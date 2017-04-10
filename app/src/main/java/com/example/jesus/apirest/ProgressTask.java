@@ -20,51 +20,49 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-
 public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
     private ProgressDialog dialog;
     private Context context;
-    private String str_url_rss;
+    private final String urlRss = "http://www.vamosacorrer.com/rss/feeds/rss_carreras.xml"; // Privado y final.
     private XmlPullParserFactory parseCreator;
     private ArrayList<String> titulo; // Titulo de la entrada.
     private ArrayList<String> imagen; // URL completa de la img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
     private ArrayList<String> localizacion; // Eso.
     private ArrayList<String> fecha;
     private ArrayList<String> link;
-                        //Hacer una clase Noticia que contenga cada uno de estos elementos
+    private ArrayList<Noticia> tNoticia;
 
-
-    public ProgressTask(Context context, String str_url_rss) {
+    public ProgressTask(Context context) {
         this.context = context;
         this.dialog = new ProgressDialog(context);
-        this.str_url_rss = str_url_rss;
 
         this.titulo = new ArrayList<>();
-        this.imagen = new ArrayList<>(); // De momento solo la URL, habría ademas que anadirle la parte fija : "vamosacorrer.com".
+        this.imagen = new ArrayList<>(); // De momento solo la URL, habría ademas que anadirle la parte fija: "vamosacorrer.com".
         this.localizacion = new ArrayList<>();
         this.fecha = new ArrayList<>();
         this.link = new ArrayList<>();
+        tNoticia = new ArrayList<>();
     }
 
     @Override
     protected void onPreExecute() {
-        this.dialog.setMessage("Leyendo Feeds RSS de " + this.str_url_rss);
+        this.dialog.setMessage("Leyendo Feeds RSS de " + this.urlRss);
         this.dialog.show();
     }
 
     @Override
     protected Boolean doInBackground(final String... args) {
-
         try {
-            URL url = new URL(str_url_rss);
-            InputStream in = url.openStream();
+            URL url = new URL(urlRss);
+            InputStream is = url.openStream();
 
-            if (in != null) {
+            if (is != null) {
                 parseCreator = XmlPullParserFactory.newInstance();
                 XmlPullParser parser = parseCreator.newPullParser();
-                parser.setInput(in, null);
+                parser.setInput(is, null);
                 int parserEvent = parser.getEventType();
+                //Noticia noticia = new Noticia(); // No funciona asi. (?)
 
                 while (parserEvent != XmlPullParser.END_DOCUMENT) {
                     switch (parserEvent) {
@@ -73,9 +71,12 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             //Títulos
                             if (tag.equalsIgnoreCase("title")) {
                                 String title = parser.nextText();
-                                if(!title.equals("RSS de Carreras de vamosacorrer.com"))
+                                if(!title.equals("RSS de Carreras de vamosacorrer.com")) {
                                     titulo.add(title);
+                                    //noticia.setTitulo(title);
+                                }
                             }
+
                             if (tag.equalsIgnoreCase("description")) {
                                 String desc = parser.nextText();
 
@@ -89,6 +90,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                                             String token2=st2.nextToken();
                                             if(token2.contains("/imagenes")){
                                                 imagen.add("http://www.vamosacorrer.com"+token2);
+                                                //noticia.setImagen("http://vamosacorrer.com" + token2);
                                                 break;
                                             }
                                         }
@@ -100,8 +102,10 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             //Fecha
                             if(tag.equalsIgnoreCase("pubDate")){
                                 String sFecha = parser.nextText();
-                                if(sFecha.length()<20)
+                                if(sFecha.length()<20) {
                                     fecha.add(sFecha);
+                                    //noticia.setFecha(sFecha);
+                                }
                             }
 
                             //Link
@@ -109,6 +113,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                                 String sLink = parser.nextText();
                                 if(!sLink.equals("http://www.vamosacorrer.com")){
                                     link.add(sLink);
+                                    //noticia.setLink(sLink);
 
                                     //Localizaciones
                                     URL url2=new URL(sLink);
@@ -120,12 +125,14 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                                     String location=loc.text();
                                     StringTokenizer st=new StringTokenizer(location, "-");
                                     localizacion.add(st.nextToken().trim());
+                                    //noticia.setLocalizacion(st.nextToken().trim());
                                 }
                             }
 
                             break;
                     } // fin switch
                     parserEvent = parser.next();
+                    //tNoticia.add(noticia);
                 }
             } else {
                 return false;
@@ -150,13 +157,25 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             dialog.dismiss();
         }
         if (success) {
+
+            for (int i = 0; i < fecha.size(); i++) {
+                Noticia noticia = new Noticia();
+                noticia.setTitulo(titulo.get(i));
+                noticia.setLocalizacion(localizacion.get(i));
+                noticia.setLink(link.get(i));
+                noticia.setFecha(fecha.get(i));
+                noticia.setImagen(imagen.get(i));
+                tNoticia.add(noticia);
+            }
+
             Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(context.getApplicationContext(), BottomBarActivity.class);
-            i.putStringArrayListExtra("imagenes", imagen);
-            i.putStringArrayListExtra("titulos", titulo);
-            i.putStringArrayListExtra("fechas", fecha);
-            i.putStringArrayListExtra("localizaciones", localizacion);
-            i.putStringArrayListExtra("links", link);
+//            i.putStringArrayListExtra("imagenes", imagen);
+//            i.putStringArrayListExtra("titulos", titulo);
+//            i.putStringArrayListExtra("fechas", fecha);
+//            i.putStringArrayListExtra("localizaciones", localizacion);
+//            i.putStringArrayListExtra("links", link);
+            i.putParcelableArrayListExtra("noticia", tNoticia);
             context.startActivity(i);
         } else {
             Toast.makeText(context, "Error en la lectura", Toast.LENGTH_SHORT).show();

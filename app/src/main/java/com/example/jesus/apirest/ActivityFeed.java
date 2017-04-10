@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class ActivityListTitle extends Activity {
+public class ActivityFeed extends Activity {
 
     private ArrayList<String> titulos;
     private ArrayList<String> imagenes;
@@ -22,6 +22,8 @@ public class ActivityListTitle extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_title);
+
+        noticias = new ArrayList<>();
 
         Intent i = getIntent();
 

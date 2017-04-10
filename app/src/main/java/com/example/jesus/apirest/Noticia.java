@@ -1,8 +1,14 @@
 package com.example.jesus.apirest;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
+public class Noticia implements Parcelable {
 
-public class Noticia {
+    /** TODO Borrar esto en el futuro.
+     * Usado: http://www.parcelabler.com/
+     * Mas info: http://stackoverflow.com/questions/7181526/how-can-i-make-my-custom-objects-parcelable
+     */
 
     private String titulo;
     private String imagen;
@@ -74,4 +80,40 @@ public class Noticia {
                 "Fecha: " + fecha + '\n' +
                 "Link: " + link + '\n';
     }
+
+    // Parte parcelable.
+    protected Noticia(Parcel in) {
+        titulo = in.readString();
+        imagen = in.readString();
+        localizacion = in.readString();
+        fecha = in.readString();
+        link = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(titulo);
+        dest.writeString(imagen);
+        dest.writeString(localizacion);
+        dest.writeString(fecha);
+        dest.writeString(link);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Noticia> CREATOR = new Parcelable.Creator<Noticia>() {
+        @Override
+        public Noticia createFromParcel(Parcel in) {
+            return new Noticia(in);
+        }
+
+        @Override
+        public Noticia[] newArray(int size) {
+            return new Noticia[size];
+        }
+    };
 }

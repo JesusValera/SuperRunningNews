@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     private Button boton_leer;
-    private EditText et_rss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +21,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /**
+         *
+         *  ESTA SERÁ LA PANTALLA DE LOGIN.
+         *
+         */
+
+
         this.boton_leer = (Button) findViewById(R.id.button1);
-        this.et_rss = (EditText) findViewById(R.id.editText1);
 
         this.boton_leer.setOnClickListener(this);
+
+        boton_leer.performClick(); // doClick().
     }
 
     @Override
@@ -49,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         switch (v.getId()) {
             case (R.id.button1) :
-                new ProgressTask(this, et_rss.getText().toString()).execute();
+                new ProgressTask(this).execute();
                 break;
         }
     }
