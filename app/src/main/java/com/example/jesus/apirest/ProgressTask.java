@@ -29,6 +29,9 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<String> imagen; // URL completa de la img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
     private ArrayList<String> localizacion; // Eso.
     private ArrayList<String> fecha;
+    private ArrayList<String> link;
+                        //Hacer una clase Noticia que contenga cada uno de estos elementos
+
 
     public ProgressTask(Context context, String str_url_rss) {
         this.context = context;
@@ -40,6 +43,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.imagen = new ArrayList<>(); // De momento solo la URL, habría ademas que anadirle la parte fija : "vamosacorrer.com".
         this.localizacion = new ArrayList<>();
         this.fecha = new ArrayList<>();
+        this.link = new ArrayList<>();
     }
 
     @Override
@@ -88,14 +92,28 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                                             }
                                         }
                                     }
-                                    //Localizaciones
-                                    //...
+
                                 }
                             }
+
+                            //Fecha
                             if(tag.equalsIgnoreCase("pubDate")){
                                 String sFecha = parser.nextText();
                                 if(sFecha.length()<20)
                                     fecha.add(sFecha);
+                            }
+
+                            //Link
+                            if(tag.equalsIgnoreCase("link")){
+                                String sLink = parser.nextText();
+                                link.add(sLink);
+
+                                //Localizaciones
+                                URL url2=new URL(sLink);
+                                //Intentar obtener el html de la noticia.
+                                //Después intentar obtener la localización de dicho html
+                                //De aquí ---->   <dd itemprop="location">Roncesvalles-Santiago de Compostela</dd>
+
                             }
 
                             break;
@@ -132,6 +150,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             i.putStringArrayListExtra("titulos", titulo);
             i.putStringArrayListExtra("fechas", fecha);
             i.putStringArrayListExtra("localizaciones", localizacion);
+            i.putStringArrayListExtra("links", link);
             context.startActivity(i);
         } else {
             Toast.makeText(context, "Error en la lectura", Toast.LENGTH_SHORT).show();
