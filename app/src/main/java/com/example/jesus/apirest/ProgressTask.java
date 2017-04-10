@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by SusVa on 7/04/17.
@@ -25,12 +26,20 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private Context context;
     private String str_url_rss;
     private XmlPullParserFactory parseCreator;
-
+    private ArrayList<String> datos; // Description, investigar como sacar datos de dentro.
+    private ArrayList<String> titulo; // Titulo de la entrada.
+    private ArrayList<String> imagen; // URL completa de la img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
+    private ArrayList<String> localizacion; // Eso.
 
     public ProgressTask(Context context, String str_url_rss) {
         this.context = context;
         this.dialog = new ProgressDialog(context);
         this.str_url_rss = str_url_rss;
+        this.datos = new ArrayList<>();
+
+        this.titulo = new ArrayList<>();
+        this.imagen = new ArrayList<>(); // De momento solo la URL, habría ademas que anadirle la parte fija : "vamosacorrer.com".
+        this.localizacion = new ArrayList<>();
     }
 
     @Override
@@ -60,9 +69,16 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 //                                String title = parser.nextText();
 //                                MainActivity.list_titles.add(title);
 //                            }
-                            if (tag.equalsIgnoreCase("item")) {
+                            if (tag.equalsIgnoreCase("description")) {
                                 String desc = parser.nextText();
-                                MainActivity.list_content.add(desc);
+                                //desc.replace("&aacute;", "á"); // No funciona por algún motivo aquí pero la linea siguiente sí.
+                                datos.add(desc.replace("&aacute;", "á").replace("&eacute;", "é").replace("&oacute;", "ó"));
+
+
+                                // No va. ¿algo hago mal o problema de CDATA? ...
+                                if (tag.equalsIgnoreCase("img")) {
+                                    Toast.makeText(context, "Hola: " + tag, Toast.LENGTH_SHORT).show();
+                                }
                             }
 
                             break;
@@ -94,6 +110,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
             Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(context.getApplicationContext(), ActivityListTitle.class);
+            i.putStringArrayListExtra("datos", datos); // PutExtra de description.
             context.startActivity(i);
         } else {
             Toast.makeText(context, "Error en la lectura", Toast.LENGTH_SHORT).show();
