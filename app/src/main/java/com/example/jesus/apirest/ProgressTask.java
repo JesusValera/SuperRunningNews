@@ -24,6 +24,8 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog dialog;
     private Context context;
     private String str_url_rss;
+    private XmlPullParserFactory parseCreator;
+
 
     public ProgressTask(Context context, String str_url_rss) {
         this.context = context;
@@ -38,20 +40,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     }
 
     @Override
-    protected void onPostExecute(final Boolean success) {
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
-        if (success) {
-            Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(context.getApplicationContext(), ActivityListTitle.class);
-            context.startActivity(i);
-        } else {
-            Toast.makeText(context, "Error en la lectura", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     protected Boolean doInBackground(final String... args) {
 
         try {
@@ -59,10 +47,8 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             InputStream in = url.openStream();
 
             if (in != null) {
-                XmlPullParserFactory parseCreator = null;
                 parseCreator = XmlPullParserFactory.newInstance();
-                XmlPullParser parser;
-                parser = parseCreator.newPullParser();
+                XmlPullParser parser = parseCreator.newPullParser();
                 parser.setInput(in, null);
                 int parserEvent = parser.getEventType();
 
@@ -70,10 +56,15 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                     switch (parserEvent) {
                         case XmlPullParser.START_TAG:
                             String tag = parser.getName();
-                            if (tag.equalsIgnoreCase("title")) {
-                                String title = parser.nextText();
-                                MainActivity.list_titles.add(title);
+//                            if (tag.equalsIgnoreCase("title")) {
+//                                String title = parser.nextText();
+//                                MainActivity.list_titles.add(title);
+//                            }
+                            if (tag.equalsIgnoreCase("item")) {
+                                String desc = parser.nextText();
+                                MainActivity.list_content.add(desc);
                             }
+
                             break;
                     } // fin switch
                     parserEvent = parser.next();
@@ -93,5 +84,19 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onPostExecute(final Boolean success) {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        if (success) {
+            Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(context.getApplicationContext(), ActivityListTitle.class);
+            context.startActivity(i);
+        } else {
+            Toast.makeText(context, "Error en la lectura", Toast.LENGTH_SHORT).show();
+        }
     }
 }

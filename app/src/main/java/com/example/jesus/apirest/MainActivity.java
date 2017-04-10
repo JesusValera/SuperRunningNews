@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     public static ArrayList<String> list_titles;
+    public static ArrayList<String> list_content;
     private Button boton_leer;
     private EditText et_rss;
 
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         this.et_rss = (EditText) findViewById(R.id.editText1);
 
         list_titles = new ArrayList<>();
+        list_content = new ArrayList<>();
 
         this.boton_leer.setOnClickListener(this);
 

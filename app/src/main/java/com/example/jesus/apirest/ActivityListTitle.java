@@ -13,9 +13,9 @@ public class ActivityListTitle extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_title);
-        titles_str = new String[MainActivity.list_titles.size()];
+        titles_str = new String[MainActivity.list_content.size()];
         int i = 0;
-        for (String t: MainActivity.list_titles) {
+        for (String t: MainActivity.list_content) {
             titles_str[i] = t;
             i++;
         }
