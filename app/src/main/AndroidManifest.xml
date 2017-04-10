@@ -23,7 +23,10 @@
         <activity
             android:name=".ActivityListTitle"
             android:label="@string/title_activity_list_title"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BottomBarActivity"
+            android:label="@string/title_activity_bottom_bar"></activity>
     </application>
 
 </manifest>

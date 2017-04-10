@@ -65,4 +65,13 @@ public class Noticia {
     public void setLink(String link) {
         this.link = link;
     }
+
+    @Override
+    public String toString() {
+        return "Titulo: " + titulo + '\n' +
+                "Imagen: " + imagen + '\n' +
+                "Localizacion: " + localizacion + '\n' +
+                "Fecha: " + fecha + '\n' +
+                "Link: " + link + '\n';
+    }
 }

@@ -31,6 +31,8 @@ public class ActivityListTitle extends Activity {
         localizaciones = i.getExtras().getStringArrayList("localizaciones");
         links = i.getExtras().getStringArrayList("links");
 
+        noticias = new ArrayList<>();
+
         for (int j = 0; j < 30; j++) {
             Noticia n=new Noticia(titulos.get(j),
                                   imagenes.get(j),
@@ -40,7 +42,7 @@ public class ActivityListTitle extends Activity {
             noticias.add(n);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, imagenes);
+        ArrayAdapter<Noticia> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, noticias);
         ListView list_titles = (ListView) findViewById(R.id.listView1);
         list_titles.setAdapter(adapter);
 

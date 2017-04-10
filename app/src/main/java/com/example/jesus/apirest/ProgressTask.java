@@ -151,7 +151,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         }
         if (success) {
             Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(context.getApplicationContext(), ActivityListTitle.class);
+            Intent i = new Intent(context.getApplicationContext(), BottomBarActivity.class);
             i.putStringArrayListExtra("imagenes", imagen);
             i.putStringArrayListExtra("titulos", titulo);
             i.putStringArrayListExtra("fechas", fecha);
