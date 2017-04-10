@@ -15,10 +15,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-/**
- * Created by SusVa on 7/04/17.
- */
 
 public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
@@ -30,6 +28,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<String> titulo; // Titulo de la entrada.
     private ArrayList<String> imagen; // URL completa de la img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
     private ArrayList<String> localizacion; // Eso.
+    private ArrayList<String> fecha;
 
     public ProgressTask(Context context, String str_url_rss) {
         this.context = context;
@@ -40,6 +39,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.titulo = new ArrayList<>();
         this.imagen = new ArrayList<>(); // De momento solo la URL, habría ademas que anadirle la parte fija : "vamosacorrer.com".
         this.localizacion = new ArrayList<>();
+        this.fecha = new ArrayList<>();
     }
 
     @Override
@@ -65,20 +65,37 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                     switch (parserEvent) {
                         case XmlPullParser.START_TAG:
                             String tag = parser.getName();
-//                            if (tag.equalsIgnoreCase("title")) {
-//                                String title = parser.nextText();
-//                                MainActivity.list_titles.add(title);
-//                            }
+                            //Títulos
+                            if (tag.equalsIgnoreCase("title")) {
+                                String title = parser.nextText();
+                                titulo.add(title);
+                            }
                             if (tag.equalsIgnoreCase("description")) {
                                 String desc = parser.nextText();
-                                //desc.replace("&aacute;", "á"); // No funciona por algún motivo aquí pero la linea siguiente sí.
-                                datos.add(desc.replace("&aacute;", "á").replace("&eacute;", "é").replace("&oacute;", "ó"));
+                                //desc.replace("&aacute;", "á").replace("&eacute;", "é").replace("&oacute;", "ó"); //No funciona desde aquí
 
-
-                                // No va. ¿algo hago mal o problema de CDATA? ...
-                                if (tag.equalsIgnoreCase("img")) {
-                                    Toast.makeText(context, "Hola: " + tag, Toast.LENGTH_SHORT).show();
+                                StringTokenizer st=new StringTokenizer(desc, "<");
+                                while(st.hasMoreTokens()){
+                                    String token=st.nextToken();
+                                    //Imágenes
+                                    if(token.contains("img")){
+                                        StringTokenizer st2=new StringTokenizer(token, "\"");
+                                        while (st2.hasMoreElements()){
+                                            String token2=st2.nextToken();
+                                            if(token2.contains("/imagenes")){
+                                                imagen.add("http://www.vamosacorrer.com"+token2);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    //Localizaciones
+                                    //...
                                 }
+                            }
+                            if(tag.equalsIgnoreCase("pubDate")){
+                                String sFecha = parser.nextText();
+                                if(sFecha.length()<20)
+                                    fecha.add(sFecha);
                             }
 
                             break;
@@ -111,6 +128,10 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(context.getApplicationContext(), ActivityListTitle.class);
             i.putStringArrayListExtra("datos", datos); // PutExtra de description.
+            i.putStringArrayListExtra("imagenes", imagen);
+            i.putStringArrayListExtra("titulos", titulo);
+            i.putStringArrayListExtra("fechas", fecha);
+            i.putStringArrayListExtra("localizaciones", localizacion);
             context.startActivity(i);
         } else {
             Toast.makeText(context, "Error en la lectura", Toast.LENGTH_SHORT).show();
