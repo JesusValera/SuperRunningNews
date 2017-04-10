@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -24,7 +27,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private Context context;
     private String str_url_rss;
     private XmlPullParserFactory parseCreator;
-    private ArrayList<String> datos; // Description, investigar como sacar datos de dentro.
     private ArrayList<String> titulo; // Titulo de la entrada.
     private ArrayList<String> imagen; // URL completa de la img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
     private ArrayList<String> localizacion; // Eso.
@@ -37,7 +39,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.context = context;
         this.dialog = new ProgressDialog(context);
         this.str_url_rss = str_url_rss;
-        this.datos = new ArrayList<>();
 
         this.titulo = new ArrayList<>();
         this.imagen = new ArrayList<>(); // De momento solo la URL, habría ademas que anadirle la parte fija : "vamosacorrer.com".
@@ -72,11 +73,11 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             //Títulos
                             if (tag.equalsIgnoreCase("title")) {
                                 String title = parser.nextText();
-                                titulo.add(title);
+                                if(!title.equals("RSS de Carreras de vamosacorrer.com"))
+                                    titulo.add(title);
                             }
                             if (tag.equalsIgnoreCase("description")) {
                                 String desc = parser.nextText();
-                                //desc.replace("&aacute;", "á").replace("&eacute;", "é").replace("&oacute;", "ó"); //No funciona desde aquí
 
                                 StringTokenizer st=new StringTokenizer(desc, "<");
                                 while(st.hasMoreTokens()){
@@ -106,14 +107,20 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             //Link
                             if(tag.equalsIgnoreCase("link")){
                                 String sLink = parser.nextText();
-                                link.add(sLink);
+                                if(!sLink.equals("http://www.vamosacorrer.com")){
+                                    link.add(sLink);
 
-                                //Localizaciones
-                                URL url2=new URL(sLink);
-                                //Intentar obtener el html de la noticia.
-                                //Después intentar obtener la localización de dicho html
-                                //De aquí ---->   <dd itemprop="location">Roncesvalles-Santiago de Compostela</dd>
-
+                                    //Localizaciones
+                                    URL url2=new URL(sLink);
+                                    //Intentar obtener el html de la noticia.
+                                    //Después intentar obtener la localización de dicho html
+                                    //De aquí ---->   <dd itemprop="location">Roncesvalles</dd>
+                                    Document doc = Jsoup.connect(sLink).get();
+                                    Elements loc = doc.select("dd[itemprop=location]");
+                                    String location=loc.text();
+                                    StringTokenizer st=new StringTokenizer(location, "-");
+                                    localizacion.add(st.nextToken().trim());
+                                }
                             }
 
                             break;
@@ -145,7 +152,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
             Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(context.getApplicationContext(), ActivityListTitle.class);
-            i.putStringArrayListExtra("datos", datos); // PutExtra de description.
             i.putStringArrayListExtra("imagenes", imagen);
             i.putStringArrayListExtra("titulos", titulo);
             i.putStringArrayListExtra("fechas", fecha);

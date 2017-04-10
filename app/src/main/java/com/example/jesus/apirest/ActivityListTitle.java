@@ -10,7 +10,13 @@ import java.util.ArrayList;
 
 public class ActivityListTitle extends Activity {
 
-    private ArrayList<String> content_str;
+    private ArrayList<String> titulos;
+    private ArrayList<String> imagenes;
+    private ArrayList<String> localizaciones;
+    private ArrayList<String> fechas;
+    private ArrayList<String> links;
+
+    private ArrayList<Noticia> noticias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,13 +24,23 @@ public class ActivityListTitle extends Activity {
         setContentView(R.layout.activity_list_title);
 
         Intent i = getIntent();
-        //content_str =  i.getExtras().getStringArrayList("datos"); // Obtener arraylist desde el intent.
-        //content_str = i.getExtras().getStringArrayList("imagenes");
-        //content_str = i.getExtras().getStringArrayList("titulos");
-        content_str = i.getExtras().getStringArrayList("fechas");
-        //content_str = i.getExtras().getStringArrayList("localizaciones");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, content_str);
+        imagenes = i.getExtras().getStringArrayList("imagenes");
+        titulos = i.getExtras().getStringArrayList("titulos");
+        fechas = i.getExtras().getStringArrayList("fechas");
+        localizaciones = i.getExtras().getStringArrayList("localizaciones");
+        links = i.getExtras().getStringArrayList("links");
+
+        for (int j = 0; j < 30; j++) {
+            Noticia n=new Noticia(titulos.get(j),
+                                  imagenes.get(j),
+                                  localizaciones.get(j),
+                                  fechas.get(j),
+                                  links.get(j));
+            noticias.add(n);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, imagenes);
         ListView list_titles = (ListView) findViewById(R.id.listView1);
         list_titles.setAdapter(adapter);
 
