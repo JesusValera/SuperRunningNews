@@ -20,6 +20,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.logging.StreamHandler;
 
 public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
@@ -33,6 +34,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<String> fecha;
     private ArrayList<String> link;
     private ArrayList<Noticia> tNoticia;
+    private boolean primera=false;
 
     //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se esté logueado,
     //no salga el dialog y el splash screen sirva como pantalla de carga.
@@ -82,25 +84,36 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             }
 
                             if (tag.equalsIgnoreCase("description")) {
-                                String desc = parser.nextText();
+                                if (!primera){
+                                    String desc = parser.nextText();
 
-                                StringTokenizer st=new StringTokenizer(desc, "<");
-                                while(st.hasMoreTokens()){
-                                    String token=st.nextToken();
-                                    //Imágenes
-                                    if(token.contains("img")){
-                                        StringTokenizer st2=new StringTokenizer(token, "\"");
-                                        while (st2.hasMoreElements()){
-                                            String token2=st2.nextToken();
-                                            if(token2.contains("/imagenes")){
-                                                imagen.add("http://www.vamosacorrer.com"+token2);
-                                                //noticia.setImagen("http://vamosacorrer.com" + token2);
-                                                break;
+                                    boolean tieneImagen=false;
+                                    StringTokenizer st=new StringTokenizer(desc, "<");
+                                    while(st.hasMoreTokens()){
+                                        String token=st.nextToken();
+                                        //Imágenes
+                                        if(token.contains("img")){
+                                            StringTokenizer st2=new StringTokenizer(token, "\"");
+                                            while (st2.hasMoreElements()){
+                                                String token2=st2.nextToken();
+                                                if(token2.contains("/imagenes")){
+                                                    imagen.add("http://www.vamosacorrer.com"+token2);
+                                                    //noticia.setImagen("http://vamosacorrer.com" + token2);
+                                                    tieneImagen=true;
+                                                    break;
+                                                }
                                             }
+                                            break;
                                         }
                                     }
-
+                                    if(!tieneImagen){
+                                        imagen.add("http://orig12.deviantart.net/96a5/f/2017/101/7/0/img_default_by_hollowkrator-db5f21z.png");
+                                    }
+                                } else {
+                                    parser.nextText();
+                                    primera=true;
                                 }
+
                             }
 
                             //Fecha
@@ -172,7 +185,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 noticia.setLocalizacion(localizacion.get(i));
                 noticia.setLink(link.get(i));
                 noticia.setFecha(fecha.get(i));
-                noticia.setImagen(imagen.get(i));
+                noticia.setImagen(imagen.get(i+1));
                 tNoticia.add(noticia);
             }
 

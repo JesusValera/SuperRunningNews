@@ -14,9 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by Susva on 11/04/17.
- */
 
 public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.FeedViewHolder>{
 
