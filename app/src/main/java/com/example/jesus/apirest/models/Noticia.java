@@ -1,4 +1,4 @@
-package com.example.jesus.apirest;
+package com.example.jesus.apirest.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

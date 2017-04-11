@@ -1,7 +1,5 @@
-package com.example.jesus.apirest.Fragments;
+package com.example.jesus.apirest.fragments;
 
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,27 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.jesus.apirest.Noticia;
+import com.example.jesus.apirest.asyncTasks.MapTask;
+import com.example.jesus.apirest.models.Noticia;
 import com.example.jesus.apirest.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class FragmentMapa extends Fragment implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private ArrayList<Noticia> tNoticia;
     private MapView mMapView;
@@ -85,15 +77,6 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback,
         super.onStart();
     }
 
-//    @Override
-//    public void onStop() {
-//        if (gac != null) {
-//            LocationServices.FusedLocationApi.removeLocationUpdates(gac, this);
-//            gac.disconnect();
-//        }
-//        super.onStop();
-//    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -118,40 +101,13 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback,
         mMapView.onLowMemory();
     }
 
-    // ¿Util este método? TODO -> Edit: No parece funcionar...
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mMapView.onSaveInstanceState(outState);
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        this.googleMap.clear();
 
-        googleMap.clear();
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        Geocoder geocoder = new Geocoder(getContext());
-        MarkerOptions markerOptions;
-        try {
-            for (Noticia noticia : tNoticia) {
-                noticia.getLocalizacion();
-                List<Address> pos = geocoder.getFromLocationName(noticia.getLocalizacion(), 1);
-                LatLng latLng = new LatLng(pos.get(0).getLatitude(), pos.get(0).getLongitude());
-                markerOptions = new MarkerOptions().position(latLng).title(noticia.getTitulo())
-                        .snippet(noticia.getLocalizacion() + "\t * " + noticia.getFecha());
-                googleMap.addMarker(markerOptions);
-
-                builder.include(latLng);
-            }
-        } catch (IOException e) {
-            Toast.makeText(getContext(), "Error en geocoder: " + e.getStackTrace(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+        new MapTask(FragmentMapa.this.getContext(), this.googleMap, tNoticia).execute();
     }
 
     @Override

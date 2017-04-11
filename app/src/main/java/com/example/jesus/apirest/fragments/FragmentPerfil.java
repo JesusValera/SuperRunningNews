@@ -1,4 +1,4 @@
-package com.example.jesus.apirest.Fragments;
+package com.example.jesus.apirest.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

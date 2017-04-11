@@ -1,10 +1,14 @@
-package com.example.jesus.apirest;
+package com.example.jesus.apirest.asyncTasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import com.example.jesus.apirest.BottomBarActivity;
+import com.example.jesus.apirest.models.Noticia;
+import com.example.jesus.apirest.R;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,7 +24,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import java.util.logging.StreamHandler;
 
 public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
@@ -34,7 +37,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<String> fecha;
     private ArrayList<String> link;
     private ArrayList<Noticia> tNoticia;
-    private boolean primera=false;
+    private boolean primera = false;
 
     //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se esté logueado,
     //no salga el dialog y el splash screen sirva como pantalla de carga.
@@ -48,7 +51,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.localizacion = new ArrayList<>();
         this.fecha = new ArrayList<>();
         this.link = new ArrayList<>();
-        tNoticia = new ArrayList<>();
+        this.tNoticia = new ArrayList<>();
     }
 
     @Override
@@ -68,7 +71,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 XmlPullParser parser = parseCreator.newPullParser();
                 parser.setInput(is, null);
                 int parserEvent = parser.getEventType();
-                //Noticia noticia = new Noticia(); // No funciona asi. (?)
 
                 while (parserEvent != XmlPullParser.END_DOCUMENT) {
                     switch (parserEvent) {
@@ -77,74 +79,71 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             //Títulos
                             if (tag.equalsIgnoreCase("title")) {
                                 String title = parser.nextText();
-                                if(!title.equals("RSS de Carreras de vamosacorrer.com")) {
+                                if (!title.equals("RSS de Carreras de vamosacorrer.com")) {
                                     titulo.add(title);
-                                    //noticia.setTitulo(title);
                                 }
                             }
 
                             if (tag.equalsIgnoreCase("description")) {
-                                if (!primera){
+                                if (!primera) {
                                     String desc = parser.nextText();
 
-                                    boolean tieneImagen=false;
-                                    StringTokenizer st=new StringTokenizer(desc, "<");
-                                    while(st.hasMoreTokens()){
-                                        String token=st.nextToken();
+                                    boolean tieneImagen = false;
+                                    StringTokenizer st = new StringTokenizer(desc, "<");
+                                    while (st.hasMoreTokens()) {
+                                        String token = st.nextToken();
                                         //Imágenes
-                                        if(token.contains("img")){
-                                            StringTokenizer st2=new StringTokenizer(token, "\"");
-                                            while (st2.hasMoreElements()){
-                                                String token2=st2.nextToken();
-                                                if(token2.contains("/imagenes")){
-                                                    imagen.add("http://www.vamosacorrer.com"+token2);
-                                                    //noticia.setImagen("http://vamosacorrer.com" + token2);
-                                                    tieneImagen=true;
+                                        if (token.contains("img")) {
+                                            StringTokenizer st2 = new StringTokenizer(token, "\"");
+                                            while (st2.hasMoreElements()) {
+                                                String token2 = st2.nextToken();
+                                                if (token2.contains("/imagenes")) {
+                                                    imagen.add("http://www.vamosacorrer.com" + token2);
+                                                    tieneImagen = true;
                                                     break;
                                                 }
                                             }
                                             break;
                                         }
                                     }
-                                    if(!tieneImagen){
+                                    if (!tieneImagen) {
                                         imagen.add("http://orig12.deviantart.net/96a5/f/2017/101/7/0/img_default_by_hollowkrator-db5f21z.png");
                                     }
                                 } else {
                                     parser.nextText();
-                                    primera=true;
+                                    primera = true;
                                 }
 
                             }
 
                             //Fecha
-                            if(tag.equalsIgnoreCase("pubDate")){
+                            if (tag.equalsIgnoreCase("pubDate")) {
                                 String sFecha = parser.nextText();
-                                if(sFecha.length()<20) {
+                                if (sFecha.length() < 20) {
 
-                                    SimpleDateFormat sdf =new SimpleDateFormat("dd/MM/yyyy");
-                                    SimpleDateFormat sdf2 =new SimpleDateFormat("yyyy-MM-dd");
-                                    try{
-                                        String sFecha2=sdf.format(sdf2.parse(sFecha.substring(0, 10)));
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        String sFecha2 = sdf.format(sdf2.parse(sFecha.substring(0, 10)));
                                         fecha.add(sFecha2);
-                                    } catch (Exception e){}
-
-                                    //noticia.setFecha(sFecha);
+                                    } catch (Exception e) {
+                                    }
                                 }
                             }
 
                             //Link
-                            if(tag.equalsIgnoreCase("link")){
+                            if (tag.equalsIgnoreCase("link")) {
                                 String sLink = parser.nextText();
-                                if(!sLink.equals("http://www.vamosacorrer.com")){
+                                if (!sLink.equals("http://www.vamosacorrer.com")) {
                                     link.add(sLink);
                                     //noticia.setLink(sLink);
 
                                     //Localizaciones
-                                    URL url2=new URL(sLink);
+                                    URL url2 = new URL(sLink);
                                     Document doc = Jsoup.connect(sLink).get();
                                     Elements loc = doc.select("dd[itemprop=location]");
-                                    String location=loc.text();
-                                    StringTokenizer st=new StringTokenizer(location, "-");
+                                    String location = loc.text();
+                                    StringTokenizer st = new StringTokenizer(location, "-");
                                     localizacion.add(st.nextToken().trim());
                                     //noticia.setLocalizacion(st.nextToken().trim());
                                 }
@@ -185,7 +184,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 noticia.setLocalizacion(localizacion.get(i));
                 noticia.setLink(link.get(i));
                 noticia.setFecha(fecha.get(i));
-                noticia.setImagen(imagen.get(i+1));
+                noticia.setImagen(imagen.get(i + 1));
                 tNoticia.add(noticia);
             }
 

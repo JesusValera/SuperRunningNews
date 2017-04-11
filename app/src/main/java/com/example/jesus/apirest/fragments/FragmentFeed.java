@@ -1,5 +1,8 @@
-package com.example.jesus.apirest.Fragments;
+package com.example.jesus.apirest.fragments;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,9 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.example.jesus.apirest.Adapters.AdapterFeed;
-import com.example.jesus.apirest.Noticia;
+import com.example.jesus.apirest.adapters.AdapterFeed;
+import com.example.jesus.apirest.models.Noticia;
 import com.example.jesus.apirest.R;
 
 import java.util.ArrayList;
@@ -18,7 +22,7 @@ public class FragmentFeed extends Fragment {
 
     private ArrayList<Noticia> tNoticia;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private AdapterFeed adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     public FragmentFeed() {
@@ -45,7 +49,18 @@ public class FragmentFeed extends Fragment {
         adapter = new AdapterFeed(tNoticia, getContext());
         recyclerView.setAdapter(adapter);
 
+        adapter.setOnClickListener(clickListener);
         return v;
     }
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Noticia noticia = adapter.getItem(adapter.getItemPos());
+
+            Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(noticia.getLink()));
+            startActivity(webIntent);
+        }
+    };
 
 }
