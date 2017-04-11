@@ -30,6 +30,7 @@ public class FragmentFeed extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
 
+        // Traer array de BottomBarActivity.
         Bundle args = getArguments();
         if (args != null) {
             this.tNoticia = args.getParcelableArrayList("noticia");

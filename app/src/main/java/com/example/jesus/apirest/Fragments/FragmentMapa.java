@@ -1,5 +1,7 @@
 package com.example.jesus.apirest.Fragments;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.jesus.apirest.Noticia;
 import com.example.jesus.apirest.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,10 +25,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class FragmentMapa extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private ArrayList<Noticia> tNoticia;
     private MapView mMapView;
     private GoogleMap googleMap;
     private GoogleApiClient gac;
@@ -37,8 +45,13 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_mapa, container, false);
+
+        // Traer array de BottomBarActivity.
+        Bundle args = getArguments();
+        if (args != null) {
+            this.tNoticia = args.getParcelableArrayList("noticia");
+        }
 
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -50,6 +63,7 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback,
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         mMapView.getMapAsync(this);
 
         if (gac == null) {
@@ -104,82 +118,53 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback,
         mMapView.onLowMemory();
     }
 
+    // ¿Util este método? TODO -> Edit: No parece funcionar...
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mMapView.onSaveInstanceState(outState);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        //this.googleMap.getUiSettings().setZoomControlsEnabled(true); // Esta el boton molestando. Investigar si se pueden cambiar de pos.
-
-        // For showing a move to my location button
-//        try {
-//            googleMap.setMyLocationEnabled(true);
-//        } catch (SecurityException e) {
-//            e.printStackTrace();
-//        }
-
-        // Recuperar todas las posiciones de usuarios conectados....................................
-
-        // For dropping a marker at a point on the Map
-//        LatLng ceeim = new LatLng(38.0051, -1.165);
-//        googleMap.addMarker(new MarkerOptions().position(ceeim).title("Marcador").snippet("Descripcion..."));
-//
-//        // For zooming automatically to the location of the marker
-//        CameraPosition cameraPosition = new CameraPosition.Builder().target(ceeim).zoom(12).build();
-//        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-//        if (gac != null) {
-//            // Set up a Location Request.
-//            LocationRequest mLocationRequest = new LocationRequest();
-//            mLocationRequest.setInterval(10 * 1000);
-//            mLocationRequest.setFastestInterval(10 * 1000);
-//            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//            // Request Location Updades.
-//            try {
-//                LocationServices.FusedLocationApi.requestLocationUpdates(gac, mLocationRequest, FragmentMapa.this);
-//            } catch (SecurityException e) {
-//                ;
-//            }
-//        }
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
 
         googleMap.clear();
-        ///// Mostrar todas las posiciones de usuarios conectados ..........................
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        // Obtener pos de usuarios activos y guardar en array.
-        double l1 = 38.005073, l2 = -1.1644974, l3 = 38.01724, l4 = -1.168988;
-        LatLng latLng1 = new LatLng(l1, l2), latLng2 = new LatLng(l3, l4);
 
-        MarkerOptions m = new MarkerOptions().position(latLng1).title(String.valueOf("Loc1")).snippet("Descripcion...");
-        MarkerOptions m2 = new MarkerOptions().position(latLng2).title(String.valueOf("Loc2")).snippet("Descripcion2..");
-        googleMap.addMarker(m);
-        googleMap.addMarker(m2);
-        builder.include(latLng1);
-        builder.include(latLng2);
+        Geocoder geocoder = new Geocoder(getContext());
+        MarkerOptions markerOptions;
+        try {
+            for (Noticia noticia : tNoticia) {
+                noticia.getLocalizacion();
+                List<Address> pos = geocoder.getFromLocationName(noticia.getLocalizacion(), 1);
+                LatLng latLng = new LatLng(pos.get(0).getLatitude(), pos.get(0).getLongitude());
+                markerOptions = new MarkerOptions().position(latLng).title(noticia.getTitulo())
+                        .snippet(noticia.getLocalizacion() + "\t * " + noticia.getFecha());
+                googleMap.addMarker(markerOptions);
+
+                builder.include(latLng);
+            }
+        } catch (IOException e) {
+            Toast.makeText(getContext(), "Error en geocoder: " + e.getStackTrace(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
-//        try {
-//            Location loc = LocationServices.FusedLocationApi.getLastLocation(gac);
-//            if (loc != null) {
-//                Toast.makeText(getContext(), "onConnected\nLAST LOCATION\nLAT: " + loc.getLatitude()
-//                        + " Long: " + loc.getLongitude(), Toast.LENGTH_SHORT).show();
-//            }
-//        } catch (SecurityException e) {
-//            ;
-//        }
-        Toast.makeText(getContext(), "onConnected", Toast.LENGTH_SHORT).show();
+        // No nos sirve porque las ubicaciones son fijas.
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-        Toast.makeText(getContext(), "onConnectionSuspended", Toast.LENGTH_SHORT).show();
-    }
+    public void onConnectionSuspended(int i) { }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(getContext(), "onConnectionFailed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Error de conexión", Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -16,13 +16,6 @@ import java.util.ArrayList;
 
 public class BottomBarActivity extends AppCompatActivity {
 
-//    private TextView mTextMessage;
-//    private ArrayList<String> titulos;
-//    private ArrayList<String> imagenes;
-//    private ArrayList<String> localizaciones;
-//    private ArrayList<String> fechas;
-//    private ArrayList<String> links;
-//
     private ArrayList<Noticia> noticias;
 
     @Override
@@ -30,15 +23,14 @@ public class BottomBarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_bar);
 
-        Intent i = getIntent();
-        this.noticias = i.getParcelableArrayListExtra("noticia");
-        Toast.makeText(getApplicationContext(), "Noticia N5: " + noticias.get(4).getTitulo(), Toast.LENGTH_SHORT).show(); // Prueba.
-
-        //mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_noticias);
 
+        Intent i = getIntent();
+        this.noticias = i.getParcelableArrayListExtra("noticia");
+
+        // Cargar por defecto la pantalla de noticias.
+        navigation.setSelectedItemId(R.id.navigation_noticias);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -48,19 +40,22 @@ public class BottomBarActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_noticias:
-                    //mTextMessage.setText(R.string.title_noticias);
 
                     FragmentFeed noticiaFragment = new FragmentFeed();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("noticia", noticias);
-                    noticiaFragment.setArguments(bundle);
+                    Bundle bundleFeed = new Bundle();
+                    bundleFeed.putParcelableArrayList("noticia", noticias);
+                    noticiaFragment.setArguments(bundleFeed);
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, noticiaFragment).commit();
 
                     return true;
                 case R.id.navigation_mapa:
-                    //mTextMessage.setText(R.string.title_mapa);
 
                     FragmentMapa mapaFragment = new FragmentMapa();
+
+                    Bundle bundleMap = new Bundle();
+                    bundleMap.putParcelableArrayList("noticia", noticias);
+                    mapaFragment.setArguments(bundleMap);
+
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, mapaFragment).commit();
 
                     return true;
