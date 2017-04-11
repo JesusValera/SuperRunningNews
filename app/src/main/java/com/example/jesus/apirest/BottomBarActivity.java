@@ -30,15 +30,14 @@ public class BottomBarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_bar);
 
+        Intent i = getIntent();
+        this.noticias = i.getParcelableArrayListExtra("noticia");
+        Toast.makeText(getApplicationContext(), "Noticia N5: " + noticias.get(4).getTitulo(), Toast.LENGTH_SHORT).show(); // Prueba.
+
         //mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_noticias);
-
-        Intent i = getIntent();
-
-        this.noticias = i.getParcelableArrayListExtra("noticia");
-        Toast.makeText(getApplicationContext(), "Noticia N5: " + noticias.get(4).getTitulo(), Toast.LENGTH_SHORT).show(); // Prueba.
 
     }
 
@@ -52,6 +51,9 @@ public class BottomBarActivity extends AppCompatActivity {
                     //mTextMessage.setText(R.string.title_noticias);
 
                     FragmentFeed noticiaFragment = new FragmentFeed();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("noticia", noticias);
+                    noticiaFragment.setArguments(bundle);
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, noticiaFragment).commit();
 
                     return true;
