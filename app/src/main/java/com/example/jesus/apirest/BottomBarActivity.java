@@ -23,7 +23,7 @@ public class BottomBarActivity extends AppCompatActivity {
 //    private ArrayList<String> fechas;
 //    private ArrayList<String> links;
 //
-    private ArrayList<Noticia> noticias; // ??.
+    private ArrayList<Noticia> noticias;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

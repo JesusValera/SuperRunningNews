@@ -33,12 +33,15 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<String> link;
     private ArrayList<Noticia> tNoticia;
 
+    //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se esté logueado,
+    //no salga el dialog y el splash screen sirva como pantalla de carga.
+
     public ProgressTask(Context context) {
         this.context = context;
-        this.dialog = new ProgressDialog(context);
+        this.dialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
 
         this.titulo = new ArrayList<>();
-        this.imagen = new ArrayList<>(); // De momento solo la URL, habría ademas que anadirle la parte fija: "vamosacorrer.com".
+        this.imagen = new ArrayList<>();
         this.localizacion = new ArrayList<>();
         this.fecha = new ArrayList<>();
         this.link = new ArrayList<>();
@@ -47,7 +50,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPreExecute() {
-        this.dialog.setMessage("Leyendo Feeds RSS de " + this.urlRss);
+        this.dialog.setMessage("Cargando Feed de Noticias...");
         this.dialog.show();
     }
 
@@ -117,9 +120,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
                                     //Localizaciones
                                     URL url2=new URL(sLink);
-                                    //Intentar obtener el html de la noticia.
-                                    //Después intentar obtener la localización de dicho html
-                                    //De aquí ---->   <dd itemprop="location">Roncesvalles</dd>
                                     Document doc = Jsoup.connect(sLink).get();
                                     Elements loc = doc.select("dd[itemprop=location]");
                                     String location=loc.text();
@@ -168,7 +168,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 tNoticia.add(noticia);
             }
 
-            Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Feeds leidos", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(context.getApplicationContext(), BottomBarActivity.class);
 //            i.putStringArrayListExtra("imagenes", imagen);
 //            i.putStringArrayListExtra("titulos", titulo);
@@ -179,6 +179,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             context.startActivity(i);
         } else {
             Toast.makeText(context, "Error en la lectura", Toast.LENGTH_SHORT).show();
+
         }
     }
 }
