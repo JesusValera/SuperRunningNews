@@ -12,6 +12,7 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         card_view:cardBackgroundColor="#585"
+        card_view:cardCornerRadius="2dp"
         card_view:cardElevation="6dp">
 
         <LinearLayout
@@ -24,9 +25,9 @@
                 android:id="@+id/ivImagen"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:background="#CECECE"
+                android:background="#FFF"
                 android:scaleType="centerCrop"
-                card_view:srcCompat="@android:drawable/stat_sys_warning" />
+                card_view:srcCompat="@drawable/img_default" />
 
             <LinearLayout
                 android:layout_width="match_parent"
