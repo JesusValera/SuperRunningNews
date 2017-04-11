@@ -4,12 +4,9 @@
     android:layout_height="match_parent"
     tools:context="com.example.jesus.apirest.Fragments.FragmentMapa">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="24dp"
-        android:text="MAPA" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
