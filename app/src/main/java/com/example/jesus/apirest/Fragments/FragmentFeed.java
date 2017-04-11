@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.jesus.apirest.Adapters.AdapterFeed;
 import com.example.jesus.apirest.Noticia;
@@ -42,7 +41,7 @@ public class FragmentFeed extends Fragment {
         layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new AdapterFeed(tNoticia);
+        adapter = new AdapterFeed(tNoticia, getContext());
         recyclerView.setAdapter(adapter);
 
         return v;

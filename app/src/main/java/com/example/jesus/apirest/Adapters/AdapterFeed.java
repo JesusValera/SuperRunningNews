@@ -1,5 +1,6 @@
 package com.example.jesus.apirest.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.jesus.apirest.Noticia;
 import com.example.jesus.apirest.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.FeedViewHolder>{
 
     private List<Noticia> datos;
+    private Context context;
 
     public static class FeedViewHolder extends RecyclerView.ViewHolder {
         // Campos respectivos de un item
@@ -36,10 +39,10 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.FeedViewHolder
         }
     }
 
-    public AdapterFeed(List<Noticia> datos) {
+    public AdapterFeed(List<Noticia> datos, Context context) {
         this.datos = datos;
+        this.context = context;
     }
-
 
     @Override
     public int getItemCount() {
@@ -55,7 +58,7 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.FeedViewHolder
 
     @Override
     public void onBindViewHolder(FeedViewHolder viewHolder, int i) {
-        //viewHolder.ivImagen.setImageResource(datos.get(i).getImagen()); // TODO insertar imagen, no String URL...
+        Picasso.with(context).load(datos.get(i).getImagen()).into(viewHolder.ivImagen);
         viewHolder.txtTitulo.setText(datos.get(i).getTitulo());
         viewHolder.txtLocalizacion.setText(datos.get(i).getLocalizacion());
         viewHolder.txtFecha.setText(datos.get(i).getFecha()); // TODO solo estos campos o todos de obj noticia ??
