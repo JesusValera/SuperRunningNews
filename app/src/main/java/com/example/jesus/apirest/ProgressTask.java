@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -106,7 +107,14 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             if(tag.equalsIgnoreCase("pubDate")){
                                 String sFecha = parser.nextText();
                                 if(sFecha.length()<20) {
-                                    fecha.add(sFecha);
+
+                                    SimpleDateFormat sdf =new SimpleDateFormat("dd-MM-yyyy");
+                                    SimpleDateFormat sdf2 =new SimpleDateFormat("yyyy-MM-dd");
+                                    try{
+                                        String sFecha2=sdf.format(sdf2.parse(sFecha.substring(0, 10)));
+                                        fecha.add(sFecha2);
+                                    } catch (Exception e){}
+
                                     //noticia.setFecha(sFecha);
                                 }
                             }
