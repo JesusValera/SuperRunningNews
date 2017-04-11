@@ -1,6 +1,5 @@
 package com.example.jesus.apirest.Fragments;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,8 +12,6 @@ import android.widget.Toast;
 import com.example.jesus.apirest.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,8 +21,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
 
 public class FragmentMapa extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -67,7 +62,6 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback,
 
         return v;
     }
-
 
     @Override
     public void onStart() {
@@ -162,7 +156,6 @@ public class FragmentMapa extends Fragment implements OnMapReadyCallback,
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
     }
-
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
