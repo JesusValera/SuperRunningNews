@@ -21,7 +21,7 @@ public class SplashActivity extends AppCompatActivity{
         //setContentView(R.layout.splash);
 
         //Si ya estaba logueado, ejecutar el ProgressTask, si no la LoginActivity
-        SystemClock.sleep(2000);
+        //SystemClock.sleep(2000);
         new ProgressTask(this).execute();
     }
 
