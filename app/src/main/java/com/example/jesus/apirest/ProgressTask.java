@@ -108,7 +108,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                                 String sFecha = parser.nextText();
                                 if(sFecha.length()<20) {
 
-                                    SimpleDateFormat sdf =new SimpleDateFormat("dd-MM-yyyy");
+                                    SimpleDateFormat sdf =new SimpleDateFormat("dd/MM/yyyy");
                                     SimpleDateFormat sdf2 =new SimpleDateFormat("yyyy-MM-dd");
                                     try{
                                         String sFecha2=sdf.format(sdf2.parse(sFecha.substring(0, 10)));
