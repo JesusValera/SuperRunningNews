@@ -46,7 +46,6 @@ public class SignupActivity extends AppCompatActivity {
     private DatabaseReference ref;
     private FirebaseStorage storage;
 
-
     private ArrayList<Usuario> usuarios;
 
     private static final int SELECT_FILE = 1;
