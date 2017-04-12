@@ -1,5 +1,7 @@
 package com.example.jesus.apirest;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -9,26 +11,21 @@ import com.example.jesus.apirest.asyncTasks.ProgressTask;
 
 public class SplashActivity extends AppCompatActivity{
 
-    private SharedPreferences pref;
+    public static SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.splash);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         //Si ya estaba logueado, ejecutar el ProgressTask, si no la LoginActivity
-        //SystemClock.sleep(2000);
-
-        // Todavía no existe pantalla de login por lo que siempre será falso. Descomentar cuando se implemente.
-        if (true/*pref.getBoolean("login", false)*/) {
+        if (pref.getBoolean("login", false)) {
             new ProgressTask(this).execute();
         } else {
-
             // Login Activity.
-
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 

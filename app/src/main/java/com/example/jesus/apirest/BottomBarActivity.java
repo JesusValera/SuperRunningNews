@@ -90,4 +90,8 @@ public class BottomBarActivity extends AppCompatActivity {
 
     };
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }
