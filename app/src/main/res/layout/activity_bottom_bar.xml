@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.jesus.apirest.BottomBarActivity">
+    tools:context="com.proyecto.tfg.superrunningnews.BottomBarActivity">
 
     <!-- Reemplazamos el FrameLayout en los fragmentos por el fragmento seleccionado a partir del id. -->
     <!-- BottomBarActivity linea 55~ ->
@@ -15,9 +15,7 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </FrameLayout>
+        android:layout_weight="1" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"

@@ -1,12 +1,10 @@
 <resources>
-    <string name="app_name">Super RN</string>
+    <string name="app_name">Super Running News</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_list_title">ActivityListTitle</string>
     <string name="title_activity_bottom_bar">BottomBarActivity</string>
     <string name="title_noticias">Noticias</string>
     <string name="title_mapa">Mapa</string>
     <string name="title_perfil">Perfil</string>
+    <string name="title_chat">Chat</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
