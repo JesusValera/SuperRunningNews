@@ -37,8 +37,8 @@ public class MapTask extends AsyncTask<Void, Void, Void> {
         this.context = context;
         this.googleMap = googleMap;
         this.tNoticia = tNoticia;
-        builder = new LatLngBounds.Builder();
         marcadores = new ArrayList<>();
+        builder = new LatLngBounds.Builder();
         progressDialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
     }
 

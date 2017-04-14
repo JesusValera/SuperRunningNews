@@ -27,9 +27,9 @@ import java.util.StringTokenizer;
 
 public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
+    private final String urlRss = "http://www.vamosacorrer.com/rss/feeds/rss_carreras.xml"; // Privado y final.
     private ProgressDialog dialog;
     private Context context;
-    private final String urlRss = "http://www.vamosacorrer.com/rss/feeds/rss_carreras.xml"; // Privado y final.
     private XmlPullParserFactory parseCreator;
     private ArrayList<String> titulo; // Titulo de la entrada.
     private ArrayList<String> imagen; // URL completa de la img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg

@@ -22,7 +22,8 @@ public class PerfilFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_perfil, container, false);
 
         // Traer elementos del layout "fragment_perfil".
-        //  Si se quisiese traer de la aplicacion que la alberga sería diferente pero no es el caso (act padre = BottomBarActivity).
+        // Para traer componentes de BottomBarActivity habría que hacer otra cosa pero no es el caso.
+
         // botonEjemplo = (Button) v.findViewById(R.id.btEjemplo);
 
         return v;

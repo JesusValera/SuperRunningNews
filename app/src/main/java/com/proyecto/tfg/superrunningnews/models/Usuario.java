@@ -3,6 +3,11 @@ package com.proyecto.tfg.superrunningnews.models;
 
 public class Usuario {
 
+    /** TODO Borrar esto en el futuro.
+     * Usado: http://www.parcelabler.com/
+     * Mas info: http://stackoverflow.com/questions/7181526/how-can-i-make-my-custom-objects-parcelable
+     */
+
     private String nombre;
     private String password;
     // array de String de las carreras marcadas como favoritas.

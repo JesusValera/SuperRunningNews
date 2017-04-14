@@ -5,6 +5,11 @@ import android.os.Parcelable;
 
 public class Noticia implements Parcelable {
 
+    /** TODO Borrar esto en el futuro.
+    * Usado: http://www.parcelabler.com/
+    * Mas info: http://stackoverflow.com/questions/7181526/how-can-i-make-my-custom-objects-parcelable
+    */
+
     private String titulo;
     private String imagen;
     private String localizacion;

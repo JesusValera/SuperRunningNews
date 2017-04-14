@@ -45,7 +45,6 @@ public class SignupActivity extends AppCompatActivity {
     private DatabaseReference ref;
     private FirebaseStorage storage;
 
-
     private ArrayList<Usuario> usuarios;
 
     private static final int SELECT_FILE = 1;
@@ -83,7 +82,6 @@ public class SignupActivity extends AppCompatActivity {
         imagenPerfil=BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
     }
-
 
     //Listener Firebase
     private ValueEventListener ref_ValueEventListener=new ValueEventListener() {
@@ -133,8 +131,7 @@ public class SignupActivity extends AppCompatActivity {
                 btCrear.setEnabled(true);
                 etUsuario.requestFocus();
                 return;
-            } 
-            
+            }
 
             //Guardar la imagen y después al usuario
             StorageReference stref = storage.getReferenceFromUrl("gs://superrunningnews-75380.appspot.com/").child("imagenes/"+usuario+".png");
@@ -166,7 +163,6 @@ public class SignupActivity extends AppCompatActivity {
                     db.getReference("imagenes").child(usuario).setValue(taskSnapshot.getDownloadUrl().toString());
                     ref.child(usuario).setValue(new Usuario(usuario, password));
 
-
                     btCrear.setEnabled(true);
 
                     progressDialog.dismiss();
@@ -185,9 +181,6 @@ public class SignupActivity extends AppCompatActivity {
                     progressDialog.show();
                 }
             });
-
-
-
         }
     };
 
@@ -216,26 +209,24 @@ public class SignupActivity extends AppCompatActivity {
             case SELECT_FILE:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-                    if (requestCode == SELECT_FILE) {
-                            InputStream imageStream = null;
-                            try {
-                                imageStream = getContentResolver().openInputStream(selectedImage);
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            // Transformamos la URI de la imagen a inputStream y este a un Bitmap
-                            Bitmap bmp = BitmapFactory.decodeStream(imageStream);
-                            int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
-                            Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
-
-                            // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
-                            ImageView mImg = (ImageView) findViewById(R.id.ivImagen);
-                            Bitmap imagen= ImageHelper.getCircularBitmap(scaled);
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            imagen.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                            mImg.setImageBitmap(imagen);
-                            imagenPerfil=imagen;
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = getContentResolver().openInputStream(selectedImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
                     }
+                    // Transformamos la URI de la imagen a inputStream y este a un Bitmap
+                    Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+                    int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+                    Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
+
+                    // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
+                    ImageView mImg = (ImageView) findViewById(R.id.ivImagen);
+                    Bitmap imagen= ImageHelper.getCircularBitmap(scaled);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    imagen.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    mImg.setImageBitmap(imagen);
+                    imagenPerfil=imagen;
                 }
                 break;
         }
