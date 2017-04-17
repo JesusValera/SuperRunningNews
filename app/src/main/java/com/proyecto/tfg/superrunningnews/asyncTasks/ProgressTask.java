@@ -57,7 +57,8 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPreExecute() {
         this.dialog.setMessage("Cargando Feed de Noticias...");
-        this.dialog.show();
+        this.dialog.setCancelable(false);
+        //this.dialog.show();
     }
 
     @Override
@@ -147,6 +148,9 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             break;
                     } // fin switch
                     parserEvent = parser.next();
+                    if (localizacion.size() == 15) {
+                        publishProgress();
+                    }
                 }
             } else {
                 return false;
@@ -163,6 +167,12 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        super.onProgressUpdate(values);
+        dialog.show();
     }
 
     @Override

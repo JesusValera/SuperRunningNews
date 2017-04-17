@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.proyecto.tfg.superrunningnews.asyncTasks.MapTask;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
@@ -28,6 +30,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
     private MapView mMapView;
     private GoogleMap googleMap;
     private GoogleApiClient gac;
+    private LatLngBounds.Builder builder;
 
     public MapaFragment() {
         // Required empty public constructor
@@ -52,6 +55,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
             e.printStackTrace();
         }
         mMapView.getMapAsync(this);
+        builder = new LatLngBounds.Builder();
 
         if (gac == null) {
             gac = new GoogleApiClient.Builder(getContext())
@@ -93,10 +97,17 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         this.googleMap.getUiSettings().setZoomControlsEnabled(true);
-        this.googleMap.clear();
+        this.googleMap.setOnMapLoadedCallback(mapLoadedListener);
 
-        new MapTask(MapaFragment.this.getContext(), this.googleMap, tNoticia).execute();
+        new MapTask(MapaFragment.this.getContext(), googleMap, tNoticia, builder).execute();
     }
+
+    private GoogleMap.OnMapLoadedCallback mapLoadedListener = new GoogleMap.OnMapLoadedCallback() {
+        @Override
+        public void onMapLoaded() {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+        }
+    };
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

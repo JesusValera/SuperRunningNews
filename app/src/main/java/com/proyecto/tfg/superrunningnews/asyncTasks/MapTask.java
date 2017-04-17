@@ -33,12 +33,12 @@ public class MapTask extends AsyncTask<Void, Void, Void> {
     private List<MarkerOptions> marcadores;
     private List<Noticia> tNoticia;
 
-    public MapTask(Context context, GoogleMap googleMap, List<Noticia> tNoticia) {
+    public MapTask(Context context, GoogleMap googleMap, List<Noticia> tNoticia, LatLngBounds.Builder builder) {
         this.context = context;
         this.googleMap = googleMap;
         this.tNoticia = tNoticia;
         marcadores = new ArrayList<>();
-        builder = new LatLngBounds.Builder();
+        this.builder = builder;
         progressDialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
     }
 
@@ -85,7 +85,7 @@ public class MapTask extends AsyncTask<Void, Void, Void> {
         for (MarkerOptions m : marcadores) {
             googleMap.addMarker(m);
         }
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+        //googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
 
         super.onPostExecute(aVoid);
     }

@@ -36,12 +36,14 @@ public class BottomBarActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         this.tNoticias = getIntent().getParcelableArrayListExtra("noticia");
-        seccion = R.id.navigation_noticias;
 
         if (savedInstanceState != null) {
             seccion = savedInstanceState.getInt("seccionActual");
+            navigation.setSelectedItemId(seccion);
+        } else {
+            seccion = R.id.navigation_noticias;
+            navigation.setSelectedItemId(seccion);
         }
-        navigation.setSelectedItemId(seccion);
 
         // Pasar objeto Usuario para contruir FRAG_PERFIL (¿y Chat?).
         /*Bundle bundleUsuario = new Bundle();
@@ -54,10 +56,10 @@ public class BottomBarActivity extends AppCompatActivity {
         FRAG_NOTICIA.setArguments(bundleNoticia);
         FRAG_MAPA.setArguments(bundleNoticia);
 
-        // No está el mapa porque en cuanto se añade, se ejecuta el AsyncTask y como
-        //  el mapa no se muestra, a la hora de pintar los snippets falla.
+        // TODO -> Dialogo cargar mapa al principio o cuando se pulse sobre el botón "Mapa"¿?
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.content, FRAG_NOTICIA)
+                /*.add(R.id.content, FRAG_MAPA)*/
                 .add(R.id.content, FRAG_PERFIL)
                 .add(R.id.content, FRAG_CHAT).commit();
     }

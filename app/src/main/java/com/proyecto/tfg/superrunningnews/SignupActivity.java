@@ -182,6 +182,30 @@ public class SignupActivity extends AppCompatActivity {
                 }
             });
         }
+
+        private boolean validar() {
+            boolean valido = true;
+
+            String usuario = etUsuario.getText().toString();
+            String password = etPassword.getText().toString();
+
+            if (usuario.isEmpty() || usuario.length() < 3 || usuario.length() > 20 ) {
+                etUsuario.setError("entre 3 y 20 caracteres");
+                valido = false;
+            } else {
+                etUsuario.setError(null);
+            }
+
+            if (password.isEmpty() || password.length() < 4 || password.length() > 12) {
+                etPassword.setError("entre 4 y 12 caracteres alfanuméricos");
+                valido = false;
+            } else {
+                etPassword.setError(null);
+            }
+
+            return valido;
+        }
+
     };
 
     private View.OnClickListener tvLogin_OnClickListener=new View.OnClickListener() {
@@ -232,26 +256,4 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-    public boolean validar() {
-        boolean valido = true;
-
-        String usuario = etUsuario.getText().toString();
-        String password = etPassword.getText().toString();
-
-        if (usuario.isEmpty() || usuario.length() < 3 || usuario.length() > 20 ) {
-            etUsuario.setError("entre 3 y 20 caracteres");
-            valido = false;
-        } else {
-            etUsuario.setError(null);
-        }
-
-        if (password.isEmpty() || password.length() < 4 || password.length() > 12) {
-            etPassword.setError("entre 4 y 12 caracteres alfanuméricos");
-            valido = false;
-        } else {
-            etPassword.setError(null);
-        }
-
-        return valido;
-    }
 }
