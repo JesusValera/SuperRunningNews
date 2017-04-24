@@ -55,8 +55,10 @@ public class NoticiaFragment extends Fragment {
         public void onClick(View v) {
             Noticia noticia = adapter.getItem(adapter.getItemPos());
 
-            Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(noticia.getLink()));
-            startActivity(webIntent);
+            if (noticia != null) {
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(noticia.getLink()));
+                startActivity(webIntent);
+            }
         }
     };
 

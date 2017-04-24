@@ -39,7 +39,11 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
     }
 
     public Noticia getItem(int pos) {
-        return tNoticias.get(pos);
+        if (pos != -1) {
+            return tNoticias.get(pos);
+        }
+
+        return null;
     }
 
     @Override
