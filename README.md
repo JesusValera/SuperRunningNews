@@ -1,1 +1,2 @@
-# SUPER RUNNING NEWS  (by Cristian Buitrago and Jesús Valera)
+# SUPER RUNNING NEWS  
+(by Cristian Buitrago and Jesús Valera)
