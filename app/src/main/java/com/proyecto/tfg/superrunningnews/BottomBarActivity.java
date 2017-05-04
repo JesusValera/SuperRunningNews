@@ -60,7 +60,7 @@ public class BottomBarActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.content, FRAG_NOTICIA)
                 /*.add(R.id.content, FRAG_MAPA)*/
-                .add(R.id.content, FRAG_PERFIL)
+                /*.add(R.id.content, FRAG_PERFIL)*/
                 .add(R.id.content, FRAG_CHAT).commit();
     }
 
@@ -88,6 +88,10 @@ public class BottomBarActivity extends AppCompatActivity {
 
                     return true;
                 case R.id.navigation_perfil:
+
+                    if (!FRAG_PERFIL.isAdded())
+                        fragmentTransaction.add(R.id.content, FRAG_PERFIL); // Hay que hacerlo aquí
+                                                                            // tambíen para que no pete.
 
                     fragmentTransaction.show(FRAG_PERFIL).commit();
                     seccion = R.id.navigation_perfil;
