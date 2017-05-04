@@ -140,6 +140,8 @@ public class LoginActivity extends AppCompatActivity {
             if (cbRecordar.isChecked()) editor.putBoolean("login", true).apply();
             else editor.putBoolean("login", false).apply();
 
+            editor.putString("usuario", etUsuario.getText().toString()).apply();
+
             new ProgressTask(LoginActivity.this, CALLER_LOGIN).execute();
         }
     };

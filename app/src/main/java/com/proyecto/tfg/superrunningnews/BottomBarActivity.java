@@ -91,7 +91,7 @@ public class BottomBarActivity extends AppCompatActivity {
 
                     if (!FRAG_PERFIL.isAdded())
                         fragmentTransaction.add(R.id.content, FRAG_PERFIL); // Hay que hacerlo aquí
-                                                                            // tambíen para que no pete.
+                                                                        // tambíen para que no pete.
 
                     fragmentTransaction.show(FRAG_PERFIL).commit();
                     seccion = R.id.navigation_perfil;
