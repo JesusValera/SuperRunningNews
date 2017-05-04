@@ -39,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
 
+    public static final int CALLER_LOGIN = 2;
+
     //private SharedPreferences pref;
 
     @Override
@@ -138,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
             if (cbRecordar.isChecked()) editor.putBoolean("login", true).apply();
             else editor.putBoolean("login", false).apply();
 
-            new ProgressTask(LoginActivity.this).execute();
+            new ProgressTask(LoginActivity.this, CALLER_LOGIN).execute();
         }
     };
 

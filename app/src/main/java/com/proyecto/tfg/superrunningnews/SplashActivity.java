@@ -11,6 +11,7 @@ import com.proyecto.tfg.superrunningnews.asyncTasks.ProgressTask;
 public class SplashActivity extends AppCompatActivity{
 
     public static SharedPreferences pref;
+    public static final int CALLER_SPLASH= 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +22,7 @@ public class SplashActivity extends AppCompatActivity{
 
         //Si ya estaba logueado, ejecutar el ProgressTask, si no la LoginActivity
         if (pref.getBoolean("login", false)) {
-            new ProgressTask(this).execute();
+            new ProgressTask(this, CALLER_SPLASH).execute();
         } else {
             // Login Activity.
             startActivity(new Intent(this, LoginActivity.class));

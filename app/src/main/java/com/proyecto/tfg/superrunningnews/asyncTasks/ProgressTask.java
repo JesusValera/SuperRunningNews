@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.proyecto.tfg.superrunningnews.BottomBarActivity;
+import com.proyecto.tfg.superrunningnews.LoginActivity;
+import com.proyecto.tfg.superrunningnews.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
 
@@ -38,14 +40,15 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<String> link;
     private ArrayList<Noticia> tNoticia;
     private boolean primera = false;
+    private int caller;
 
     //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se esté logueado,
     //no salga el dialog y el splash screen sirva como pantalla de carga.
 
-    public ProgressTask(Context context) {
+    public ProgressTask(Context context, int caller) {
         this.context = context;
         this.dialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
-
+        this.caller=caller;
         this.titulo = new ArrayList<>();
         this.imagen = new ArrayList<>();
         this.localizacion = new ArrayList<>();
@@ -58,7 +61,8 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     protected void onPreExecute() {
         this.dialog.setMessage("Cargando Feed de Noticias...");
         this.dialog.setCancelable(false);
-        //this.dialog.show();
+
+        if(caller== LoginActivity.CALLER_LOGIN) this.dialog.show();
     }
 
     @Override
@@ -148,7 +152,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             break;
                     } // fin switch
                     parserEvent = parser.next();
-                    if (localizacion.size() == 15) {
+                    if (localizacion.size() == 15 && caller== SplashActivity.CALLER_SPLASH) {
                         publishProgress();
                     }
                 }
