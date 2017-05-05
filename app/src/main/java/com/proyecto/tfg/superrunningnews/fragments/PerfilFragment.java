@@ -6,8 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -286,6 +288,13 @@ public class PerfilFragment extends Fragment {
     private View.OnClickListener btLogout_OnClickListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            try{
+                MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.down);
+                mp.start();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            SystemClock.sleep(300);
             Intent i=new Intent(getContext(), LoginActivity.class);
             startActivity(i);
         }

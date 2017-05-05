@@ -3,7 +3,10 @@ package com.proyecto.tfg.superrunningnews.asyncTasks;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.widget.Toast;
 
 import com.proyecto.tfg.superrunningnews.BottomBarActivity;
@@ -62,7 +65,16 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.dialog.setMessage("Cargando Feed de Noticias...");
         this.dialog.setCancelable(false);
 
-        if(caller== LoginActivity.CALLER_LOGIN) this.dialog.show();
+        if(caller== LoginActivity.CALLER_LOGIN){
+            try{
+                MediaPlayer mp = MediaPlayer.create(context, R.raw.up);
+                mp.start();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            SystemClock.sleep(300);
+            this.dialog.show();
+        }
     }
 
     @Override

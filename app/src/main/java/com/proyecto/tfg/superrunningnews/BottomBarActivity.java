@@ -1,5 +1,6 @@
 package com.proyecto.tfg.superrunningnews;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -62,6 +63,13 @@ public class BottomBarActivity extends AppCompatActivity {
                 /*.add(R.id.content, FRAG_MAPA)*/
                 /*.add(R.id.content, FRAG_PERFIL)*/
                 .add(R.id.content, FRAG_CHAT).commit();
+
+        try{
+            MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.coin);
+            mp.start();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
