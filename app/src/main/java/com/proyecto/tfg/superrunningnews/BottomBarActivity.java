@@ -46,6 +46,8 @@ public class BottomBarActivity extends AppCompatActivity {
             navigation.setSelectedItemId(seccion);
         }
 
+        /** TODO. Se obtiene directamente desde el propio fragmento. Me gusta.
+         **  Dejamos esto por aquí mientras por si, en limpieza final borrar*/
         // Pasar objeto Usuario para contruir FRAG_PERFIL (¿y Chat?).
         /*Bundle bundleUsuario = new Bundle();
         bundleUsuario.putParcelable("usuario", usuario); //--> ¡¡Usuario no es parcelable, aún!!
@@ -57,7 +59,6 @@ public class BottomBarActivity extends AppCompatActivity {
         FRAG_NOTICIA.setArguments(bundleNoticia);
         FRAG_MAPA.setArguments(bundleNoticia);
 
-        // TODO -> Dialogo cargar mapa al principio o cuando se pulse sobre el botón "Mapa"¿?
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.content, FRAG_NOTICIA)
                 /*.add(R.id.content, FRAG_MAPA)*/
@@ -107,7 +108,7 @@ public class BottomBarActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_chat:
-                    // Si es mucho trabajo, comentar esto y ocultar boton Chat...
+
                     fragmentTransaction.show(FRAG_CHAT).commit();
                     seccion = R.id.navigation_chat;
 
@@ -130,7 +131,7 @@ public class BottomBarActivity extends AppCompatActivity {
             moveTaskToBack(true);
             return;
         } else {
-            Toast.makeText(getBaseContext(), "Presione una vez más para salir.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), R.string.salir, Toast.LENGTH_SHORT).show();
         }
         mBackPressed = System.currentTimeMillis();
     }

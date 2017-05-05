@@ -287,14 +287,10 @@ public class PerfilFragment extends Fragment {
     private View.OnClickListener btLogout_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-<<<<<<< Updated upstream
             SharedPreferences.Editor editor = SplashActivity.pref.edit();
             editor.putBoolean("login", false).apply();
 
-            try{
-=======
             try {
->>>>>>> Stashed changes
                 MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.down);
                 mp.start();
             } catch (Exception e) {

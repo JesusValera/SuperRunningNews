@@ -7,4 +7,16 @@
     <string name="title_perfil">Perfil</string>
     <string name="title_chat">Chat</string>
 
+    <string name="foto">Imagen del evento</string>
+    <string name="titulo">Titulo no disponible</string>
+    <string name="localidad">Localidad no disponible</string>
+    <string name="fecha">00/00/1970</string>
+    <string name="salir">Presione una vez más para salir.</string>
+
+    <string name="escribir_mensaje">Escriba su mensaje...</string>
+    <string name="accion_eliminar">Eliminar</string>
+    <string name="accion_copiar">Copiar</string>
+    <string name="mensaje_copiado">Mensaje copiado</string>
+    <string name="title_activity_default_messages">Chat</string>
+
 </resources>
