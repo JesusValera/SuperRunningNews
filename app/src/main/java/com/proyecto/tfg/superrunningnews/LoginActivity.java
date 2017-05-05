@@ -69,17 +69,6 @@ public class LoginActivity extends AppCompatActivity {
 
         ref.addValueEventListener(ref_ValueEventListener);
 
-        // Check Permissions
-        if (ActivityCompat.checkSelfPermission(this, "android.permission.ACCESS_FINE_LOCATION") != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{"android.permission.ACCESS_FINE_LOCATION"}, 0);
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, "android.permission.INTERNET") != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{"android.permission.INTERNET"}, 0);
-        }
-
     }
 
     //Listener Firebase

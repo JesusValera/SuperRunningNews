@@ -99,7 +99,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
         this.googleMap.getUiSettings().setZoomControlsEnabled(true);
         this.googleMap.setOnMapLoadedCallback(mapLoadedListener);
 
-        new MapTask(MapaFragment.this.getContext(), googleMap, tNoticia, builder).execute();
+        new MapTask(MapaFragment.this.getContext(), googleMap, tNoticia, builder, mMapView).execute();
     }
 
     private GoogleMap.OnMapLoadedCallback mapLoadedListener = new GoogleMap.OnMapLoadedCallback() {

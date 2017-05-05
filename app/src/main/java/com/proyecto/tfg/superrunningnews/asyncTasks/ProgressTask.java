@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class ProgressTask extends AsyncTask<String, Void, Boolean> {
@@ -208,6 +209,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 tNoticia.add(noticia);
             }
 
+            Collections.sort(tNoticia);
             Intent i = new Intent(context.getApplicationContext(), BottomBarActivity.class);
             i.putParcelableArrayListExtra("noticia", tNoticia);
             context.startActivity(i);

@@ -2,8 +2,17 @@ package com.proyecto.tfg.superrunningnews.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
 
-public class Noticia implements Parcelable {
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+
+public class Noticia implements Parcelable, Comparable<Noticia> {
 
     /** TODO Borrar esto en el futuro.
     * Usado: http://www.parcelabler.com/
@@ -22,6 +31,7 @@ public class Noticia implements Parcelable {
         this.localizacion = "";
         this.fecha = "";
         this.link = "";
+        this.fecha = "";
     }
 
     public Noticia(String titulo, String imagen, String localizacion, String fecha, String link) {
@@ -81,6 +91,24 @@ public class Noticia implements Parcelable {
                 "Link: " + link + '\n';
     }
 
+    @Override
+    public int compareTo(@NonNull Noticia n) {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date fechaThis = null, fechaN = null;
+        try {
+            fechaThis = formatter.parse(this.fecha);
+            fechaN = formatter.parse(n.fecha);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (fechaThis.before(fechaN)) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
     // Parte parcelable.
     protected Noticia(Parcel in) {
         titulo = in.readString();
@@ -116,4 +144,5 @@ public class Noticia implements Parcelable {
             return new Noticia[size];
         }
     };
+
 }

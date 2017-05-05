@@ -5,11 +5,12 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.MapView;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -32,18 +33,23 @@ public class MapTask extends AsyncTask<Void, Void, Void> {
     private ProgressDialog progressDialog;
     private List<MarkerOptions> marcadores;
     private List<Noticia> tNoticia;
+    private MapView mMapView;
 
-    public MapTask(Context context, GoogleMap googleMap, List<Noticia> tNoticia, LatLngBounds.Builder builder) {
+    public MapTask(Context context, GoogleMap googleMap, List<Noticia> tNoticia, LatLngBounds.Builder builder, MapView mMapView) {
         this.context = context;
         this.googleMap = googleMap;
         this.tNoticia = tNoticia;
         marcadores = new ArrayList<>();
         this.builder = builder;
+        this.mMapView = mMapView;
         progressDialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
     }
 
     @Override
     protected void onPreExecute() {
+
+        mMapView.setVisibility(View.INVISIBLE);
+
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false); // No es cancelable. >:D
         progressDialog.setIndeterminate(true);
@@ -80,6 +86,8 @@ public class MapTask extends AsyncTask<Void, Void, Void> {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+
+        mMapView.setVisibility(View.VISIBLE);
 
         // Anadir los marcadores. ¡No se puede hacer en doInBackground!
         for (MarkerOptions m : marcadores) {

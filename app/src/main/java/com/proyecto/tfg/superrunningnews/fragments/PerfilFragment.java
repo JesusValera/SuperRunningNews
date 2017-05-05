@@ -64,7 +64,7 @@ public class PerfilFragment extends Fragment {
 
     private static final int SELECT_FILE = 1;
 
-    private boolean imagenEscogida=false;
+    private boolean imagenEscogida = false;
 
     public PerfilFragment() {
         // Required empty public constructor
@@ -90,7 +90,7 @@ public class PerfilFragment extends Fragment {
 
         //Con esto evitamos tener que pasar el usuario por otras vías más tediosas y largas
         //Si el usuario es nulo -> ver ponerImagen()
-        usuario= SplashActivity.pref.getString("usuario", null);
+        usuario = SplashActivity.pref.getString("usuario", null);
 
         tvUsuario.setText(usuario);
 
@@ -104,7 +104,7 @@ public class PerfilFragment extends Fragment {
         db = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        urls=new HashMap<>();
+        urls = new HashMap<>();
         refurl = db.getReference("imagenes");
 
         refurl.addValueEventListener(refurl_ValueEventListener);
@@ -112,9 +112,9 @@ public class PerfilFragment extends Fragment {
         return view;
     }
 
-    private void ponerImagen(){
-        if(urls.get(usuario)!=null){
-            StorageReference dref=storage.getReferenceFromUrl(urls.get(usuario));
+    private void ponerImagen() {
+        if (urls.get(usuario) != null) {
+            StorageReference dref = storage.getReferenceFromUrl(urls.get(usuario));
             final long ONE_MEGABYTE = 1024 * 1024;
             dref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
@@ -133,7 +133,7 @@ public class PerfilFragment extends Fragment {
     }
 
     //Listeners Firebase
-    private ValueEventListener refurl_ValueEventListener=new ValueEventListener() {
+    private ValueEventListener refurl_ValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             urls.clear();
@@ -152,7 +152,7 @@ public class PerfilFragment extends Fragment {
     };
 
     //Listeners
-    private View.OnClickListener btImagen_OnClickListener=new View.OnClickListener() {
+    private View.OnClickListener btImagen_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent();
@@ -169,34 +169,32 @@ public class PerfilFragment extends Fragment {
             case SELECT_FILE:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-                    if (requestCode == SELECT_FILE) {
-                        InputStream imageStream = null;
-                        try {
-                            imageStream = getContext().getContentResolver().openInputStream(selectedImage);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        // Transformamos la URI de la imagen a inputStream y este a un Bitmap
-                        Bitmap bmp = BitmapFactory.decodeStream(imageStream);
-                        int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
-                        Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
-
-                        // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
-                        ImageView mImg = (ImageView) view.findViewById(R.id.ivImagen);
-                        Bitmap imagen= ImageHelper.getCircularBitmap(scaled);
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        imagen.compress(Bitmap.CompressFormat.PNG, 100, baos);
-
-                        mImg.setImageBitmap(imagen);
-                        imagenPerfil=imagen;
-                        imagenEscogida=true;
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = getContext().getContentResolver().openInputStream(selectedImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
                     }
+                    // Transformamos la URI de la imagen a inputStream y este a un Bitmap
+                    Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+                    int nh = (int) (bmp.getHeight() * (512.0 / bmp.getWidth()));
+                    Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
+
+                    // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
+                    ImageView mImg = (ImageView) view.findViewById(R.id.ivImagen);
+                    Bitmap imagen = ImageHelper.getCircularBitmap(scaled);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    imagen.compress(Bitmap.CompressFormat.PNG, 100, baos);
+
+                    mImg.setImageBitmap(imagen);
+                    imagenPerfil = imagen;
+                    imagenEscogida = true;
                 }
                 break;
         }
     }
 
-    private View.OnClickListener btBorrar_OnClickListener=new View.OnClickListener() {
+    private View.OnClickListener btBorrar_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -211,19 +209,19 @@ public class PerfilFragment extends Fragment {
                     refurl.child(usuario).removeValue();
                     db.getReference("localizaciones").child(usuario).removeValue();
                     db.getReference("usuarios").child(usuario).removeValue();
-                    StorageReference dref=storage.getReferenceFromUrl(urls.get(usuario));
+                    StorageReference dref = storage.getReferenceFromUrl(urls.get(usuario));
                     dref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(getContext(), "Perfil borrado correctamente!", Toast.LENGTH_SHORT).show();
-                            Intent i=new Intent(getContext(), LoginActivity.class);
+                            Intent i = new Intent(getContext(), LoginActivity.class);
                             startActivity(i);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(getContext(), "Error al  borrar perfil!", Toast.LENGTH_SHORT).show();
-                            Intent i=new Intent(getContext(), LoginActivity.class);
+                            Intent i = new Intent(getContext(), LoginActivity.class);
                             startActivity(i);
                         }
                     });
@@ -240,21 +238,21 @@ public class PerfilFragment extends Fragment {
         }
     };
 
-    private View.OnClickListener btUpdate_OnClickListener=new View.OnClickListener() {
+    private View.OnClickListener btUpdate_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(!etPassword.getText().toString().equals("")){
-                if(!validar()){
+            if (!etPassword.getText().toString().equals("")) {
+                if (!validar()) {
                     return;
                 }
                 db.getReference("usuarios").child(usuario).setValue(new Usuario(usuario, etPassword.getText().toString()));
             }
 
-            if(imagenEscogida){
+            if (imagenEscogida) {
                 final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Actualizando cuenta...");
-                StorageReference stref = storage.getReferenceFromUrl("gs://miniproyecto-84313.appspot.com/").child("imagenes/"+usuario+".png");
+                StorageReference stref = storage.getReferenceFromUrl("gs://miniproyecto-84313.appspot.com/").child("imagenes/" + usuario + ".png");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 imagenPerfil.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] data = baos.toByteArray();
@@ -286,20 +284,24 @@ public class PerfilFragment extends Fragment {
         }
     };
 
-    private View.OnClickListener btLogout_OnClickListener=new View.OnClickListener() {
+    private View.OnClickListener btLogout_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+<<<<<<< Updated upstream
             SharedPreferences.Editor editor = SplashActivity.pref.edit();
             editor.putBoolean("login", false).apply();
 
             try{
+=======
+            try {
+>>>>>>> Stashed changes
                 MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.down);
                 mp.start();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             SystemClock.sleep(300);
-            Intent i=new Intent(getContext(), LoginActivity.class);
+            Intent i = new Intent(getContext(), LoginActivity.class);
             startActivity(i);
         }
     };

@@ -30,6 +30,7 @@
                 card_view:srcCompat="@drawable/img_default" />
 
             <LinearLayout
+                android:id="@+id/llInformacion"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:gravity="center"
