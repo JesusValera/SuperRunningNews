@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -288,6 +289,9 @@ public class PerfilFragment extends Fragment {
     private View.OnClickListener btLogout_OnClickListener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            SharedPreferences.Editor editor = SplashActivity.pref.edit();
+            editor.putBoolean("login", false).apply();
+
             try{
                 MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.down);
                 mp.start();
