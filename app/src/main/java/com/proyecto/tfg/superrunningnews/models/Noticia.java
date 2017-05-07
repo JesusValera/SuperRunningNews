@@ -24,6 +24,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
     private String localizacion;
     private String fecha;
     private String link;
+    private boolean favorito;
 
     public Noticia() {
         this.titulo = "";
@@ -82,6 +83,14 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         this.link = link;
     }
 
+    public boolean isFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
+    }
+
     @Override
     public String toString() {
         return "Titulo: " + titulo + '\n' +
@@ -116,6 +125,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         localizacion = in.readString();
         fecha = in.readString();
         link = in.readString();
+        favorito = in.readByte() != 0;
     }
 
     @Override
@@ -130,6 +140,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         dest.writeString(localizacion);
         dest.writeString(fecha);
         dest.writeString(link);
+        dest.writeByte((byte) (favorito ? 1 : 0));
     }
 
     @SuppressWarnings("unused")
@@ -144,5 +155,6 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
             return new Noticia[size];
         }
     };
+
 
 }

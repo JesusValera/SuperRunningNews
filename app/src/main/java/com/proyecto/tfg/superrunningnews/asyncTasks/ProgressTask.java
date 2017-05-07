@@ -3,15 +3,21 @@ package com.proyecto.tfg.superrunningnews.asyncTasks;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.proyecto.tfg.superrunningnews.BottomBarActivity;
 import com.proyecto.tfg.superrunningnews.LoginActivity;
 import com.proyecto.tfg.superrunningnews.SplashActivity;
+import com.proyecto.tfg.superrunningnews.models.Favorito;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
 
@@ -45,6 +51,10 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<Noticia> tNoticia;
     private boolean primera = false;
     private int caller;
+    private FirebaseDatabase db;
+    private DatabaseReference ref;
+    private ArrayList<Favorito> tFavoritos;
+    private String usuario;
 
     //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se esté logueado,
     //no salga el dialog y el splash screen sirva como pantalla de carga.
@@ -59,7 +69,29 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.fecha = new ArrayList<>();
         this.link = new ArrayList<>();
         this.tNoticia = new ArrayList<>();
+        this.tFavoritos = new ArrayList<>();
+        db = FirebaseDatabase.getInstance();
+        usuario = SplashActivity.pref.getString("usuario", null);
+        ref = db.getReference("favoritos/"+usuario);
+        ref.addValueEventListener(ref_ValueEventListener);
+
     }
+    //Listener Firebase
+    private ValueEventListener ref_ValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            tFavoritos.clear();
+            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                Favorito favorito = data.getValue(Favorito.class);
+                tFavoritos.add(favorito);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Toast.makeText(context, "Error en la base de datos!", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onPreExecute() {
@@ -206,6 +238,14 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 noticia.setLink(link.get(i));
                 noticia.setFecha(fecha.get(i));
                 noticia.setImagen(imagen.get(i + 1));
+                noticia.setFavorito(false);
+                for (Favorito fav: tFavoritos) {
+                    if(fav.getNombreEvento().equals(titulo.get(i))){
+                        noticia.setFavorito(true);
+                        break;
+                    }
+                }
+
                 tNoticia.add(noticia);
             }
 
