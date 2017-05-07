@@ -105,7 +105,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             } catch (Exception e){
                 e.printStackTrace();
             }
-            SystemClock.sleep(300);
+            SystemClock.sleep(500);
             this.dialog.show();
         }
     }

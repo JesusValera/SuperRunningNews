@@ -66,6 +66,7 @@ public class PerfilFragment extends Fragment {
 
     private boolean imagenEscogida = false;
 
+
     public PerfilFragment() {
         // Required empty public constructor
     }
@@ -292,13 +293,18 @@ public class PerfilFragment extends Fragment {
 
             try {
                 MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.down);
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        Intent i = new Intent(getContext(), LoginActivity.class);
+                        startActivity(i);
+                    }
+                });
                 mp.start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            SystemClock.sleep(300);
-            Intent i = new Intent(getContext(), LoginActivity.class);
-            startActivity(i);
+
         }
     };
 
