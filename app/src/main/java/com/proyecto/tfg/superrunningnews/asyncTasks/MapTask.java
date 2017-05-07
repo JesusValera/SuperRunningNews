@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,9 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by SusVa on 11/04/17.
- */
 
 public class MapTask extends AsyncTask<Void, Void, Void> {
 
@@ -63,14 +61,15 @@ public class MapTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
         Geocoder geocoder = new Geocoder(context, new Locale("es", "ES"));
-        MarkerOptions markerOptions;
         try {
             for (Noticia noticia : tNoticia) {
                 List<Address> pos = geocoder.getFromLocationName(noticia.getLocalizacion(), 1);
                 LatLng latLng = new LatLng(pos.get(0).getLatitude(), pos.get(0).getLongitude());
                 // Texto, descripcicon [y color] del marcador.
-                markerOptions = new MarkerOptions().position(latLng).title(noticia.getTitulo())
-                        .snippet(noticia.getLocalizacion() + " el " + noticia.getFecha());
+                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(noticia.getTitulo())
+                        .snippet(noticia.getLocalizacion() + " el " + noticia.getFecha())
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                if(noticia.isFavorito()) markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 marcadores.add(markerOptions);
                 builder.include(latLng);
             }
