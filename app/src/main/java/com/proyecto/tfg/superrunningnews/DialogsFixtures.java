@@ -2,7 +2,7 @@ package com.proyecto.tfg.superrunningnews;
 
 import com.proyecto.tfg.superrunningnews.models.Dialog;
 import com.proyecto.tfg.superrunningnews.models.Message;
-import com.proyecto.tfg.superrunningnews.models.User;
+import com.proyecto.tfg.superrunningnews.models.Usuario;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,7 +32,7 @@ public final class DialogsFixtures extends FixturesData {
     }
 
     private static Dialog getDialog(int i, Date lastMessageCreatedAt) {
-        ArrayList<User> users = getUsers();
+        ArrayList<Usuario> users = getUsers();
         return new Dialog(
                 getRandomId(),
                 users.size() > 1 ? groupChatTitles.get(users.size() - 2) : users.get(0).getName(),
@@ -42,8 +42,8 @@ public final class DialogsFixtures extends FixturesData {
                 i < 3 ? 3 - i : 0);
     }
 
-    private static ArrayList<User> getUsers() {
-        ArrayList<User> users = new ArrayList<>();
+    private static ArrayList<Usuario> getUsers() {
+        ArrayList<Usuario> users = new ArrayList<>();
         int usersCount = 1 + rnd.nextInt(4);
 
         for (int i = 0; i < usersCount; i++) {
@@ -53,12 +53,14 @@ public final class DialogsFixtures extends FixturesData {
         return users;
     }
 
-    private static User getUser() {
-        return new User(
+    /* TODO - Contrasena que giro? */
+    private static Usuario getUser() {
+        return new Usuario(
                 getRandomId(),
                 getRandomName(),
                 getRandomAvatar(),
-                getRandomBoolean());
+                getRandomBoolean(),
+                "pass");
     }
 
     private static Message getMessage(final Date date) {

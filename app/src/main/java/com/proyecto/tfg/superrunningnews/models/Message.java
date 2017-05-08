@@ -16,15 +16,15 @@ public class Message implements IMessage,
     private String id;
     private String text;
     private Date createdAt;
-    private User user;
+    private Usuario user;
     private Image image;
     private Voice voice;
 
-    public Message(String id, User user, String text) {
+    public Message(String id, Usuario user, String text) {
         this(id, user, text, new Date());
     }
 
-    public Message(String id, User user, String text, Date createdAt) {
+    public Message(String id, Usuario user, String text, Date createdAt) {
         this.id = id;
         this.text = text;
         this.user = user;
@@ -47,7 +47,7 @@ public class Message implements IMessage,
     }
 
     @Override
-    public User getUser() {
+    public Usuario getUser() {
         return this.user;
     }
 

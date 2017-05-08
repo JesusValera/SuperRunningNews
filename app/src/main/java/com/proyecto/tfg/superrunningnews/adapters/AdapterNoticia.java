@@ -3,7 +3,6 @@ package com.proyecto.tfg.superrunningnews.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,24 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.proyecto.tfg.superrunningnews.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Favorito;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
-import com.proyecto.tfg.superrunningnews.models.Usuario;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -42,15 +35,16 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
     private FirebaseDatabase db;
     private DatabaseReference ref;
     private String usuario;
+    private final String format = "dd/MM/yyyy";
+    private final String fechaHoy = new SimpleDateFormat(format).format(Calendar.getInstance().getTime());
 
     public AdapterNoticia(List<Noticia> tNoticias, Context context) {
         this.tNoticias = tNoticias;
         this.context = context;
         db = FirebaseDatabase.getInstance();
         usuario = SplashActivity.pref.getString("usuario", null);
-        ref = db.getReference("favoritos/"+usuario);
+        ref = db.getReference("favoritos/" + usuario);
     }
-
 
     public void setOnClickListener(View.OnClickListener listener) {
         this.listener = listener;
@@ -86,15 +80,14 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.setItem(tNoticias.get(i));
-        final Noticia noticia=tNoticias.get(i);
+        final Noticia noticia = tNoticias.get(i);
         viewHolder.fbFavorito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(noticia.isFavorito()) {
+                if (noticia.isFavorito()) {
                     noticia.setFavorito(false);
                     ref.child(noticia.getTitulo()).removeValue();
-                }
-                else {
+                } else {
                     ref.child(noticia.getTitulo()).setValue(new Favorito(usuario, noticia.getTitulo()));
                     noticia.setFavorito(true);
                 }
@@ -102,7 +95,6 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
             }
         });
     }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -143,10 +135,10 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
             txtLocalizacion.setText(n.getLocalizacion());
             txtFecha.setText(n.getFecha());
 
-            if(n.isFavorito()) fbFavorito.setImageResource(R.drawable.ic_favorite_black_48dp);
+            if (n.isFavorito()) fbFavorito.setImageResource(R.drawable.ic_favorite_black_48dp);
             else fbFavorito.setImageResource(R.drawable.ic_favorite_border_black_48dp);
 
-            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat formatter = new SimpleDateFormat(format);
             Date fecha = null;
             try {
                 fecha = formatter.parse(n.getFecha());
@@ -154,11 +146,13 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
                 ;
             }
 
-            if (fecha.before(Calendar.getInstance().getTime())) {
+            if (n.getFecha().equals(fechaHoy)) {
+                llInformacion.setBackgroundColor(Color.YELLOW);
+            } else if (fecha.before(Calendar.getInstance().getTime())) {
                 llInformacion.setBackgroundColor(Color.rgb(230, 230, 230));
             } else {
                 // Si no se pone esta linea se pintan todos.
-                llInformacion.setBackgroundColor(Color.TRANSPARENT);
+                llInformacion.setBackgroundColor(Color.WHITE);
             }
         }
     }

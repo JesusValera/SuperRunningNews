@@ -1,7 +1,7 @@
 package com.proyecto.tfg.superrunningnews;
 
 import com.proyecto.tfg.superrunningnews.models.Message;
-import com.proyecto.tfg.superrunningnews.models.User;
+import com.proyecto.tfg.superrunningnews.models.Usuario;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,12 +60,13 @@ public class MessagesFixtures extends FixturesData {
         return messages;
     }
 
-    private static User getUser() {
+    private static Usuario getUser() {
         boolean even = rnd.nextBoolean();
-        return new User(
+        return new Usuario(
                 even ? "0" : "1",
                 even ? names.get(0) : names.get(1),
                 even ? avatars.get(0) : avatars.get(1),
-                true);
+                true,
+                "pass");
     }
 }

@@ -121,7 +121,7 @@ public class SignupActivity extends AppCompatActivity {
             //Crear los datos en Firebase
             boolean existe=false;
             for (Usuario user : usuarios) {
-                if (user.getNombre().equals(usuario)){
+                if (user.getName().equals(usuario)){
                     existe=true;
                     break;
                 }
@@ -161,7 +161,7 @@ public class SignupActivity extends AppCompatActivity {
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
 
                     db.getReference("imagenes").child(usuario).setValue(taskSnapshot.getDownloadUrl().toString());
-                    ref.child(usuario).setValue(new Usuario(usuario, password));
+                    ref.child(usuario).setValue(new Usuario(usuario, usuario, "", true, password));
 
                     btCrear.setEnabled(true);
 

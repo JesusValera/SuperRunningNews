@@ -113,6 +113,8 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
 
         if (fechaThis.before(fechaN)) {
             return 1;
+        } else if (fechaThis.equals(fechaN)) {
+            return 0;
         } else {
             return -1;
         }

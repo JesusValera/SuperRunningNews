@@ -246,7 +246,7 @@ public class PerfilFragment extends Fragment {
                 if (!validar()) {
                     return;
                 }
-                db.getReference("usuarios").child(usuario).setValue(new Usuario(usuario, etPassword.getText().toString()));
+                db.getReference("usuarios").child(usuario).setValue(new Usuario(usuario, usuario, "avatar", true, etPassword.getText().toString()));
             }
 
             if (imagenEscogida) {

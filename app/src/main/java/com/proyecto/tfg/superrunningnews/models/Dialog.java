@@ -13,13 +13,13 @@ public class Dialog implements IDialog<Message> {
     private String id;
     private String dialogPhoto;
     private String dialogName;
-    private ArrayList<User> users;
+    private ArrayList<Usuario> users;
     private Message lastMessage;
 
     private int unreadCount;
 
     public Dialog(String id, String name, String photo,
-                  ArrayList<User> users, Message lastMessage, int unreadCount) {
+                  ArrayList<Usuario> users, Message lastMessage, int unreadCount) {
 
         this.id = id;
         this.dialogName = name;
@@ -45,7 +45,7 @@ public class Dialog implements IDialog<Message> {
     }
 
     @Override
-    public ArrayList<User> getUsers() {
+    public ArrayList<Usuario> getUsers() {
         return users;
     }
 

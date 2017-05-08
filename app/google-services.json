@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "769662209140",
+    "firebase_url": "https://superrunningnews-75380.firebaseio.com",
+    "project_id": "superrunningnews-75380",
+    "storage_bucket": "superrunningnews-75380.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769662209140:android:9e3ab139c0576104",
+        "android_client_info": {
+          "package_name": "com.example.jesus.apirest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "769662209140-41m9gfgeamrfjht83v8c2bvpdgo1b6g7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jesus.apirest",
+            "certificate_hash": "74531bfa122bfa27efd0b913fa7e45fd37d54653"
+          }
+        },
+        {
+          "client_id": "769662209140-8ufijhjs3r5qd74hnqo15fmep6d7ad59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_0jJ0_FKRYdqy9DHJFYvgzK_U8Hk58Ag"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769662209140-8ufijhjs3r5qd74hnqo15fmep6d7ad59.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769662209140:android:7068b3148e74ebda",
+        "android_client_info": {
+          "package_name": "com.proyecto.tfg.superrunningnews"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "769662209140-fr47dgafb7tpdh98m4nttvk64vt4pv9f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.proyecto.tfg.superrunningnews",
+            "certificate_hash": "ceed7095531fa2389b7d7bcaf97b3a25f5ec0575"
+          }
+        },
+        {
+          "client_id": "769662209140-8ufijhjs3r5qd74hnqo15fmep6d7ad59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_0jJ0_FKRYdqy9DHJFYvgzK_U8Hk58Ag"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769662209140-8ufijhjs3r5qd74hnqo15fmep6d7ad59.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

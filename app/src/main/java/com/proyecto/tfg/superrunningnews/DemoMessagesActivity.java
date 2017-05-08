@@ -1,9 +1,7 @@
 package com.proyecto.tfg.superrunningnews;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -100,14 +98,19 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     }
 
     protected void loadMessages() {
-        new Handler().postDelayed(new Runnable() { //imitation of internet connection
-            @Override
-            public void run() {
-                ArrayList<Message> messages = MessagesFixtures.getMessages(lastLoadedDate);
-                lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
-                messagesAdapter.addToEnd(messages, false);
-            }
-        }, 1000);
+
+        ArrayList<Message> messages = MessagesFixtures.getMessages(lastLoadedDate);
+        lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
+        messagesAdapter.addToEnd(messages, false);
+
+//        new Handler().postDelayed(new Runnable() { //imitation of internet connection
+//            @Override
+//            public void run() {
+//                ArrayList<Message> messages = MessagesFixtures.getMessages(lastLoadedDate);
+//                lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
+//                messagesAdapter.addToEnd(messages, false);
+//            }
+//        }, 1000);
     }
 
     private MessagesListAdapter.Formatter<Message> getMessageStringFormatter() {

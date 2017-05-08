@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
             boolean existe = false;
             boolean passvalid = false;
             for (Usuario user : usuarios) {
-                if (user.getNombre().equals(usuario)) {
+                if (user.getName().equals(usuario)) {
                     existe = true;
                     if (user.getPassword().equals(password)) {
                         passvalid = true;
