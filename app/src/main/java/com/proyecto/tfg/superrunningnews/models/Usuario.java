@@ -1,6 +1,5 @@
 package com.proyecto.tfg.superrunningnews.models;
 
-
 import com.stfalcon.chatkit.commons.models.IUser;
 
 public class Usuario implements IUser {

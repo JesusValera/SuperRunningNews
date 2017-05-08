@@ -1,9 +1,5 @@
 package com.proyecto.tfg.superrunningnews.models;
 
-/**
- * Created by SusVa on 12/04/17.
- */
-
 public class Chat {
 
     private boolean mio;

@@ -6,10 +6,6 @@ import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.util.List;
 
-/**
- * Created by SusVa on 5/05/17.
- */
-
 public class DefaultDialog implements IDialog {
 
 
