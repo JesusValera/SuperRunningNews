@@ -120,6 +120,35 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         }
     }
 
+    public static Comparator<Noticia> NoticiaOrdenadaFechaInversa = new Comparator<Noticia>() {
+        @Override
+        public int compare(Noticia n1, Noticia n2) {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaThis = null, fechaN = null;
+            try {
+                fechaThis = formatter.parse(n1.fecha);
+                fechaN = formatter.parse(n2.fecha);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if (fechaThis.before(fechaN)) {
+                return -1;
+            } else if (fechaThis.equals(fechaN)) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    };
+
+    public static Comparator<Noticia> NoticiaOrdenadaProvincia = new Comparator<Noticia>() {
+        @Override
+        public int compare(Noticia n1, Noticia n2) {
+            return n1.getLocalizacion().compareTo(n2.getLocalizacion());
+        }
+    };
+
     // Parte parcelable.
     protected Noticia(Parcel in) {
         titulo = in.readString();

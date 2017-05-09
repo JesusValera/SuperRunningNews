@@ -18,5 +18,14 @@
     <string name="accion_copiar">Copiar</string>
     <string name="mensaje_copiado">Mensaje copiado</string>
     <string name="title_activity_default_messages">Chat</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="modificar_perfil">Modificar perfil</string>
+    <string name="borrar_perfil">Borrar perfil</string>
+    <string name="foto_perfil">Foto de perfil</string>
+    <string name="repite_contrasena">Repite la contraseña</string>
+    <string name="nueva_contrasena">Nueva contraseña</string>
+    <string name="nombre">Nombre</string>
+    <string name="descripcion_imagen">Imagen de perfil</string>
+
 
 </resources>

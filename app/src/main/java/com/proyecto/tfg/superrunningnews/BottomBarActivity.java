@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -85,6 +86,8 @@ public class BottomBarActivity extends AppCompatActivity {
 
                     fragmentTransaction.show(FRAG_NOTICIA).commit();
                     seccion = R.id.navigation_noticias;
+                    // Para que cuando se pulse el botón de noticias haga scroll al primer elemento.
+                    hacerScroll();
 
                     return true;
                 case R.id.navigation_mapa:
@@ -106,7 +109,6 @@ public class BottomBarActivity extends AppCompatActivity {
                     seccion = R.id.navigation_perfil;
 
                     return true;
-
                 case R.id.navigation_chat:
 
                     fragmentTransaction.show(FRAG_CHAT).commit();
@@ -119,6 +121,15 @@ public class BottomBarActivity extends AppCompatActivity {
         }
 
     };
+
+    private void hacerScroll() {
+        try {
+            ((RecyclerView)FRAG_NOTICIA.getActivity().findViewById(R.id.recyclerView)).smoothScrollToPosition(0);
+        } catch (NullPointerException e) {
+            ;
+        }
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
