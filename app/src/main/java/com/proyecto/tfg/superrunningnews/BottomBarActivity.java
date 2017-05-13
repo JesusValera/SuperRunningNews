@@ -24,7 +24,6 @@ public class BottomBarActivity extends AppCompatActivity {
     private final NoticiaFragment FRAG_NOTICIA = new NoticiaFragment();
     private final PerfilFragment FRAG_PERFIL = new PerfilFragment();
     private final ChatFragment FRAG_CHAT = new ChatFragment();
-    private ArrayList<Noticia> tNoticias;
     private int seccion;
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
@@ -37,7 +36,12 @@ public class BottomBarActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        this.tNoticias = getIntent().getParcelableArrayListExtra("noticia");
+        ArrayList<Noticia> tNoticias = getIntent().getParcelableArrayListExtra("noticia");
+
+        Bundle bundleNoticia = new Bundle();
+        bundleNoticia.putParcelableArrayList("noticia", tNoticias);
+        FRAG_NOTICIA.setArguments(bundleNoticia);
+        FRAG_MAPA.setArguments(bundleNoticia);
 
         if (savedInstanceState != null) {
             seccion = savedInstanceState.getInt("seccionActual");
@@ -47,29 +51,10 @@ public class BottomBarActivity extends AppCompatActivity {
             navigation.setSelectedItemId(seccion);
         }
 
-        /** TODO. Se obtiene directamente desde el propio fragmento. Me gusta.
-         **  Dejamos esto por aquí mientras por si, en limpieza final borrar*/
-        // Pasar objeto Usuario para contruir FRAG_PERFIL (¿y Chat?).
-        /*Bundle bundleUsuario = new Bundle();
-        bundleUsuario.putParcelable("usuario", usuario); //--> ¡¡Usuario no es parcelable, aún!!
-        FRAG_PERFIL.setArguments(bundleUsuario);
-        FRAG_CHAT.setArguments(bundleUsuario); //(??)*/
-
-        Bundle bundleNoticia = new Bundle();
-        bundleNoticia.putParcelableArrayList("noticia", tNoticias);
-        FRAG_NOTICIA.setArguments(bundleNoticia);
-        FRAG_MAPA.setArguments(bundleNoticia);
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.content, FRAG_NOTICIA)
-                /*.add(R.id.content, FRAG_MAPA)*/
-                /*.add(R.id.content, FRAG_PERFIL)*/
-                .add(R.id.content, FRAG_CHAT).commit();
-
-        try{
+        try {
             MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.coin);
             mp.start();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -79,39 +64,30 @@ public class BottomBarActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.hide(FRAG_NOTICIA).hide(FRAG_MAPA).hide(FRAG_PERFIL).hide(FRAG_CHAT);
 
             switch (item.getItemId()) {
                 case R.id.navigation_noticias:
 
-                    fragmentTransaction.show(FRAG_NOTICIA).commit();
+                    fragmentTransaction.replace(R.id.content, FRAG_NOTICIA).commit();
                     seccion = R.id.navigation_noticias;
-                    // Para que cuando se pulse el botón de noticias haga scroll al primer elemento.
-                    hacerScroll();
+                    hacerScrollAPrimeraPos();
 
                     return true;
                 case R.id.navigation_mapa:
 
-                    if (!FRAG_MAPA.isAdded())
-                        fragmentTransaction.add(R.id.content, FRAG_MAPA); // <-- !!
-
-                    fragmentTransaction.show(FRAG_MAPA).commit();
+                    fragmentTransaction.replace(R.id.content, FRAG_MAPA).commit();
                     seccion = R.id.navigation_mapa;
 
                     return true;
                 case R.id.navigation_perfil:
 
-                    if (!FRAG_PERFIL.isAdded())
-                        fragmentTransaction.add(R.id.content, FRAG_PERFIL); // Hay que hacerlo aquí
-                                                                        // tambíen para que no pete.
-
-                    fragmentTransaction.show(FRAG_PERFIL).commit();
+                    fragmentTransaction.replace(R.id.content, FRAG_PERFIL).commit();
                     seccion = R.id.navigation_perfil;
 
                     return true;
                 case R.id.navigation_chat:
 
-                    fragmentTransaction.show(FRAG_CHAT).commit();
+                    fragmentTransaction.replace(R.id.content, FRAG_CHAT).commit();
                     seccion = R.id.navigation_chat;
 
                     return true;
@@ -122,9 +98,9 @@ public class BottomBarActivity extends AppCompatActivity {
 
     };
 
-    private void hacerScroll() {
+    private void hacerScrollAPrimeraPos() {
         try {
-            ((RecyclerView)FRAG_NOTICIA.getActivity().findViewById(R.id.recyclerView)).smoothScrollToPosition(0);
+            ((RecyclerView) FRAG_NOTICIA.getActivity().findViewById(R.id.recyclerView)).smoothScrollToPosition(0);
         } catch (NullPointerException e) {
             ;
         }

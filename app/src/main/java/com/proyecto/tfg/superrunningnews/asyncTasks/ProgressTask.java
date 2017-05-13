@@ -3,12 +3,14 @@ package com.proyecto.tfg.superrunningnews.asyncTasks;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +37,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 public class ProgressTask extends AsyncTask<String, Void, Boolean> {
@@ -42,7 +46,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private final String urlRss = "http://www.vamosacorrer.com/rss/feeds/rss_carreras.xml"; // Privado y final.
     private ProgressDialog dialog;
     private Context context;
-    private XmlPullParserFactory parseCreator;
     private ArrayList<String> titulo; // Titulo de la entrada.
     private ArrayList<String> imagen; // URL completa de la img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
     private ArrayList<String> localizacion; // Eso.
@@ -54,7 +57,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private FirebaseDatabase db;
     private DatabaseReference ref;
     private ArrayList<Favorito> tFavoritos;
-    private String usuario;
 
     //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se esté logueado,
     //no salga el dialog y el splash screen sirva como pantalla de carga.
@@ -62,7 +64,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     public ProgressTask(Context context, int caller) {
         this.context = context;
         this.dialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
-        this.caller=caller;
+        this.caller = caller;
         this.titulo = new ArrayList<>();
         this.imagen = new ArrayList<>();
         this.localizacion = new ArrayList<>();
@@ -71,11 +73,12 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.tNoticia = new ArrayList<>();
         this.tFavoritos = new ArrayList<>();
         db = FirebaseDatabase.getInstance();
-        usuario = SplashActivity.pref.getString("usuario", null);
-        ref = db.getReference("favoritos/"+usuario);
+        String usuario = SplashActivity.pref.getString("usuario", null);
+        ref = db.getReference("favoritos/" + usuario);
         ref.addValueEventListener(ref_ValueEventListener);
 
     }
+
     //Listener Firebase
     private ValueEventListener ref_ValueEventListener = new ValueEventListener() {
         @Override
@@ -98,11 +101,11 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.dialog.setMessage("Cargando Feed de Noticias...");
         this.dialog.setCancelable(false);
 
-        if(caller== LoginActivity.CALLER_LOGIN){
-            try{
+        if (caller == LoginActivity.CALLER_LOGIN) {
+            try {
                 MediaPlayer mp = MediaPlayer.create(context, R.raw.up);
                 mp.start();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             SystemClock.sleep(500);
@@ -117,7 +120,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             InputStream is = url.openStream();
 
             if (is != null) {
-                parseCreator = XmlPullParserFactory.newInstance();
+                XmlPullParserFactory parseCreator = XmlPullParserFactory.newInstance();
                 XmlPullParser parser = parseCreator.newPullParser();
                 parser.setInput(is, null);
                 int parserEvent = parser.getEventType();
@@ -197,7 +200,8 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             break;
                     } // fin switch
                     parserEvent = parser.next();
-                    if (localizacion.size() == 15 && caller== SplashActivity.CALLER_SPLASH) {
+                    // Un poco mas tarde porque ahora tambien crea el atrib. LatLng de cada noticia.
+                    if (localizacion.size() == 20 && caller == SplashActivity.CALLER_SPLASH) {
                         publishProgress();
                     }
                 }
@@ -226,10 +230,9 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(final Boolean success) {
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
         if (success) {
+
+            Geocoder geocoder = new Geocoder(context, new Locale("es", "ES"));
 
             for (int i = 0; i < fecha.size(); i++) {
                 Noticia noticia = new Noticia();
@@ -238,9 +241,18 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 noticia.setLink(link.get(i));
                 noticia.setFecha(fecha.get(i));
                 noticia.setImagen(imagen.get(i + 1));
+
+                try {
+                    List<Address> pos = geocoder.getFromLocationName(localizacion.get(i), 1);
+                    LatLng latLng = new LatLng(pos.get(0).getLatitude(), pos.get(0).getLongitude());
+                    noticia.setLatLng(latLng);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 noticia.setFavorito(false);
-                for (Favorito fav: tFavoritos) {
-                    if(fav.getNombreEvento().equals(titulo.get(i))){
+                for (Favorito fav : tFavoritos) {
+                    if (fav.getNombreEvento().equals(titulo.get(i))) {
                         noticia.setFavorito(true);
                         break;
                     }
@@ -255,6 +267,10 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             context.startActivity(i);
         } else {
             Toast.makeText(context, "Error en la lectura", Toast.LENGTH_SHORT).show();
+        }
+
+        if (dialog.isShowing()) {
+            dialog.dismiss();
         }
     }
 }

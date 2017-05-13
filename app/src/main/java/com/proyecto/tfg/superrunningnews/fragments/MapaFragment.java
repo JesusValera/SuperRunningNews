@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.proyecto.tfg.superrunningnews.asyncTasks.MapTask;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
@@ -22,14 +24,16 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MapaFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private ArrayList<Noticia> tNoticia;
+    private List<Noticia> tNoticia;
     private MapView mMapView;
     private GoogleMap googleMap;
     private GoogleApiClient gac;
+    private List<MarkerOptions> marcadores;
     private LatLngBounds.Builder builder;
 
     public MapaFragment() {
@@ -55,7 +59,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
             e.printStackTrace();
         }
         mMapView.getMapAsync(this);
-        builder = new LatLngBounds.Builder();
 
         if (gac == null) {
             gac = new GoogleApiClient.Builder(getContext())
@@ -64,7 +67,36 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
                     .build();
         }
 
+        builder = new LatLngBounds.Builder();
+        marcadores = new ArrayList<>();
+
         return v;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
+        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40, -3), 5.25F));
+        this.googleMap.setOnMapLoadedCallback(mapLoadedListener);
+
+        new MapTask(MapaFragment.this.getContext(), tNoticia, marcadores).execute();
+    }
+
+    private GoogleMap.OnMapLoadedCallback mapLoadedListener = new GoogleMap.OnMapLoadedCallback() {
+        @Override
+        public void onMapLoaded() {
+            for (MarkerOptions m : marcadores) {
+                builder.include(m.getPosition());
+                googleMap.addMarker(m);
+            }
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
+        }
+    };
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(getContext(), "La conexión falló.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -91,27 +123,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
-        this.googleMap.setOnMapLoadedCallback(mapLoadedListener);
-
-        new MapTask(MapaFragment.this.getContext(), googleMap, tNoticia, builder, mMapView).execute();
-    }
-
-    private GoogleMap.OnMapLoadedCallback mapLoadedListener = new GoogleMap.OnMapLoadedCallback() {
-        @Override
-        public void onMapLoaded() {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
-        }
-    };
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(getContext(), "La conexión falló.", Toast.LENGTH_SHORT).show();
     }
 
 }

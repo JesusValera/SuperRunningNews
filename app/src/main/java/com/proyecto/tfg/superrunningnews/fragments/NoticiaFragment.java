@@ -7,11 +7,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -27,7 +25,6 @@ public class NoticiaFragment extends Fragment {
     private ArrayList<Noticia> tNoticia;
     private RecyclerView recyclerView;
     private AdapterNoticia adapter;
-    private RecyclerView.LayoutManager layoutManager;
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2, fab3;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
@@ -49,7 +46,7 @@ public class NoticiaFragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(v.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new AdapterNoticia(tNoticia, getContext());
@@ -57,13 +54,6 @@ public class NoticiaFragment extends Fragment {
 
         adapter.setOnClickListener(clickListener);
 
-        //****
-        /*fabSort = (FloatingActionButton) v.findViewById(R.id.fabSort);
-        fabSort.setOnClickListener(fabListener);
-        recyclerView.addOnScrollListener(rvScrollListener);*/
-        //****
-
-        /////////
         fab = (FloatingActionButton) v.findViewById(R.id.fab);
         fab1 = (FloatingActionButton) v.findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) v.findViewById(R.id.fab2);
@@ -83,40 +73,29 @@ public class NoticiaFragment extends Fragment {
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int id = v.getId();
-            switch (id){
-                case R.id.fab:
-                    animateFAB();
-                    break;
+            switch (v.getId()) {
                 case R.id.fab1:
                     Collections.sort(tNoticia, Noticia.NoticiaOrdenadaProvincia);
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(0);
-                    animateFAB();
-                    Log.d("Raj", "Fab 1");
                     break;
                 case R.id.fab2:
                     Collections.sort(tNoticia, Noticia.NoticiaOrdenadaFechaInversa);
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(0);
-                    animateFAB();
-                    Log.d("Raj", "Fab 2");
                     break;
                 case R.id.fab3:
                     Collections.sort(tNoticia);
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(0);
-                    animateFAB();
-                    Log.d("Raj", "Fab 3");
                     break;
             }
+            animateFAB();
         }
     };
 
     public void animateFAB() {
-
         if (isFabOpen) {
-
             fab.startAnimation(rotate_backward);
             fab1.startAnimation(fab_close);
             fab2.startAnimation(fab_close);
@@ -125,10 +104,7 @@ public class NoticiaFragment extends Fragment {
             fab2.setClickable(false);
             fab3.setClickable(false);
             isFabOpen = false;
-            Log.d("Raj", "close");
-
         } else {
-
             fab.startAnimation(rotate_forward);
             fab1.startAnimation(fab_open);
             fab2.startAnimation(fab_open);
@@ -137,27 +113,8 @@ public class NoticiaFragment extends Fragment {
             fab2.setClickable(true);
             fab3.setClickable(true);
             isFabOpen = true;
-            Log.d("Raj", "open");
-
         }
     }
-
-    /*private RecyclerView.OnScrollListener rvScrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-            if (dy > 0 ||dy<0 && fabSort.isShown())
-                fabSort.hide();
-        }
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-
-            if (newState == RecyclerView.SCROLL_STATE_IDLE){
-                fabSort.show();
-            }
-            super.onScrollStateChanged(recyclerView, newState);
-        }
-    };*/
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -170,12 +127,4 @@ public class NoticiaFragment extends Fragment {
             }
         }
     };
-
-    private View.OnClickListener fabListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(getContext(), "a", Toast.LENGTH_SHORT).show();
-        }
-    };
-
 }

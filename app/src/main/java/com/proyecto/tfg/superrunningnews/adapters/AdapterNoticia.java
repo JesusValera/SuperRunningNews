@@ -74,6 +74,10 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
 
     @Override
     public int getItemCount() {
+        if (null == tNoticias) {
+            return 0;
+        }
+
         return tNoticias.size();
     }
 

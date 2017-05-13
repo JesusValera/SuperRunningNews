@@ -3,12 +3,12 @@ package com.proyecto.tfg.superrunningnews.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -24,6 +24,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
     private String localizacion;
     private String fecha;
     private String link;
+    private LatLng latLng;
     private boolean favorito;
 
     public Noticia() {
@@ -33,14 +34,16 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         this.fecha = "";
         this.link = "";
         this.fecha = "";
+        this.latLng = null;
     }
 
-    public Noticia(String titulo, String imagen, String localizacion, String fecha, String link) {
+    public Noticia(String titulo, String imagen, String localizacion, String fecha, String link, LatLng latLng) {
         this.titulo = titulo;
         this.imagen = imagen;
         this.localizacion = localizacion;
         this.fecha = fecha;
         this.link = link;
+        this.latLng = latLng;
     }
 
     public String getTitulo() {
@@ -81,6 +84,14 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
     }
 
     public boolean isFavorito() {
@@ -156,7 +167,8 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         localizacion = in.readString();
         fecha = in.readString();
         link = in.readString();
-        favorito = in.readByte() != 0;
+        latLng = (LatLng) in.readValue(LatLng.class.getClassLoader());
+        favorito = in.readByte() != 0x00;
     }
 
     @Override
@@ -171,6 +183,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         dest.writeString(localizacion);
         dest.writeString(fecha);
         dest.writeString(link);
+        dest.writeValue(latLng);
         dest.writeByte((byte) (favorito ? 1 : 0));
     }
 
@@ -186,6 +199,5 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
             return new Noticia[size];
         }
     };
-
 
 }
