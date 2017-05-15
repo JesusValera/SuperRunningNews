@@ -8,9 +8,6 @@
     android:orientation="vertical"
     tools:context="com.proyecto.tfg.superrunningnews.BottomBarActivity">
 
-    <!-- Reemplazamos el FrameLayout en los fragmentos por el fragmento seleccionado a partir del id. -->
-    <!-- BottomBarActivity linea 55~ ->
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, noticiaFragment).commit(); -->
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"

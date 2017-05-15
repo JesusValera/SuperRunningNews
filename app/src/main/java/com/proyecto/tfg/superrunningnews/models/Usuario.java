@@ -4,7 +4,7 @@ import com.stfalcon.chatkit.commons.models.IUser;
 
 public class Usuario implements IUser {
 
-    /** TODO Borrar esto en el futuro.
+    /**
      * Usado: http://www.parcelabler.com/
      * Mas info: http://stackoverflow.com/questions/7181526/how-can-i-make-my-custom-objects-parcelable
      */

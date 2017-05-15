@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -57,20 +56,19 @@ public class PerfilFragment extends Fragment {
     private FirebaseDatabase db;
     private DatabaseReference refurl;
     private FirebaseStorage storage;
-    HashMap<String, String> urls;
+    private HashMap<String, String> urls;
 
     private Bitmap imagenPerfil;
     private String usuario;
+    private Usuario user;
 
-    private static final int SELECT_FILE = 1;
+    private final int SELECT_FILE = 1;
 
     private boolean imagenEscogida = false;
-
 
     public PerfilFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,7 +85,6 @@ public class PerfilFragment extends Fragment {
         btBorrar = (Button) view.findViewById(R.id.btBorrar);
         btLogout = (Button) view.findViewById(R.id.btLogout);
         tvUsuario = (TextView) view.findViewById(R.id.tvUsuario);
-
 
         //Con esto evitamos tener que pasar el usuario por otras vías más tediosas y largas
         //Si el usuario es nulo -> ver ponerImagen()
@@ -235,7 +232,6 @@ public class PerfilFragment extends Fragment {
                 }
             });
             builder.show();
-
         }
     };
 
@@ -246,6 +242,7 @@ public class PerfilFragment extends Fragment {
                 if (!validar()) {
                     return;
                 }
+                // TODO - El parametro "avatar" esta mal, hay que poner la ruta de la img. ¿cómo?
                 db.getReference("usuarios").child(usuario).setValue(new Usuario(usuario, usuario, "avatar", true, etPassword.getText().toString()));
             }
 
@@ -253,7 +250,7 @@ public class PerfilFragment extends Fragment {
                 final ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Actualizando cuenta...");
-                StorageReference stref = storage.getReferenceFromUrl("gs://miniproyecto-84313.appspot.com/").child("imagenes/" + usuario + ".png");
+                StorageReference stref = storage.getReferenceFromUrl("gs://superrunningnews-75380.appspot.com/").child("imagenes/" + usuario + ".png");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 imagenPerfil.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 byte[] data = baos.toByteArray();
@@ -269,7 +266,7 @@ public class PerfilFragment extends Fragment {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                        db.getReference("imagenes").child(usuario).setValue(taskSnapshot.getDownloadUrl().toString());
+                        db.getReference("usuarios").child(usuario).child("avatar").setValue(taskSnapshot.getDownloadUrl().toString());
                         progressDialog.dismiss();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -308,7 +305,7 @@ public class PerfilFragment extends Fragment {
         }
     };
 
-    public boolean validar() {
+    private boolean validar() {
         boolean valido = true;
 
         String password = etPassword.getText().toString();

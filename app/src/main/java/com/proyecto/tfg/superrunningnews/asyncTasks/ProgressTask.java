@@ -236,7 +236,16 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
             for (int i = 0; i < fecha.size(); i++) {
                 Noticia noticia = new Noticia();
+                // Titulo no puede contener ".", "#", "[", "]".
                 noticia.setTitulo(titulo.get(i));
+                if (titulo.get(i).contains(".") || titulo.get(i).contains("#") ||
+                        titulo.get(i).contains("[") || titulo.get(i).contains("]")) {
+                    noticia.setTitulo(titulo.get(i)
+                            .replace(".", "")
+                            .replace("#", "")
+                            .replace("[", "")
+                            .replace("]", ""));
+                }
                 noticia.setLocalizacion(localizacion.get(i));
                 noticia.setLink(link.get(i));
                 noticia.setFecha(fecha.get(i));

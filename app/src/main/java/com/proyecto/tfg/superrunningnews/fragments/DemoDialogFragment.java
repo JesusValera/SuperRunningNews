@@ -20,14 +20,9 @@ package com.proyecto.tfg.superrunningnews.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.proyecto.tfg.superrunningnews.AppUtils;
-import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Dialog;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -58,10 +53,7 @@ public abstract class DemoDialogFragment extends Fragment
 
     @Override
     public void onDialogLongClick(Dialog dialog) {
-        AppUtils.showToast(
-                getContext(),
-                dialog.getDialogName(),
-                false);
+        Toast.makeText(getContext(), dialog.getDialogName(), Toast.LENGTH_SHORT).show();
     }
 
 }

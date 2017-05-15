@@ -14,10 +14,10 @@ import java.util.Date;
 
 public class Noticia implements Parcelable, Comparable<Noticia> {
 
-    /** TODO Borrar esto en el futuro.
-    * Usado: http://www.parcelabler.com/
-    * Mas info: http://stackoverflow.com/questions/7181526/how-can-i-make-my-custom-objects-parcelable
-    */
+    /**
+     * Usado: http://www.parcelabler.com/
+     * Mas info: http://stackoverflow.com/questions/7181526/how-can-i-make-my-custom-objects-parcelable
+     */
 
     private String titulo;
     private String imagen;
@@ -33,8 +33,8 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         this.localizacion = "";
         this.fecha = "";
         this.link = "";
-        this.fecha = "";
         this.latLng = null;
+        favorito = false;
     }
 
     public Noticia(String titulo, String imagen, String localizacion, String fecha, String link, LatLng latLng) {
@@ -44,6 +44,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         this.fecha = fecha;
         this.link = link;
         this.latLng = latLng;
+        favorito = false;
     }
 
     public String getTitulo() {

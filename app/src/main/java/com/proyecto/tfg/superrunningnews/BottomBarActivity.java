@@ -42,6 +42,7 @@ public class BottomBarActivity extends AppCompatActivity {
         bundleNoticia.putParcelableArrayList("noticia", tNoticias);
         FRAG_NOTICIA.setArguments(bundleNoticia);
         FRAG_MAPA.setArguments(bundleNoticia);
+        FRAG_CHAT.setArguments(bundleNoticia);
 
         if (savedInstanceState != null) {
             seccion = savedInstanceState.getInt("seccionActual");

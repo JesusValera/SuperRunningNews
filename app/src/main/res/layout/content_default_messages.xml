@@ -30,5 +30,4 @@
         app:inputHint="@string/escribir_mensaje"
         app:showAttachmentButton="false"/>
 
-
 </RelativeLayout>

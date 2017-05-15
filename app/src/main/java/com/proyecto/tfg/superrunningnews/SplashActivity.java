@@ -28,12 +28,4 @@ public class SplashActivity extends AppCompatActivity{
             startActivity(new Intent(this, LoginActivity.class));
         }
     }
-
-
-
-    // TODO -> No olvidar anadir algo asi cuando el usuario se loguee en LoginActivity:
-    // pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-    //
-    // pref.edit().putBoolean("login", true).apply();
-
 }

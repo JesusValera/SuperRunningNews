@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.proyecto.tfg.superrunningnews.models.Message;
 import com.squareup.picasso.Picasso;
@@ -84,7 +85,7 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
                 break;
             case R.id.action_copy:
                 messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
-                AppUtils.showToast(this, R.string.mensaje_copiado, true);
+                Toast.makeText(getApplicationContext(), R.string.mensaje_copiado, Toast.LENGTH_SHORT).show();
                 break;
         }
         return true;

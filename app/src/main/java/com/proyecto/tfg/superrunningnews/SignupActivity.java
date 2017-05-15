@@ -69,22 +69,21 @@ public class SignupActivity extends AppCompatActivity {
         btImagen.setOnClickListener(btImagen_OnClickListener);
 
         //Firebase
-        usuarios=new ArrayList<>();
+        usuarios = new ArrayList<>();
         db = FirebaseDatabase.getInstance();
         ref = db.getReference("usuarios");
         storage = FirebaseStorage.getInstance();
 
 
-
         ref.addValueEventListener(ref_ValueEventListener);
 
         //Imagen
-        imagenPerfil=BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        imagenPerfil = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 
     }
 
     //Listener Firebase
-    private ValueEventListener ref_ValueEventListener=new ValueEventListener() {
+    private ValueEventListener ref_ValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             usuarios.clear();
@@ -102,10 +101,10 @@ public class SignupActivity extends AppCompatActivity {
 
 
     //Listeners
-    private View.OnClickListener btCrear_OnClickListener=new View.OnClickListener() {
+    private View.OnClickListener btCrear_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(!validar()){
+            if (!validar()) {
                 Toast.makeText(SignupActivity.this, "No se ha podido crear la cuenta!", Toast.LENGTH_SHORT).show();
                 btCrear.setEnabled(true);
                 return;
@@ -113,20 +112,18 @@ public class SignupActivity extends AppCompatActivity {
 
             btCrear.setEnabled(false);
 
-
             final String usuario = etUsuario.getText().toString();
             final String password = etPassword.getText().toString();
 
-
             //Crear los datos en Firebase
-            boolean existe=false;
+            boolean existe = false;
             for (Usuario user : usuarios) {
-                if (user.getName().equals(usuario)){
-                    existe=true;
+                if (user.getName().equals(usuario)) {
+                    existe = true;
                     break;
                 }
             }
-            if(existe){
+            if (existe) {
                 etUsuario.setError("El usuario ya existe");
                 btCrear.setEnabled(true);
                 etUsuario.requestFocus();
@@ -134,7 +131,7 @@ public class SignupActivity extends AppCompatActivity {
             }
 
             //Guardar la imagen y después al usuario
-            StorageReference stref = storage.getReferenceFromUrl("gs://superrunningnews-75380.appspot.com/").child("imagenes/"+usuario+".png");
+            StorageReference stref = storage.getReferenceFromUrl("gs://superrunningnews-75380.appspot.com/").child("imagenes/" + usuario + ".png");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             //Bitmap imagen= ImageHelper.getCircularBitmap(imagenPerfil);
             imagenPerfil.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -159,9 +156,8 @@ public class SignupActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-
-                    db.getReference("imagenes").child(usuario).setValue(taskSnapshot.getDownloadUrl().toString());
-                    ref.child(usuario).setValue(new Usuario(usuario, usuario, "", true, password));
+                    ref.child(usuario).setValue(new Usuario(usuario, usuario, taskSnapshot.getDownloadUrl().toString(), true, password));
+                    //db.getReference("usuarios").child(usuario).child("avatar").setValue();
 
                     btCrear.setEnabled(true);
 
@@ -189,7 +185,7 @@ public class SignupActivity extends AppCompatActivity {
             String usuario = etUsuario.getText().toString();
             String password = etPassword.getText().toString();
 
-            if (usuario.isEmpty() || usuario.length() < 3 || usuario.length() > 20 ) {
+            if (usuario.isEmpty() || usuario.length() < 3 || usuario.length() > 20) {
                 etUsuario.setError("entre 3 y 20 caracteres");
                 valido = false;
             } else {
@@ -208,7 +204,7 @@ public class SignupActivity extends AppCompatActivity {
 
     };
 
-    private View.OnClickListener tvLogin_OnClickListener=new View.OnClickListener() {
+    private View.OnClickListener tvLogin_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -216,7 +212,7 @@ public class SignupActivity extends AppCompatActivity {
         }
     };
 
-    private View.OnClickListener btImagen_OnClickListener=new View.OnClickListener() {
+    private View.OnClickListener btImagen_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent();
@@ -241,16 +237,16 @@ public class SignupActivity extends AppCompatActivity {
                     }
                     // Transformamos la URI de la imagen a inputStream y este a un Bitmap
                     Bitmap bmp = BitmapFactory.decodeStream(imageStream);
-                    int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+                    int nh = (int) (bmp.getHeight() * (512.0 / bmp.getWidth()));
                     Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
 
                     // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
                     ImageView mImg = (ImageView) findViewById(R.id.ivImagen);
-                    Bitmap imagen= ImageHelper.getCircularBitmap(scaled);
+                    Bitmap imagen = ImageHelper.getCircularBitmap(scaled);
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     imagen.compress(Bitmap.CompressFormat.PNG, 100, baos);
                     mImg.setImageBitmap(imagen);
-                    imagenPerfil=imagen;
+                    imagenPerfil = imagen;
                 }
                 break;
         }
