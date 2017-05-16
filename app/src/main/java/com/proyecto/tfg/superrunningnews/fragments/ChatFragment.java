@@ -81,10 +81,9 @@ public class ChatFragment extends DemoDialogFragment {
         Dialog d1 = new Dialog("1" , "Grupo N1 prueba", "https://pbs.twimg.com/profile_images/719940973778722816/0vf4NGTC.jpg", users, m1, 1);*/
 
         //****
-        //  Mostar imagen perfil en pantalla perfil -> no se guarda?
         //  ¿Cómo guardo los grupos en la base de datos si necesito que ya existan para usarlos?
         //  Es decir, necesito que ya estén creados para poder usarlos pero ahora no están creados,
-        //  hay algo que no logro entender...
+        //  hay algo que no logro entender... **
         //  Por cierto, aquí está la respuesta: https://github.com/stfalcon-studio/ChatKit/issues/37
         //  Me da la sensación de que no responde a lo que yo le pregunto pero no lo sé, tampoco
         //  entiendo la respuesta 100% pero creo que dice algo que nada tiene que ver.
@@ -92,7 +91,10 @@ public class ChatFragment extends DemoDialogFragment {
         //  ese array al grupo, si no, no va.
         //  ¿Crear antes mensajes para añadirlos al grupo? Pero no existen los grupos... alsjfslj :)
         //
-        //   TODO - Revisar TODOES.
+        //
+        //  ** UPDATE: Crear los grupos en NoticiaFragment/BottomBarActivity/ProgressTask para
+        //             cuando se de al boton del chat de una tarjeta te abra la actividad directamente.
+        //   TODO.
 
 
         // ¿Esto Aquí?

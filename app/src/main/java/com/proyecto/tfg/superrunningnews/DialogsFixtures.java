@@ -69,7 +69,7 @@ public final class DialogsFixtures extends FixturesData {
         return users;
     }
 
-    /* TODO - Contrasena que giro? */
+    /* TODO - Clase de prueba, no se usa, tener para idea. */
     private static Usuario getUser() {
         return new Usuario(
                 getRandomId(),

@@ -1,144 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <com.github.glomadrian.grav.GravView
-        android:id="@+id/grav"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        app:animationGenerators="@array/BubbleAnimations"
-        app:array_colors="@array/bubble"
-        app:ball_from_size="10dp"
-        app:ball_to_size="20dp"
-        app:colorGenerator="com.github.glomadrian.grav.generator.paint.ArrayColorGenerator"
-        app:gravGenerator="com.github.glomadrian.grav.generator.grav.BallGenerator"
-        app:pointGenerator="com.github.glomadrian.grav.generator.point.RegularPointGenerator"
-        app:regular_cell_size="300"
-        app:regular_variance="200"
-        app:shake_direction="vertical"
-        app:shake_max_duration="20000"
-        app:shake_min_duration="10000"
-        app:shake_variance="500dp"
-        app:side_to_side_direction="leftToRight"
-        app:side_to_side_max_duration="10000"
-        app:side_to_side_min_duration="10000" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="20dp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <!-- Layout vacío para que al iniciar la actividad no se ponga el foco en el editText -->
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="0sp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="106dp"
+            app:srcCompat="@drawable/ic_titulo_srn" />
+
+        <TextView
+            android:id="@+id/tvRegistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:paddingBottom="5dp"
+            android:paddingTop="15dp"
+            android:text="Registrarse"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/etUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Usuario"
+                android:inputType="textCapWords" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:paddingTop="20dp">
-
-            <!-- Layout vacío para que al iniciar la actividad no se ponga el foco en el editText -->
-            <LinearLayout
-                android:layout_width="0sp"
-                android:layout_height="0sp"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
+            android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="match_parent"
-                android:layout_height="106dp"
-                app:srcCompat="@drawable/ic_titulo_srn" />
-
-            <TextView
-                android:id="@+id/tvRegistro"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:paddingBottom="5dp"
-                android:paddingTop="15dp"
-                android:text="Registrarse"
-                android:textAlignment="textStart"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/etUsuario"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Usuario"
-                    android:inputType="textCapWords" />
-            </android.support.design.widget.TextInputLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Contraseña"
-                    android:inputType="textPassword" />
-            </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/ivImagen"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    app:srcCompat="@mipmap/ic_launcher" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btImagen"
-                    android:layout_width="183dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_weight="4.58"
-                    android:padding="12dp"
-                    android:text="Foto de perfil" />
-            </LinearLayout>
+                android:id="@+id/ivImagen"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@mipmap/ic_launcher" />
 
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btCrear"
-                android:layout_width="fill_parent"
+                android:id="@+id/btImagen"
+                android:layout_width="183dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="24dp"
+                android:layout_weight="4.58"
                 android:padding="12dp"
-                android:text="Crear cuenta" />
-
-            <TextView
-                android:id="@+id/tvLogin"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:gravity="center"
-                android:paddingBottom="20dp"
-                android:paddingTop="5dp"
-                android:text="¿Ya estás registrado? Inicia sesión"
-                android:textColor="@color/white"
-                android:textSize="16dip" />
-
+                android:text="Foto de perfil" />
         </LinearLayout>
 
-    </ScrollView>
-</RelativeLayout>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btCrear"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:padding="12dp"
+            android:text="Crear cuenta" />
+
+        <TextView
+            android:id="@+id/tvLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:paddingBottom="20dp"
+            android:paddingTop="5dp"
+            android:text="¿Ya estás registrado? Inicia sesión"
+            android:textColor="@color/white"
+            android:textSize="16dip" />
+
+    </LinearLayout>
+
+</ScrollView>

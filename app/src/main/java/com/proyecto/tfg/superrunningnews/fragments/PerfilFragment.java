@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +36,7 @@ import com.proyecto.tfg.superrunningnews.LoginActivity;
 import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Usuario;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -60,7 +59,6 @@ public class PerfilFragment extends Fragment {
 
     private Bitmap imagenPerfil;
     private String usuario;
-    private Usuario user;
 
     private final int SELECT_FILE = 1;
 
@@ -86,6 +84,7 @@ public class PerfilFragment extends Fragment {
         btLogout = (Button) view.findViewById(R.id.btLogout);
         tvUsuario = (TextView) view.findViewById(R.id.tvUsuario);
 
+
         //Con esto evitamos tener que pasar el usuario por otras vías más tediosas y largas
         //Si el usuario es nulo -> ver ponerImagen()
         usuario = SplashActivity.pref.getString("usuario", null);
@@ -106,6 +105,11 @@ public class PerfilFragment extends Fragment {
         refurl = db.getReference("imagenes");
 
         refurl.addValueEventListener(refurl_ValueEventListener);
+
+        Picasso.with(getContext()).load("https://firebasestorage.googleapis.com/v0/b/superrunningnews" +
+                "-75380.appspot.com/o/imagenes%2F" + usuario + ".png?alt=media").into(ivImagen);
+        Picasso.with(getContext()).load("https://firebasestorage.googleapis.com/v0/b/superrunningnews" +
+                "-75380.appspot.com/o/imagenes%2F" + usuario + ".png?alt=media").into(ivPerfil);
 
         return view;
     }
@@ -232,6 +236,7 @@ public class PerfilFragment extends Fragment {
                 }
             });
             builder.show();
+
         }
     };
 
@@ -242,8 +247,9 @@ public class PerfilFragment extends Fragment {
                 if (!validar()) {
                     return;
                 }
-                // TODO - El parametro "avatar" esta mal, hay que poner la ruta de la img. ¿cómo?
-                db.getReference("usuarios").child(usuario).setValue(new Usuario(usuario, usuario, "avatar", true, etPassword.getText().toString()));
+                db.getReference("usuarios").child(usuario).setValue(new Usuario(usuario, usuario,
+                        "https://firebasestorage.googleapis.com/v0/b/superrunningnews-75380.appspot.com/o/imagenes%2F" +
+                                usuario + ".png?alt=media", true, etPassword.getText().toString()));
             }
 
             if (imagenEscogida) {
@@ -266,7 +272,7 @@ public class PerfilFragment extends Fragment {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                        db.getReference("usuarios").child(usuario).child("avatar").setValue(taskSnapshot.getDownloadUrl().toString());
+                        db.getReference("imagenes").child(usuario).setValue(taskSnapshot.getDownloadUrl().toString());
                         progressDialog.dismiss();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -278,30 +284,14 @@ public class PerfilFragment extends Fragment {
             }
 
             Toast.makeText(getContext(), "Usuario actualizado correctamente!", Toast.LENGTH_SHORT).show();
-
         }
     };
 
     private View.OnClickListener btLogout_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            SharedPreferences.Editor editor = SplashActivity.pref.edit();
-            editor.putBoolean("login", false).apply();
-
-            try {
-                MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.down);
-                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        Intent i = new Intent(getContext(), LoginActivity.class);
-                        startActivity(i);
-                    }
-                });
-                mp.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            Intent i = new Intent(getContext(), LoginActivity.class);
+            startActivity(i);
         }
     };
 
