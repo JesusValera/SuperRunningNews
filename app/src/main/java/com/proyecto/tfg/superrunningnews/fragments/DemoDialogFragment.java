@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-
 package com.proyecto.tfg.superrunningnews.fragments;
-
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,7 +44,9 @@ public abstract class DemoDialogFragment extends Fragment
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
-                Picasso.with(getContext()).load(url).into(imageView);
+                if (!url.equals("")) {
+                    Picasso.with(getContext()).load(url).into(imageView);
+                }
             }
         };
     }

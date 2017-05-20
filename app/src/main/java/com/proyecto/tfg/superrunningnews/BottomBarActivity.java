@@ -107,7 +107,6 @@ public class BottomBarActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt("seccionActual", seccion);

@@ -45,12 +45,8 @@ import java.util.HashMap;
 
 public class PerfilFragment extends Fragment {
 
-    private View view;
-
     private EditText etPassword, etPassword2;
     private ImageView ivImagen, ivPerfil;
-    private Button btImagen, btUpdate, btBorrar, btLogout;
-    private TextView tvUsuario;
 
     private FirebaseDatabase db;
     private DatabaseReference refurl;
@@ -71,18 +67,18 @@ public class PerfilFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_perfil, container, false);
+        View view = inflater.inflate(R.layout.fragment_perfil, container, false);
 
         //Enganchar controles
         etPassword = (EditText) view.findViewById(R.id.etPassword);
         etPassword2 = (EditText) view.findViewById(R.id.etPassword2);
         ivImagen = (ImageView) view.findViewById(R.id.ivImagen);
         ivPerfil = (ImageView) view.findViewById(R.id.ivPerfil);
-        btImagen = (Button) view.findViewById(R.id.btImagen);
-        btUpdate = (Button) view.findViewById(R.id.btUpdate);
-        btBorrar = (Button) view.findViewById(R.id.btBorrar);
-        btLogout = (Button) view.findViewById(R.id.btLogout);
-        tvUsuario = (TextView) view.findViewById(R.id.tvUsuario);
+        Button btImagen = (Button) view.findViewById(R.id.btImagen);
+        Button btUpdate = (Button) view.findViewById(R.id.btUpdate);
+        Button btBorrar = (Button) view.findViewById(R.id.btBorrar);
+        Button btLogout = (Button) view.findViewById(R.id.btLogout);
+        TextView tvUsuario = (TextView) view.findViewById(R.id.tvUsuario);
 
 
         //Con esto evitamos tener que pasar el usuario por otras vías más tediosas y largas
@@ -183,7 +179,7 @@ public class PerfilFragment extends Fragment {
                     Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
 
                     // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
-                    ImageView mImg = (ImageView) view.findViewById(R.id.ivImagen);
+                    ImageView mImg = (ImageView) getView().findViewById(R.id.ivImagen);
                     Bitmap imagen = ImageHelper.getCircularBitmap(scaled);
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     imagen.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -249,7 +245,7 @@ public class PerfilFragment extends Fragment {
                 }
                 db.getReference("usuarios").child(usuario).setValue(new Usuario(usuario, usuario,
                         "https://firebasestorage.googleapis.com/v0/b/superrunningnews-75380.appspot.com/o/imagenes%2F" +
-                                usuario + ".png?alt=media", true, etPassword.getText().toString()));
+                                usuario + ".png?alt=media", etPassword.getText().toString()));
             }
 
             if (imagenEscogida) {

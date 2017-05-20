@@ -78,19 +78,24 @@ public class NoticiaFragment extends Fragment {
                     Collections.sort(tNoticia, Noticia.NoticiaOrdenadaProvincia);
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(0);
+                    animateFAB();
                     break;
                 case R.id.fab2:
                     Collections.sort(tNoticia, Noticia.NoticiaOrdenadaFechaInversa);
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(0);
+                    animateFAB();
                     break;
                 case R.id.fab3:
                     Collections.sort(tNoticia);
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(0);
+                    animateFAB();
+                    break;
+                case R.id.fab:
+                    animateFAB();
                     break;
             }
-            animateFAB();
         }
     };
 

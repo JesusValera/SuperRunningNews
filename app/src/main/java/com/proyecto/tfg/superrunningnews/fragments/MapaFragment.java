@@ -31,7 +31,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
 
     private List<Noticia> tNoticia;
     private MapView mMapView;
-    private GoogleMap googleMap;
     private GoogleApiClient gac;
     private List<MarkerOptions> marcadores;
     private LatLngBounds.Builder builder;
@@ -74,25 +73,21 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
-        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40, -3), 5.25F));
-        this.googleMap.setOnMapLoadedCallback(mapLoadedListener);
+    public void onMapReady(final GoogleMap googleMap) {
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(40, -3), 5.25F));
+        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                for (MarkerOptions m : marcadores) {
+                    builder.include(m.getPosition());
+                    googleMap.addMarker(m);
+                }
+            }
+        });
 
         new MapTask(MapaFragment.this.getContext(), tNoticia, marcadores).execute();
     }
-
-    private GoogleMap.OnMapLoadedCallback mapLoadedListener = new GoogleMap.OnMapLoadedCallback() {
-        @Override
-        public void onMapLoaded() {
-            for (MarkerOptions m : marcadores) {
-                builder.include(m.getPosition());
-                googleMap.addMarker(m);
-            }
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 100));
-        }
-    };
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

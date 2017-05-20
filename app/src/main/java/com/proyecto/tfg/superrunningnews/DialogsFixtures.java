@@ -29,6 +29,7 @@ import java.util.Date;
  */
 
 public final class DialogsFixtures extends FixturesData {
+
     private DialogsFixtures() {
         throw new AssertionError();
     }
@@ -75,7 +76,6 @@ public final class DialogsFixtures extends FixturesData {
                 getRandomId(),
                 getRandomName(),
                 getRandomAvatar(),
-                getRandomBoolean(),
                 "pass");
     }
 

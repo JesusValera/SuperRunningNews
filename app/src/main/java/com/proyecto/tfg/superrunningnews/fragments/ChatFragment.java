@@ -29,7 +29,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.proyecto.tfg.superrunningnews.DefaultMessagesActivity;
 import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Dialog;
+import com.proyecto.tfg.superrunningnews.models.Message;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
+import com.proyecto.tfg.superrunningnews.models.Usuario;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
@@ -79,6 +81,7 @@ public class ChatFragment extends DemoDialogFragment {
         users.add(u2);
         Message m1 = new Message("1", u1, "Hola, soy un mensaje");
         Dialog d1 = new Dialog("1" , "Grupo N1 prueba", "https://pbs.twimg.com/profile_images/719940973778722816/0vf4NGTC.jpg", users, m1, 1);*/
+        //dialogs.add(d1);
 
         //****
         //  ¿Cómo guardo los grupos en la base de datos si necesito que ya existan para usarlos?
@@ -98,12 +101,15 @@ public class ChatFragment extends DemoDialogFragment {
 
 
         // ¿Esto Aquí?
-        dialogs.clear();
-        for (int i = 0; i < tNoticia.size(); i++) {
 
-            //Dialog dialog = new Dialog("" + i, tNoticia.get(i).getTitulo(), tNoticia.get(i).getImagen(), null, , 0);
+        //dialogs.clear();
+        ArrayList<Usuario> users = new ArrayList<>();
+        for (int i = 0; i < tNoticia.size(); i++) {
+            Message message = new Message("" + i, new Usuario(), "Mensaje: " + i);
+            Dialog dialog = new Dialog(String.valueOf(i), tNoticia.get(i).getTitulo(),
+                    tNoticia.get(i).getImagen(), users, message, 0);
+            dialogs.add(dialog);
         }
-        //dialogs.add(d1);
         initAdapter();
         return v;
     }

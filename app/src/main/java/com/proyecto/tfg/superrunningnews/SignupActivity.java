@@ -157,7 +157,7 @@ public class SignupActivity extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                     String urlImg = taskSnapshot.getDownloadUrl().toString().substring(0, taskSnapshot.getDownloadUrl().toString().indexOf("&"));
-                    ref.child(usuario).setValue(new Usuario(usuario, usuario, urlImg, true, password));
+                    ref.child(usuario).setValue(new Usuario(usuario, usuario, urlImg, password));
                     //db.getReference("usuarios").child(usuario).child("avatar").setValue();
 
                     btCrear.setEnabled(true);
