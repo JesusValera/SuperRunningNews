@@ -1,5 +1,8 @@
 package com.proyecto.tfg.superrunningnews;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +20,7 @@ import com.proyecto.tfg.superrunningnews.fragments.PerfilFragment;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class BottomBarActivity extends AppCompatActivity {
 
@@ -27,6 +31,9 @@ public class BottomBarActivity extends AppCompatActivity {
     private int seccion;
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
+    private ArrayList<Noticia> tNoticias;
+    public static ArrayList<Noticia> noticias;
+    private Thread t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +43,8 @@ public class BottomBarActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        ArrayList<Noticia> tNoticias = getIntent().getParcelableArrayListExtra("noticia");
+        tNoticias = getIntent().getParcelableArrayListExtra("noticia");
+        noticias=tNoticias;
 
         Bundle bundleNoticia = new Bundle();
         bundleNoticia.putParcelableArrayList("noticia", tNoticias);
@@ -58,7 +66,19 @@ public class BottomBarActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        //Inicio del servicio de notificaciones peródicas
+        Intent i = new Intent(BottomBarActivity.this, NotificacionesService.class);
+        //i.putParcelableArrayListExtra("noticia",tNoticias);
+        PendingIntent servicePendingIntent = PendingIntent.getService(BottomBarActivity.this, 0, i, 0 );
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, servicePendingIntent);
     }
+
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
