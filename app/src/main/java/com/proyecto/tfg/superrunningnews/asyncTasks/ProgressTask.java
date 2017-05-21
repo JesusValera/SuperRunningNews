@@ -264,7 +264,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
                 tNoticia.add(noticia);
 
-                Dialog grupo = new Dialog(titulo.get(i), titulo.get(i), imagen.get(i),
+                Dialog grupo = new Dialog(titulo.get(i), titulo.get(i), imagen.get(i+1),
                         new ArrayList<Usuario>(), lastMessage, 0);
                 tGruposNuevos.add(grupo);
             }

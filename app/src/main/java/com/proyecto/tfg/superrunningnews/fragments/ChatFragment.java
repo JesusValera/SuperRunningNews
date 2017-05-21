@@ -107,8 +107,7 @@ public class ChatFragment extends DemoDialogFragment {
         super.dialogsAdapter.setOnDialogLongClickListener(this);
 
         dialogsList.setAdapter(super.dialogsAdapter);
-        dialogsList.scrollToPosition(0);
-        dialogsList.smoothScrollToPosition(0);
+        dialogsList.scrollToPosition(tGrupos.size()-1);
     }
 
 }
