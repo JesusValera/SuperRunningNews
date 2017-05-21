@@ -24,20 +24,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MessagesFixtures extends FixturesData {
+
     private MessagesFixtures() {
         throw new AssertionError();
-    }
-
-    public static Message getImageMessage() {
-        Message message = new Message(getRandomId(), getUser(), null);
-        message.setImage(new Message.Image(getRandomImage()));
-        return message;
-    }
-
-    public static Message getVoiceMessage() {
-        Message message = new Message(getRandomId(), getUser(), null);
-        message.setVoice(new Message.Voice("http://example.com", rnd.nextInt(200) + 30));
-        return message;
     }
 
     public static Message getTextMessage() {
@@ -54,12 +43,7 @@ public class MessagesFixtures extends FixturesData {
             int countPerDay = rnd.nextInt(5) + 1;
 
             for (int j = 0; j < countPerDay; j++) {
-                Message message;
-                if (i % 2 == 0 && j % 3 == 0) {
-                    message = getImageMessage();
-                } else {
-                    message = getTextMessage();
-                }
+                Message message = getTextMessage();
 
                 Calendar calendar = Calendar.getInstance();
                 if (startDate != null) calendar.setTime(startDate);
@@ -77,7 +61,7 @@ public class MessagesFixtures extends FixturesData {
         return new Usuario(
                 even ? "0" : "1",
                 even ? names.get(0) : names.get(1),
-                even ? avatars.get(0) : avatars.get(1),
+                "http://editor.editafacil.es/Images/cargando.gif",
                 "pass");
     }
 }

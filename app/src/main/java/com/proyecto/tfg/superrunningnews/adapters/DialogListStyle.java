@@ -25,6 +25,7 @@ import com.stfalcon.chatkit.R;
 import com.stfalcon.chatkit.commons.Style;
 
 public class DialogListStyle extends Style {
+
     private int dialogTitleTextColor;
     private int dialogTitleTextSize;
     private int dialogTitleTextStyle;

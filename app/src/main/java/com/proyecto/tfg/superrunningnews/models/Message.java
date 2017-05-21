@@ -1,20 +1,16 @@
 package com.proyecto.tfg.superrunningnews.models;
 
-import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
 
-public class Message implements IMessage,
-        MessageContentType.Image, /*this is for default image messages implementation*/
-        MessageContentType /*and this one is for custom content type (in this case - voice message)*/ {
+public class Message implements MessageContentType
+        /*and this one is for custom content type (in this case - voice message)*/ {
 
     private String id;
     private String text;
     private Date createdAt;
     private Usuario user;
-    private Image image;
-    private Voice voice;
 
     public Message(String id, Usuario user, String text) {
         this(id, user, text, new Date());
@@ -47,15 +43,6 @@ public class Message implements IMessage,
         return this.user;
     }
 
-    @Override
-    public String getImageUrl() {
-        return image == null ? null : image.url;
-    }
-
-    public Voice getVoice() {
-        return voice;
-    }
-
     public String getStatus() {
         return "Sent";
     }
@@ -66,14 +53,6 @@ public class Message implements IMessage,
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public void setVoice(Voice voice) {
-        this.voice = voice;
     }
 
     public static class Image {

@@ -27,8 +27,7 @@ import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 public class DefaultMessagesActivity extends DemoMessagesActivity
-        implements MessageInput.InputListener,
-        MessageInput.AttachmentsListener {
+        implements MessageInput.InputListener {
 
     public static void open(Context context) {
         context.startActivity(new Intent(context, DefaultMessagesActivity.class));
@@ -63,12 +62,6 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
         super.messagesAdapter.addToStart(
                 MessagesFixtures.getTextMessage(input.toString()), true);
         return true;
-    }
-
-    @Override
-    public void onAddAttachments() {
-        super.messagesAdapter.addToStart(
-                MessagesFixtures.getImageMessage(), true);
     }
 
     private void initAdapter() {

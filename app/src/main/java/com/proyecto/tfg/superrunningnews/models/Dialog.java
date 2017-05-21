@@ -32,7 +32,6 @@ public class Dialog implements IDialog<Message> {
 
     public Dialog(String id, String name, String photo,
                   ArrayList<Usuario> users, Message lastMessage, int unreadCount) {
-
         this.id = id;
         this.dialogName = name;
         this.dialogPhoto = photo;
