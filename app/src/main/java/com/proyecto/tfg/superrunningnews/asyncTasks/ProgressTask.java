@@ -19,9 +19,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.proyecto.tfg.superrunningnews.BottomBarActivity;
 import com.proyecto.tfg.superrunningnews.LoginActivity;
 import com.proyecto.tfg.superrunningnews.SplashActivity;
+import com.proyecto.tfg.superrunningnews.models.Dialog;
 import com.proyecto.tfg.superrunningnews.models.Favorito;
+import com.proyecto.tfg.superrunningnews.models.Message;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
+import com.proyecto.tfg.superrunningnews.models.Usuario;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,6 +39,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -47,7 +51,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ProgressDialog dialog;
     private Context context;
     private ArrayList<String> titulo; // Titulo de la entrada.
-    private ArrayList<String> imagen; // URL completa de la img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
+    private ArrayList<String> imagen; // URL de img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
     private ArrayList<String> localizacion; // Eso.
     private ArrayList<String> fecha;
     private ArrayList<String> link;
@@ -55,11 +59,17 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private boolean primera = false;
     private int caller;
     private FirebaseDatabase db;
-    private DatabaseReference ref;
+    private DatabaseReference refFav;
+    private DatabaseReference refGrupo;
     private ArrayList<Favorito> tFavoritos;
+    private ArrayList<Dialog> tGruposNuevos;
+    private ArrayList<Dialog> tGruposOriginales;
+    private ArrayList<Dialog> tGruposOriginalesAux; // Creo esta auxiliar porque cuando hago
+                                                    // removeAll, la lista 'tGruposOriginales'
+                                                    // se modifica.
 
-    //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se esté logueado,
-    //no salga el dialog y el splash screen sirva como pantalla de carga.
+    //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se
+    //esté logueado, no salga el dialog y el splash screen sirva como pantalla de carga.
 
     public ProgressTask(Context context, int caller) {
         this.context = context;
@@ -72,29 +82,17 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.link = new ArrayList<>();
         this.tNoticia = new ArrayList<>();
         this.tFavoritos = new ArrayList<>();
+        this.tGruposOriginales = new ArrayList<>();
+        this.tGruposOriginalesAux = new ArrayList<>();
+        this.tGruposNuevos = new ArrayList<>();
         db = FirebaseDatabase.getInstance();
         String usuario = SplashActivity.pref.getString("usuario", null);
-        ref = db.getReference("favoritos/" + usuario);
-        ref.addValueEventListener(ref_ValueEventListener);
+        refFav = db.getReference("favoritos/" + usuario);
+        refFav.addValueEventListener(refFav_ValueEventListener);
 
+        refGrupo = db.getReference("grupos/");
+        refGrupo.addValueEventListener(refGrupo_ValueEventListener);
     }
-
-    //Listener Firebase
-    private ValueEventListener ref_ValueEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            tFavoritos.clear();
-            for (DataSnapshot data : dataSnapshot.getChildren()) {
-                Favorito favorito = data.getValue(Favorito.class);
-                tFavoritos.add(favorito);
-            }
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            Toast.makeText(context, "Error en la base de datos!", Toast.LENGTH_SHORT).show();
-        }
-    };
 
     @Override
     protected void onPreExecute() {
@@ -133,7 +131,12 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             if (tag.equalsIgnoreCase("title")) {
                                 String title = parser.nextText();
                                 if (!title.equals("RSS de Carreras de vamosacorrer.com")) {
-                                    titulo.add(title);
+                                    // Titulo no puede contener ".", "#", "[", "]".
+                                    String tituloFormateado = title.replace(".", "")
+                                            .replace("#", "")
+                                            .replace("[", "")
+                                            .replace("]", "");
+                                    titulo.add(tituloFormateado);
                                 }
                             }
 
@@ -200,7 +203,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             break;
                     } // fin switch
                     parserEvent = parser.next();
-                    // Un poco mas tarde porque ahora tambien crea el atrib. LatLng de cada noticia.
+
                     if (localizacion.size() == 20 && caller == SplashActivity.CALLER_SPLASH) {
                         publishProgress();
                     }
@@ -233,19 +236,11 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
 
             Geocoder geocoder = new Geocoder(context, new Locale("es", "ES"));
+            Message lastMessage = new Message("", new Usuario(), "");
 
             for (int i = 0; i < fecha.size(); i++) {
                 Noticia noticia = new Noticia();
-                // Titulo no puede contener ".", "#", "[", "]".
                 noticia.setTitulo(titulo.get(i));
-                if (titulo.get(i).contains(".") || titulo.get(i).contains("#") ||
-                        titulo.get(i).contains("[") || titulo.get(i).contains("]")) {
-                    noticia.setTitulo(titulo.get(i)
-                            .replace(".", "")
-                            .replace("#", "")
-                            .replace("[", "")
-                            .replace("]", ""));
-                }
                 noticia.setLocalizacion(localizacion.get(i));
                 noticia.setLink(link.get(i));
                 noticia.setFecha(fecha.get(i));
@@ -268,6 +263,22 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 }
 
                 tNoticia.add(noticia);
+
+                Dialog grupo = new Dialog(titulo.get(i), titulo.get(i), imagen.get(i),
+                        new ArrayList<Usuario>(), lastMessage, 0);
+                tGruposNuevos.add(grupo);
+            }
+
+            // Borramos los que ya no existan (eventos que ya han sido eliminados).
+            tGruposOriginales.removeAll(tGruposNuevos); // Noticias que ya no existen.
+            for (int i = 0; i < tGruposOriginales.size(); i++) {
+                db.getReference("grupos/").child(tGruposOriginales.get(i).getDialogName()).removeValue();
+            }
+
+            // Y creamos los que no esten.
+            tGruposNuevos.removeAll(tGruposOriginalesAux); // Noticias que no estan anadidas.
+            for (int i = 0; i < tGruposNuevos.size(); i++) {
+                db.getReference("grupos/").child(tGruposNuevos.get(i).getDialogName()).setValue(tGruposNuevos.get(i));
             }
 
             Collections.sort(tNoticia);
@@ -282,4 +293,38 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
             dialog.dismiss();
         }
     }
+
+    //Listener Firebase
+    private ValueEventListener refFav_ValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            tFavoritos.clear();
+            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                Favorito favorito = data.getValue(Favorito.class);
+                tFavoritos.add(favorito);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Toast.makeText(context, "(FV) Error en la base de datos!", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private ValueEventListener refGrupo_ValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                Dialog dialog = data.getValue(Dialog.class);
+                tGruposOriginales.add(dialog);
+                tGruposOriginalesAux.add(dialog);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Toast.makeText(context, "(GP) Error en la base de datos!", Toast.LENGTH_SHORT).show();
+        }
+    };
+
 }

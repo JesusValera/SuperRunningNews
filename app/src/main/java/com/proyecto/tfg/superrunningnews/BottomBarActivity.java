@@ -50,7 +50,6 @@ public class BottomBarActivity extends AppCompatActivity {
         bundleNoticia.putParcelableArrayList("noticia", tNoticias);
         FRAG_NOTICIA.setArguments(bundleNoticia);
         FRAG_MAPA.setArguments(bundleNoticia);
-        FRAG_CHAT.setArguments(bundleNoticia);
 
         if (savedInstanceState != null) {
             seccion = savedInstanceState.getInt("seccionActual");
@@ -77,8 +76,6 @@ public class BottomBarActivity extends AppCompatActivity {
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, servicePendingIntent);
     }
-
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

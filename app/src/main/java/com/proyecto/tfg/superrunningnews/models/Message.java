@@ -4,8 +4,7 @@ import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
 
-public class Message implements MessageContentType
-        /*and this one is for custom content type (in this case - voice message)*/ {
+public class Message implements MessageContentType {
 
     private String id;
     private String text;

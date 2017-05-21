@@ -16,11 +16,14 @@
 
 package com.proyecto.tfg.superrunningnews.models;
 
+import android.support.annotation.NonNull;
+
+import com.google.firebase.database.Exclude;
 import com.stfalcon.chatkit.commons.models.IDialog;
 
 import java.util.ArrayList;
 
-public class Dialog implements IDialog<Message> {
+public class Dialog implements IDialog<Message>, Comparable<Dialog> {
 
     private String id;
     private String dialogPhoto;
@@ -29,6 +32,13 @@ public class Dialog implements IDialog<Message> {
     private Message lastMessage;
 
     private int unreadCount;
+
+    // Constructor vacio para firebase.
+    public Dialog() {
+        this.id = "";
+        this.dialogName = "";
+        this.dialogPhoto = "";
+    }
 
     public Dialog(String id, String name, String photo,
                   ArrayList<Usuario> users, Message lastMessage, int unreadCount) {
@@ -55,11 +65,17 @@ public class Dialog implements IDialog<Message> {
         return dialogName;
     }
 
+    @Exclude
     @Override
     public ArrayList<Usuario> getUsers() {
         return users;
     }
 
+    public void setUsers(ArrayList<Usuario> users) {
+        this.users = users;
+    }
+
+    @Exclude
     @Override
     public Message getLastMessage() {
         return lastMessage;
@@ -75,4 +91,18 @@ public class Dialog implements IDialog<Message> {
         return unreadCount;
     }
 
+    // Necesario para comparar los objetos cuando se hace: Collection<c>.removeAll(<c> Collection);
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Dialog)) {
+            return false;
+        }
+        Dialog otherMember = (Dialog) obj;
+        return otherMember.getId().equals(getId());
+    }
+
+    @Override
+    public int compareTo(@NonNull Dialog o) {
+        return o.getDialogName().compareToIgnoreCase(dialogName);
+    }
 }

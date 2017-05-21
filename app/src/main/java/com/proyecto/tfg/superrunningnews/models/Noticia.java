@@ -157,7 +157,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
     public static Comparator<Noticia> NoticiaOrdenadaProvincia = new Comparator<Noticia>() {
         @Override
         public int compare(Noticia n1, Noticia n2) {
-            return n1.getLocalizacion().compareTo(n2.getLocalizacion());
+            return n1.getLocalizacion().compareToIgnoreCase(n2.getLocalizacion());
         }
     };
 
