@@ -49,6 +49,7 @@ public class MessagesActivity extends BaseMessagesActivity
     private String titulo;
     private DatabaseReference ref;
     private String usuario;
+    private boolean entrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +67,9 @@ public class MessagesActivity extends BaseMessagesActivity
 
         messagesList = (MessagesList) findViewById(R.id.messagesList);
 
-        imageLoader = new ImageLoader() {
-            @Override
-            public void loadImage(ImageView imageView, String url) {
-                Picasso.with(getApplicationContext()).load(url).into(imageView);
-            }
-        };
-
         messagesAdapter = new MessagesListAdapter<>(usuario, holdersConfig, imageLoader);
+
+        entrar = false;
 
         ((MessageInput) findViewById(R.id.input)).setInputListener(this);
         initAdapter();
@@ -81,19 +77,18 @@ public class MessagesActivity extends BaseMessagesActivity
 
     private void initAdapter() {
         messagesAdapter.enableSelectionMode(this);
-        messagesAdapter.setLoadMoreListener(this);
         messagesList.setAdapter(messagesAdapter);
 
         // grupos -> nombreEvento -> mensajes -> user+hora -> [MENSAJE]
         FirebaseDatabase db = FirebaseDatabase.getInstance();
 
-        // Mensaje nuevo.
-        ref = db.getReference("grupos/").child(titulo + "/").child("mensajes/");
-        ref.addValueEventListener(ref_ValueEvent);
-
         // Cargar todos los mensajes.
         DatabaseReference ref2 = db.getReference("grupos/").child(titulo + "/").child("mensajes/");
         ref2.addListenerForSingleValueEvent(ref2_ValueEvent);
+
+        // Mensaje nuevo.
+        ref = db.getReference("grupos/").child(titulo + "/").child("mensajes/");
+        ref.addValueEventListener(ref_ValueEvent);
     }
 
     private ValueEventListener ref_ValueEvent = new ValueEventListener() {
@@ -106,8 +101,13 @@ public class MessagesActivity extends BaseMessagesActivity
                 sms = data.getValue(Mensaje.class);
             }
             // Y anadirlo al adaptador.
+
             if (sms != null) {
-                messagesAdapter.addToStart(sms, true);
+                if (entrar) {
+                    messagesAdapter.addToStart(sms, true);
+                } else {
+                    entrar = true;
+                }
             }
         }
 
@@ -148,7 +148,6 @@ public class MessagesActivity extends BaseMessagesActivity
 
         return true;
     }
-
 
     private ValueEventListener ref2_ValueEvent = new ValueEventListener() {
         @Override

@@ -16,13 +16,17 @@
 
 package com.proyecto.tfg.superrunningnews.base;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Mensaje;
+import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
@@ -34,8 +38,7 @@ import java.util.Locale;
  */
 
 public abstract class BaseMessagesActivity extends AppCompatActivity
-        implements MessagesListAdapter.SelectionListener,
-        MessagesListAdapter.OnLoadMoreListener {
+        implements MessagesListAdapter.SelectionListener {
 
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Mensaje> messagesAdapter;
@@ -44,8 +47,15 @@ public abstract class BaseMessagesActivity extends AppCompatActivity
     private int selectionCount;
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        imageLoader = new ImageLoader() {
+            @Override
+            public void loadImage(ImageView imageView, String url) {
+                Picasso.with(getApplicationContext()).load(url).into(imageView);
+            }
+        };
     }
 
     @Override
@@ -77,10 +87,6 @@ public abstract class BaseMessagesActivity extends AppCompatActivity
         } else {
             messagesAdapter.unselectAllItems();
         }
-    }
-
-    @Override
-    public void onLoadMore(int page, int totalItemsCount) {
     }
 
     @Override

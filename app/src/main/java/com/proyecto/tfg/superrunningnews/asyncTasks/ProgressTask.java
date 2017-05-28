@@ -63,8 +63,8 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<Dialog> tGruposNuevos;
     private ArrayList<Dialog> tGruposOriginales;
     private ArrayList<Dialog> tGruposOriginalesAux; // Creo esta auxiliar porque cuando hago
-    // removeAll, la lista 'tGruposOriginales'
-    // se modifica.
+                                                    // removeAll, la lista 'tGruposOriginales'
+                                                    // se modifica.
 
     public ProgressTask(Context context, int caller) {
         this.context = context;
@@ -249,7 +249,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                         noticia.setLatLng(latLng);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
 
                 noticia.setFavorito(false);

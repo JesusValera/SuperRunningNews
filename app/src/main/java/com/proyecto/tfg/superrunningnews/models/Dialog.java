@@ -23,6 +23,7 @@ import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Dialog implements IDialog<Mensaje>, Comparable<Dialog> {
@@ -32,6 +33,7 @@ public class Dialog implements IDialog<Mensaje>, Comparable<Dialog> {
     private String dialogName;
     private ArrayList<Usuario> users;
     private Mensaje lastMensaje;
+    private HashMap<String, Mensaje> mensajes;
 
     private int unreadCount;
 
@@ -76,7 +78,11 @@ public class Dialog implements IDialog<Mensaje>, Comparable<Dialog> {
     @Exclude
     @Override
     public Mensaje getLastMessage() {
-        return lastMensaje;
+        try {
+            return mensajes.values().iterator().next();
+        } catch (NullPointerException e) {
+            return new Mensaje("", new Usuario(), "");
+        }
     }
 
     @Override
@@ -87,6 +93,14 @@ public class Dialog implements IDialog<Mensaje>, Comparable<Dialog> {
     @Override
     public int getUnreadCount() {
         return unreadCount;
+    }
+
+    public HashMap<String, Mensaje> getMensajes() {
+        return mensajes;
+    }
+
+    public void setMensajes(HashMap<String, Mensaje> mensajes) {
+        this.mensajes = mensajes;
     }
 
     @Override
