@@ -1,6 +1,5 @@
 package com.proyecto.tfg.superrunningnews.asyncTasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -11,12 +10,10 @@ import java.util.List;
 
 public class MapTask extends AsyncTask<Void, Void, Void> {
 
-    private Context context;
     private List<MarkerOptions> marcadores;
     private List<Noticia> tNoticia;
 
-    public MapTask(Context context, List<Noticia> tNoticia, List<MarkerOptions> tMarcadores) {
-        this.context = context;
+    public MapTask(List<Noticia> tNoticia, List<MarkerOptions> tMarcadores) {
         this.tNoticia = tNoticia;
         marcadores = tMarcadores;
     }

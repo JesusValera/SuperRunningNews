@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.proyecto.tfg.superrunningnews.fragments;
+package com.proyecto.tfg.superrunningnews;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,14 +26,14 @@ import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
-public abstract class DemoDialogFragment extends Fragment
+public abstract class BaseChatFragment extends Fragment
         implements DialogsListAdapter.OnDialogClickListener<Dialog>,
         DialogsListAdapter.OnDialogLongClickListener<Dialog> {
 
     protected ImageLoader imageLoader;
     protected DialogsListAdapter<Dialog> dialogsAdapter;
 
-    public DemoDialogFragment() {
+    public BaseChatFragment() {
         // Required empty public constructor
     }
 
@@ -44,9 +44,7 @@ public abstract class DemoDialogFragment extends Fragment
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
-                if (!url.equals("")) {
-                    Picasso.with(getContext()).load(url).into(imageView);
-                }
+                Picasso.with(getContext()).load(url).into(imageView);
             }
         };
     }

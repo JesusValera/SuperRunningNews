@@ -20,33 +20,32 @@ import android.support.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
 import com.stfalcon.chatkit.commons.models.IDialog;
+import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Dialog implements IDialog<Message>, Comparable<Dialog> {
+public class Dialog implements IDialog<Mensaje>, Comparable<Dialog> {
 
     private String id;
     private String dialogPhoto;
     private String dialogName;
     private ArrayList<Usuario> users;
-    private Message lastMessage;
+    private Mensaje lastMensaje;
 
     private int unreadCount;
 
-    // Constructor vacio para firebase.
+    // Constructor para firebase.
     public Dialog() {
-        this.id = "";
-        this.dialogName = "";
-        this.dialogPhoto = "";
     }
 
     public Dialog(String id, String name, String photo,
-                  ArrayList<Usuario> users, Message lastMessage, int unreadCount) {
+                  ArrayList<Usuario> users, Mensaje lastMensaje, int unreadCount) {
         this.id = id;
         this.dialogName = name;
         this.dialogPhoto = photo;
         this.users = users;
-        this.lastMessage = lastMessage;
+        this.lastMensaje = lastMensaje;
         this.unreadCount = unreadCount;
     }
 
@@ -65,9 +64,8 @@ public class Dialog implements IDialog<Message>, Comparable<Dialog> {
         return dialogName;
     }
 
-    @Exclude
     @Override
-    public ArrayList<Usuario> getUsers() {
+    public List<? extends IUser> getUsers() {
         return users;
     }
 
@@ -77,13 +75,13 @@ public class Dialog implements IDialog<Message>, Comparable<Dialog> {
 
     @Exclude
     @Override
-    public Message getLastMessage() {
-        return lastMessage;
+    public Mensaje getLastMessage() {
+        return lastMensaje;
     }
 
     @Override
-    public void setLastMessage(Message lastMessage) {
-        this.lastMessage = lastMessage;
+    public void setLastMessage(Mensaje mensaje) {
+        this.lastMensaje = mensaje;
     }
 
     @Override
@@ -91,7 +89,13 @@ public class Dialog implements IDialog<Message>, Comparable<Dialog> {
         return unreadCount;
     }
 
-    // Necesario para comparar los objetos cuando se hace: Collection<c>.removeAll(<c> Collection);
+    @Override
+    public int compareTo(@NonNull Dialog o) {
+        return o.getDialogName().compareToIgnoreCase(dialogName);
+    }
+
+    // Necesario para comparar los objetos cuando se hace -->
+    //  Collection<c>.removeAll(<c> Collection);
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Dialog)) {
@@ -101,8 +105,4 @@ public class Dialog implements IDialog<Message>, Comparable<Dialog> {
         return otherMember.getId().equals(getId());
     }
 
-    @Override
-    public int compareTo(@NonNull Dialog o) {
-        return o.getDialogName().compareToIgnoreCase(dialogName);
-    }
 }

@@ -5,27 +5,19 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.io.File;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class NotificacionesService extends IntentService {
 
-    private ArrayList<Noticia> tNoticias;
     private int idNotificacion;
 
     public NotificacionesService() {
@@ -38,7 +30,7 @@ public class NotificacionesService extends IntentService {
 
         try {
             //tNoticias = intent.getParcelableArrayListExtra("noticia"); //El intent no tiene los datos
-            tNoticias=BottomBarActivity.noticias;
+            ArrayList<Noticia> tNoticias = BottomBarActivity.noticias;
             Calendar fechaNoticia = Calendar.getInstance();
             Calendar fechaActual = Calendar.getInstance();
 

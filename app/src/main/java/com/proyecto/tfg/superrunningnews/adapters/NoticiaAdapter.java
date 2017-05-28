@@ -1,6 +1,7 @@
 package com.proyecto.tfg.superrunningnews.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.proyecto.tfg.superrunningnews.MessagesActivity;
 import com.proyecto.tfg.superrunningnews.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Favorito;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
@@ -25,23 +27,24 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHolder> {
+public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.ViewHolder> {
 
     private List<Noticia> tNoticias;
     private Context context;
     private View.OnClickListener listener;
     private int itemPos = -1;
-    private FirebaseDatabase db;
     private DatabaseReference ref;
     private String usuario;
     private final String format = "dd/MM/yyyy";
-    private final String fechaHoy = new SimpleDateFormat(format).format(Calendar.getInstance().getTime());
+    private final String fechaHoy = new SimpleDateFormat(format, new Locale("ES", "es"))
+            .format(Calendar.getInstance().getTime());
 
-    public AdapterNoticia(List<Noticia> tNoticias, Context context) {
+    public NoticiaAdapter(List<Noticia> tNoticias, Context context) {
         this.tNoticias = tNoticias;
         this.context = context;
-        db = FirebaseDatabase.getInstance();
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
         usuario = SplashActivity.pref.getString("usuario", null);
         ref = db.getReference("favoritos/" + usuario);
     }
@@ -101,7 +104,7 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivImagen;
         private TextView txtTitulo;
@@ -109,6 +112,7 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
         private TextView txtFecha;
         private LinearLayout llInformacion;
         private FloatingActionButton fbFavorito;
+        private FloatingActionButton fbChat;
 
         private ViewHolder(final View v) {
             super(v);
@@ -118,6 +122,7 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
             txtFecha = (TextView) v.findViewById(R.id.txtFecha);
             llInformacion = (LinearLayout) v.findViewById(R.id.llInformacion);
             fbFavorito = (FloatingActionButton) v.findViewById(R.id.fbFavorito);
+            fbChat = (FloatingActionButton) v.findViewById(R.id.fbChat);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -133,7 +138,7 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
             });
         }
 
-        public void setItem(Noticia n) {
+        public void setItem(final Noticia n) {
             Picasso.with(context).load(n.getImagen()).into(ivImagen);
             txtTitulo.setText(n.getTitulo());
             txtLocalizacion.setText(n.getLocalizacion());
@@ -142,12 +147,12 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
             if (n.isFavorito()) fbFavorito.setImageResource(R.drawable.ic_favorite_black_48dp);
             else fbFavorito.setImageResource(R.drawable.ic_favorite_border_black_48dp);
 
-            DateFormat formatter = new SimpleDateFormat(format);
-            Date fecha = null;
+            DateFormat formatter = new SimpleDateFormat(format, new Locale("ES", "es"));
+            Date fecha;
             try {
                 fecha = formatter.parse(n.getFecha());
             } catch (ParseException e) {
-                ;
+                fecha = Calendar.getInstance().getTime();
             }
 
             if (n.getFecha().equals(fechaHoy)) {
@@ -158,6 +163,15 @@ public class AdapterNoticia extends RecyclerView.Adapter<AdapterNoticia.ViewHold
                 // Si no se pone esta linea se pintan todos.
                 llInformacion.setBackgroundColor(Color.WHITE);
             }
+
+            fbChat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, MessagesActivity.class);
+                    i.putExtra("titulo", n.getTitulo());
+                    context.startActivity(i);
+                }
+            });
         }
     }
 }

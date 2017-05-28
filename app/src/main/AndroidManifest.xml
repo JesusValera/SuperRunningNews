@@ -39,7 +39,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark" />
         <activity
-            android:name=".DefaultMessagesActivity"
+            android:name=".MessagesActivity"
             android:label="@string/title_activity_default_messages"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />

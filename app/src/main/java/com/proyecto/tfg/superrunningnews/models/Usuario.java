@@ -10,10 +10,12 @@ public class Usuario implements IUser {
     private String avatar;
 
     public Usuario() {
-        this.name = "";
-        this.password= "";
-        this.avatar = "";
-        this.password = "";
+    }
+
+    public Usuario(String id, String name, String avatar) {
+        this.id = id;
+        this.name = name;
+        this.avatar = avatar;
     }
 
     public Usuario(String id, String name, String avatar, String password) {

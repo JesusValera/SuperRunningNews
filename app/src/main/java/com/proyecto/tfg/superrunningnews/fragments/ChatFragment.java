@@ -16,6 +16,7 @@
 
 package com.proyecto.tfg.superrunningnews.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,26 +28,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.proyecto.tfg.superrunningnews.DefaultMessagesActivity;
+import com.proyecto.tfg.superrunningnews.BaseChatFragment;
+import com.proyecto.tfg.superrunningnews.MessagesActivity;
 import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Dialog;
-import com.proyecto.tfg.superrunningnews.models.Message;
-import com.proyecto.tfg.superrunningnews.models.Noticia;
+import com.proyecto.tfg.superrunningnews.models.Mensaje;
 import com.proyecto.tfg.superrunningnews.models.Usuario;
+import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
+import com.stfalcon.chatkit.utils.DateFormatter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Date;
 
-public class ChatFragment extends DemoDialogFragment {
+public class ChatFragment extends BaseChatFragment implements DateFormatter.Formatter {
 
     private DialogsList dialogsList;
     private ArrayList<Dialog> tGrupos;
-
-    private FirebaseDatabase db;
-    private DatabaseReference ref;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -57,16 +57,13 @@ public class ChatFragment extends DemoDialogFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
 
+        dialogsList = (DialogsList) v.findViewById(R.id.dialogsList);
         tGrupos = new ArrayList<>();
 
         // Firebase.
-        db = FirebaseDatabase.getInstance();
-        ref = db.getReference("grupos/");
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference ref = db.getReference("grupos/");
         ref.addListenerForSingleValueEvent(ref_ValueEventListener);
-
-        dialogsList = (DialogsList) v.findViewById(R.id.dialogsList);
-
-        // grupos -> nombreEvento -> mensajes -> id+CreateAt -> objetoMensaje.
 
         return v;
     }
@@ -74,11 +71,11 @@ public class ChatFragment extends DemoDialogFragment {
     private ValueEventListener ref_ValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Message lastMessage = new Message("", new Usuario(), "");
+            Mensaje lastMensaje = new Mensaje("", new Usuario(), "");
             ArrayList<Usuario> user = new ArrayList<>();
             for (DataSnapshot data : dataSnapshot.getChildren()) {
                 Dialog dialog = data.getValue(Dialog.class);
-                dialog.setLastMessage(lastMessage);
+                dialog.setLastMessage(lastMensaje);
                 dialog.setUsers(user);
                 tGrupos.add(dialog);
             }
@@ -94,20 +91,35 @@ public class ChatFragment extends DemoDialogFragment {
     };
 
     @Override
-    public void onDialogClick(Dialog dialog) {
-        DefaultMessagesActivity.open(getContext());
+    public String format(Date date) {
+        // Ocultar hora de dialogos.
+        return "";
     }
 
     private void initAdapter() {
-        // Metodo setItems, tanto para los grupos como para los mensajes
-        super.dialogsAdapter = new DialogsListAdapter<>(super.imageLoader);
-        super.dialogsAdapter.setItems(tGrupos);
+        // Metodo setItems, tanto para los grupos como para los mensajes.
+        dialogsAdapter = new DialogsListAdapter<>(imageLoader);
+        dialogsAdapter.setItems(tGrupos);
 
-        super.dialogsAdapter.setOnDialogClickListener(this);
-        super.dialogsAdapter.setOnDialogLongClickListener(this);
+        dialogsAdapter.setOnDialogClickListener(clickListener);
+        dialogsAdapter.setOnDialogLongClickListener(this);
+        dialogsAdapter.setDatesFormatter(this);
 
-        dialogsList.setAdapter(super.dialogsAdapter);
+        dialogsList.setAdapter(dialogsAdapter);
         dialogsList.scrollToPosition(tGrupos.size()-1);
+    }
+
+    private DialogsListAdapter.OnDialogClickListener clickListener = new DialogsListAdapter.OnDialogClickListener() {
+        @Override
+        public void onDialogClick(IDialog dialog) {
+            Intent i = new Intent(getContext(), MessagesActivity.class);
+            i.putExtra("titulo", dialog.getDialogName());
+            startActivity(i);
+        }
+    };
+
+    @Override
+    public void onDialogClick(Dialog dialog) {
     }
 
 }

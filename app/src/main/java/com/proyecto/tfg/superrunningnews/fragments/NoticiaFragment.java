@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.proyecto.tfg.superrunningnews.adapters.AdapterNoticia;
+import com.proyecto.tfg.superrunningnews.adapters.NoticiaAdapter;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
 
@@ -24,7 +24,7 @@ public class NoticiaFragment extends Fragment {
 
     private ArrayList<Noticia> tNoticia;
     private RecyclerView recyclerView;
-    private AdapterNoticia adapter;
+    private NoticiaAdapter adapter;
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2, fab3;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
@@ -49,7 +49,7 @@ public class NoticiaFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new AdapterNoticia(tNoticia, getContext());
+        adapter = new NoticiaAdapter(tNoticia, getContext());
         recyclerView.setAdapter(adapter);
 
         adapter.setOnClickListener(clickListener);

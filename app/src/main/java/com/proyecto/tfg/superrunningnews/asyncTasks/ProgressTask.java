@@ -21,7 +21,7 @@ import com.proyecto.tfg.superrunningnews.LoginActivity;
 import com.proyecto.tfg.superrunningnews.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Dialog;
 import com.proyecto.tfg.superrunningnews.models.Favorito;
-import com.proyecto.tfg.superrunningnews.models.Message;
+import com.proyecto.tfg.superrunningnews.models.Mensaje;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Usuario;
@@ -39,7 +39,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -47,29 +46,24 @@ import java.util.StringTokenizer;
 
 public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
-    private final String urlRss = "http://www.vamosacorrer.com/rss/feeds/rss_carreras.xml"; // Privado y final.
+    private final String urlRss = "http://www.vamosacorrer.com/rss/feeds/rss_carreras.xml";
     private ProgressDialog dialog;
     private Context context;
-    private ArrayList<String> titulo; // Titulo de la entrada.
-    private ArrayList<String> imagen; // URL de img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
-    private ArrayList<String> localizacion; // Eso.
+    private ArrayList<String> titulo;
+    private ArrayList<String> imagen; // URL img -> http://www.vamosacorrer.com/imagenes/2017/04...ion.jpg
+    private ArrayList<String> localizacion;
     private ArrayList<String> fecha;
     private ArrayList<String> link;
     private ArrayList<Noticia> tNoticia;
     private boolean primera = false;
     private int caller;
     private FirebaseDatabase db;
-    private DatabaseReference refFav;
-    private DatabaseReference refGrupo;
     private ArrayList<Favorito> tFavoritos;
     private ArrayList<Dialog> tGruposNuevos;
     private ArrayList<Dialog> tGruposOriginales;
     private ArrayList<Dialog> tGruposOriginalesAux; // Creo esta auxiliar porque cuando hago
                                                     // removeAll, la lista 'tGruposOriginales'
                                                     // se modifica.
-
-    //Crear variable a partir de los datos de las preferencias. Hacerlo para que cuando ya se
-    //esté logueado, no salga el dialog y el splash screen sirva como pantalla de carga.
 
     public ProgressTask(Context context, int caller) {
         this.context = context;
@@ -87,11 +81,11 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         this.tGruposNuevos = new ArrayList<>();
         db = FirebaseDatabase.getInstance();
         String usuario = SplashActivity.pref.getString("usuario", null);
-        refFav = db.getReference("favoritos/" + usuario);
+        DatabaseReference refFav = db.getReference("favoritos/" + usuario);
         refFav.addValueEventListener(refFav_ValueEventListener);
 
-        refGrupo = db.getReference("grupos/");
-        refGrupo.addValueEventListener(refGrupo_ValueEventListener);
+        DatabaseReference refGrupo = db.getReference("grupos/");
+        refGrupo.addListenerForSingleValueEvent(refGrupo_ValueEventListener);
     }
 
     @Override
@@ -175,12 +169,14 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                             if (tag.equalsIgnoreCase("pubDate")) {
                                 String sFecha = parser.nextText();
                                 if (sFecha.length() < 20) {
-                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
                                     try {
+                                        Locale locale = new Locale("ES", "es");
+                                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", locale);
+                                        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd", locale);
                                         String sFecha2 = sdf.format(sdf2.parse(sFecha.substring(0, 10)));
                                         fecha.add(sFecha2);
                                     } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
                                 }
                             }
@@ -236,7 +232,6 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         if (success) {
 
             Geocoder geocoder = new Geocoder(context, new Locale("es", "ES"));
-            Message lastMessage = new Message("", new Usuario(), "");
 
             for (int i = 0; i < fecha.size(); i++) {
                 Noticia noticia = new Noticia();
@@ -248,8 +243,10 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
                 try {
                     List<Address> pos = geocoder.getFromLocationName(localizacion.get(i), 1);
-                    LatLng latLng = new LatLng(pos.get(0).getLatitude(), pos.get(0).getLongitude());
-                    noticia.setLatLng(latLng);
+                    if (pos.size() != 0) {
+                        LatLng latLng = new LatLng(pos.get(0).getLatitude(), pos.get(0).getLongitude());
+                        noticia.setLatLng(latLng);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -265,7 +262,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
                 tNoticia.add(noticia);
 
                 Dialog grupo = new Dialog(titulo.get(i), titulo.get(i), imagen.get(i+1),
-                        new ArrayList<Usuario>(), lastMessage, 0);
+                        new ArrayList<Usuario>(), new Mensaje(), 0);
                 tGruposNuevos.add(grupo);
             }
 

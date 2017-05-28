@@ -33,7 +33,6 @@ public class BottomBarActivity extends AppCompatActivity {
     private long mBackPressed;
     private ArrayList<Noticia> tNoticias;
     public static ArrayList<Noticia> noticias;
-    private Thread t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

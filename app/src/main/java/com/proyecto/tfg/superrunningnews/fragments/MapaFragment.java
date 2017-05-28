@@ -86,7 +86,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-        new MapTask(MapaFragment.this.getContext(), tNoticia, marcadores).execute();
+        new MapTask(tNoticia, marcadores).execute();
     }
 
     @Override
