@@ -1,4 +1,4 @@
-package com.proyecto.tfg.superrunningnews;
+package com.proyecto.tfg.superrunningnews.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.asyncTasks.ProgressTask;
 
 public class SplashActivity extends AppCompatActivity{

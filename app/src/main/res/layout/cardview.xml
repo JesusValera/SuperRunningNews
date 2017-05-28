@@ -26,8 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="#FFF"
-                android:scaleType="centerCrop"
                 android:contentDescription="@string/foto"
+                android:scaleType="centerCrop"
                 card_view:srcCompat="@drawable/img_default" />
 
             <LinearLayout
@@ -57,6 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:maxLines="1"
                         android:text="@string/localidad"
                         android:textColor="#000"
                         android:textSize="14sp" />

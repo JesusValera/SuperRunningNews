@@ -1,4 +1,4 @@
-package com.proyecto.tfg.superrunningnews;
+package com.proyecto.tfg.superrunningnews.helpers;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

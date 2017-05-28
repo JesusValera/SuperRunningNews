@@ -14,7 +14,7 @@
  * limitations under the License.
  *******************************************************************************/
 
-package com.proyecto.tfg.superrunningnews;
+package com.proyecto.tfg.superrunningnews.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.proyecto.tfg.superrunningnews.base.BaseMessagesActivity;
+import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.adapters.MessageAdapter;
 import com.proyecto.tfg.superrunningnews.models.Mensaje;
 import com.proyecto.tfg.superrunningnews.models.Usuario;

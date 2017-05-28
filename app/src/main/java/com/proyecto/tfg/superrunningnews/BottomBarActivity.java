@@ -18,6 +18,7 @@ import com.proyecto.tfg.superrunningnews.fragments.MapaFragment;
 import com.proyecto.tfg.superrunningnews.fragments.NoticiaFragment;
 import com.proyecto.tfg.superrunningnews.fragments.PerfilFragment;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
+import com.proyecto.tfg.superrunningnews.services.NotificacionesService;
 
 import java.util.ArrayList;
 import java.util.Calendar;

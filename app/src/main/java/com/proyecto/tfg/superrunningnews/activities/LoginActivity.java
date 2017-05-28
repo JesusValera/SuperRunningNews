@@ -1,4 +1,4 @@
-package com.proyecto.tfg.superrunningnews;
+package com.proyecto.tfg.superrunningnews.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.asyncTasks.ProgressTask;
 import com.proyecto.tfg.superrunningnews.models.Usuario;
 import com.google.firebase.database.DataSnapshot;

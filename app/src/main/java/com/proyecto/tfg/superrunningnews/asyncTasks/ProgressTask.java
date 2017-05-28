@@ -17,8 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.proyecto.tfg.superrunningnews.BottomBarActivity;
-import com.proyecto.tfg.superrunningnews.LoginActivity;
-import com.proyecto.tfg.superrunningnews.SplashActivity;
+import com.proyecto.tfg.superrunningnews.activities.LoginActivity;
+import com.proyecto.tfg.superrunningnews.activities.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Dialog;
 import com.proyecto.tfg.superrunningnews.models.Favorito;
 import com.proyecto.tfg.superrunningnews.models.Mensaje;
@@ -40,6 +40,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -62,8 +63,8 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
     private ArrayList<Dialog> tGruposNuevos;
     private ArrayList<Dialog> tGruposOriginales;
     private ArrayList<Dialog> tGruposOriginalesAux; // Creo esta auxiliar porque cuando hago
-                                                    // removeAll, la lista 'tGruposOriginales'
-                                                    // se modifica.
+    // removeAll, la lista 'tGruposOriginales'
+    // se modifica.
 
     public ProgressTask(Context context, int caller) {
         this.context = context;
@@ -261,10 +262,12 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
 
                 tNoticia.add(noticia);
 
-                Dialog grupo = new Dialog(titulo.get(i), titulo.get(i), imagen.get(i+1),
+                Dialog grupo = new Dialog(titulo.get(i), titulo.get(i), imagen.get(i + 1),
                         new ArrayList<Usuario>(), new Mensaje(), 0);
                 tGruposNuevos.add(grupo);
             }
+
+            noticiaExtra();
 
             // Borramos los que ya no existan (eventos que ya han sido eliminados).
             tGruposOriginales.removeAll(tGruposNuevos); // Noticias que ya no existen.
@@ -289,6 +292,26 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
+    }
+
+    private void noticiaExtra() {
+        Locale locale = new Locale("ES", "es");
+        long d = new Date().getTime() + (1000 * 60 * 60 * 24);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", locale);
+        String fecha = sdf.format(new Date(d));
+
+        Noticia noticia = new Noticia();
+        noticia.setTitulo("Carrera de los Caballos del Vino");
+        noticia.setLocalizacion("Caravaca");
+        noticia.setLink("http://www.caravaca.org/");
+        noticia.setFecha(fecha);
+        noticia.setImagen("https://firebasestorage.googleapis.com/v0/b/superrunningnews-75380.appspot.com/o/imagenes%2Fcaravaca_castillo.jpg?alt=media&token=4cf84dc4-6a8d-4498-bdaa-7f1f7876fd1f");
+        noticia.setLatLng(new LatLng(38.0980454, -1.8799036));
+        tNoticia.add(noticia);
+
+        Dialog grupo = new Dialog(noticia.getTitulo(), noticia.getTitulo(), noticia.getImagen(),
+                new ArrayList<Usuario>(), new Mensaje(), 0);
+        tGruposNuevos.add(grupo);
     }
 
     //Listener Firebase

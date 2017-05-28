@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.proyecto.tfg.superrunningnews.MessagesActivity;
-import com.proyecto.tfg.superrunningnews.SplashActivity;
+import com.proyecto.tfg.superrunningnews.activities.MessagesActivity;
+import com.proyecto.tfg.superrunningnews.activities.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Favorito;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.proyecto.tfg.superrunningnews.R;

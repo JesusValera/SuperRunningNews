@@ -14,13 +14,14 @@
  * limitations under the License.
  *******************************************************************************/
 
-package com.proyecto.tfg.superrunningnews;
+package com.proyecto.tfg.superrunningnews.base;
 
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Mensaje;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;

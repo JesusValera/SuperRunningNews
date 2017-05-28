@@ -1,4 +1,4 @@
-package com.proyecto.tfg.superrunningnews;
+package com.proyecto.tfg.superrunningnews.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.proyecto.tfg.superrunningnews.helpers.ImageHelper;
+import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

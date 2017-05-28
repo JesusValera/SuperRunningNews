@@ -31,10 +31,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.proyecto.tfg.superrunningnews.ImageHelper;
-import com.proyecto.tfg.superrunningnews.LoginActivity;
+import com.proyecto.tfg.superrunningnews.helpers.ImageHelper;
+import com.proyecto.tfg.superrunningnews.activities.LoginActivity;
 import com.proyecto.tfg.superrunningnews.R;
-import com.proyecto.tfg.superrunningnews.SplashActivity;
+import com.proyecto.tfg.superrunningnews.activities.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Usuario;
 import com.squareup.picasso.Picasso;
 
