@@ -156,7 +156,7 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.ViewHold
             }
 
             if (n.getFecha().equals(fechaHoy)) {
-                llInformacion.setBackgroundColor(Color.YELLOW);
+                llInformacion.setBackgroundColor(context.getResources().getColor(R.color.colorToday));
             } else if (fecha.before(Calendar.getInstance().getTime())) {
                 llInformacion.setBackgroundColor(Color.rgb(230, 230, 230));
             } else {
