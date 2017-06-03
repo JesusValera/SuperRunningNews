@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -286,8 +289,22 @@ public class PerfilFragment extends Fragment {
     private View.OnClickListener btLogout_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(getContext(), LoginActivity.class);
-            startActivity(i);
+            try {
+                MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.down);
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        Intent i = new Intent(getContext(), LoginActivity.class);
+                        startActivity(i);
+                    }
+                });
+                mp.start();
+                SharedPreferences.Editor editor = SplashActivity.pref.edit();
+                editor.putBoolean("login", false).apply();
+                SystemClock.sleep(500);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     };
 
