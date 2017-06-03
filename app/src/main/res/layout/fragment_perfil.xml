@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary"
+    android:background="@color/bg"
     android:orientation="vertical">
 
     <com.github.glomadrian.grav.GravView
@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         app:colorGenerator="com.github.glomadrian.grav.generator.paint.ArrayColorGenerator"
-        app:array_colors="@array/bubble"
+        app:array_colors="@array/red"
         app:pointGenerator="com.github.glomadrian.grav.generator.point.RegularPointGenerator"
         app:regular_cell_size="300"
         app:regular_variance="200"
@@ -35,7 +35,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:paddingTop="8dp"
-        android:theme="@style/AppTheme.Dark">
+        android:theme="@style/AppTheme.DarkLight">
 
         <!-- Layout vacío para que al iniciar la actividad no se ponga el foco en el editText -->
 
@@ -67,7 +67,7 @@
                 android:paddingTop="4dp"
                 android:text="@string/nombre"
                 android:textAlignment="center"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp"
                 android:textStyle="normal|bold" />
 
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="4dp"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme.DarkLight">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/etPassword"
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/nueva_contrasena"
                 android:inputType="textPassword"
-                android:textColor="@color/white" />
+                android:textColor="@color/colorPrimaryDark" />
         </android.support.design.widget.TextInputLayout>
 
 
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="6dp"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme.DarkLight">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/etPassword2"
@@ -103,14 +103,14 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/repite_contrasena"
                 android:inputType="textPassword"
-                android:textColor="@color/white" />
+                android:textColor="@color/colorPrimaryDark" />
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme.DarkLight">
 
             <ImageView
                 android:id="@+id/ivImagen"

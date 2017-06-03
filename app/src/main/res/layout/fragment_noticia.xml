@@ -17,9 +17,9 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="230dp"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:src="@drawable/sort_alph"
+        android:src="@drawable/alphabetical"
         android:visibility="invisible"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
@@ -30,9 +30,9 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="160dp"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:src="@drawable/sort_asc"
+        android:src="@drawable/calendar_up"
         android:visibility="invisible"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
@@ -43,9 +43,9 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="90dp"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:src="@drawable/sort_desc"
+        android:src="@drawable/calenda_down"
         android:visibility="invisible"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
@@ -55,8 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/sort_variant"
-        app:backgroundTint="@color/colorAccent"
+        android:src="@drawable/filter"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
