@@ -1,4 +1,4 @@
-/*******************************************************************************
+/* ******************************************************************************
  * Copyright 2016 stfalcon.com
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,24 +32,19 @@ public class Dialog implements IDialog<Mensaje>, Comparable<Dialog> {
     private String id;
     private String dialogPhoto;
     private String dialogName;
-    private ArrayList<Usuario> users;
-    private Mensaje lastMensaje;
+    private List<Usuario> users;
     private HashMap<String, Mensaje> mensajes;
-
-    private int unreadCount;
 
     // Constructor para firebase.
     public Dialog() {
     }
 
     public Dialog(String id, String name, String photo,
-                  ArrayList<Usuario> users, Mensaje lastMensaje, int unreadCount) {
+                  ArrayList<Usuario> users) {
         this.id = id;
         this.dialogName = name;
         this.dialogPhoto = photo;
         this.users = users;
-        this.lastMensaje = lastMensaje;
-        this.unreadCount = unreadCount;
     }
 
     @Override
@@ -79,20 +75,23 @@ public class Dialog implements IDialog<Mensaje>, Comparable<Dialog> {
     @Override
     public Mensaje getLastMessage() {
         try {
-            return mensajes.values().iterator().next();
+            List<String> sortedKeys = new ArrayList<>(mensajes.keySet());
+            Collections.sort(sortedKeys);
+            return mensajes.get(sortedKeys.get(sortedKeys.size() - 1));
         } catch (NullPointerException e) {
             return new Mensaje("", new Usuario(), "");
         }
     }
 
+    @Exclude
     @Override
     public void setLastMessage(Mensaje mensaje) {
-        this.lastMensaje = mensaje;
     }
 
+    @Exclude
     @Override
     public int getUnreadCount() {
-        return unreadCount;
+        return 0;
     }
 
     public HashMap<String, Mensaje> getMensajes() {

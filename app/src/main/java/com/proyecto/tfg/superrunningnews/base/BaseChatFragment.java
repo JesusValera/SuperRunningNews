@@ -1,4 +1,4 @@
-/*******************************************************************************
+/* ******************************************************************************
  * Copyright 2016 stfalcon.com
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
+
 package com.proyecto.tfg.superrunningnews.base;
 
 import android.os.Bundle;
@@ -40,7 +41,6 @@ public abstract class BaseChatFragment extends Fragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {

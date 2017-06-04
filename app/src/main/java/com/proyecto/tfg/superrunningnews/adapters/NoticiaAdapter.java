@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +72,8 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.cardview, viewGroup, false);
         return new ViewHolder(v);
     }
 
@@ -95,14 +97,14 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.ViewHold
                     noticia.setFavorito(false);
                     ref.child(noticia.getTitulo()).removeValue();
                 } else {
-                    ref.child(noticia.getTitulo()).setValue(new Favorito(usuario, noticia.getTitulo()));
+                    ref.child(noticia.getTitulo()).setValue(
+                            new Favorito(usuario, noticia.getTitulo()));
                     noticia.setFavorito(true);
                 }
                 notifyDataSetChanged();
             }
         });
     }
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -144,26 +146,8 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.ViewHold
             txtLocalizacion.setText(n.getLocalizacion());
             txtFecha.setText(n.getFecha());
 
-            if (n.isFavorito()) fbFavorito.setImageResource(R.drawable.ic_favorite_black_48dp);
-            else fbFavorito.setImageResource(R.drawable.ic_favorite_border_black_48dp);
-
-            DateFormat formatter = new SimpleDateFormat(format, new Locale("ES", "es"));
-            Date fecha;
-            try {
-                fecha = formatter.parse(n.getFecha());
-            } catch (ParseException e) {
-                fecha = Calendar.getInstance().getTime();
-            }
-
-            if (n.getFecha().equals(fechaHoy)) {
-                llInformacion.setBackgroundColor(context.getResources().getColor(R.color.colorToday));
-            } else if (fecha.before(Calendar.getInstance().getTime())) {
-                llInformacion.setBackgroundColor(Color.rgb(230, 230, 230));
-            } else {
-                // Si no se pone esta linea se pintan todos.
-                llInformacion.setBackgroundColor(Color.WHITE);
-            }
-
+            esFavorito(n);
+            colorTarjeta(n);
             fbChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -172,6 +156,32 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.ViewHold
                     context.startActivity(i);
                 }
             });
+        }
+
+        private void esFavorito(Noticia n) {
+            if (n.isFavorito()) {
+                fbFavorito.setImageResource(R.drawable.ic_favorite_black_48dp);
+            } else {
+                fbFavorito.setImageResource(R.drawable.ic_favorite_border_black_48dp);
+            }
+        }
+
+        private void colorTarjeta(Noticia n) {
+            if (n.getFecha().equals(fechaHoy)) {
+                llInformacion.setBackgroundColor(ContextCompat.getColor(context, R.color.colorToday));
+            } else if (fechaNoticia(n).before(Calendar.getInstance().getTime())) {
+                llInformacion.setBackgroundColor(Color.rgb(230, 230, 230));
+            } else { // Si no se pone esta linea se pintan todos.
+                llInformacion.setBackgroundColor(Color.WHITE);
+            }
+        }
+
+        private Date fechaNoticia(Noticia n) {
+            try {
+                return new SimpleDateFormat(format, new Locale("ES", "es")).parse(n.getFecha());
+            } catch (ParseException e) {
+                return Calendar.getInstance().getTime();
+            }
         }
     }
 }

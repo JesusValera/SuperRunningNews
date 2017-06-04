@@ -13,7 +13,7 @@
     <string name="fecha">00/00/1970</string>
     <string name="salir">Presione una vez más para salir.</string>
 
-    <string name="escribir_mensaje">Escriba su mensaje...</string>
+    <string name="escribir_mensaje">Escriba su mensaje…</string>
     <string name="accion_eliminar">Eliminar</string>
     <string name="accion_copiar">Copiar</string>
     <string name="mensaje_copiado">Mensaje copiado</string>
@@ -27,13 +27,13 @@
     <string name="nombre">Nombre</string>
     <string name="descripcion_imagen">Imagen de perfil</string>
 
-
     <string name="circle">
         M527.023,71.8233 C780.213,71.8233,985.464,277.075,985.464,530.265
         C985.464,783.455,780.213,988.707,527.023,988.707
         C273.832,988.707,68.5809,783.455,68.5809,530.265
         C68.5809,277.075,273.832,71.8233,527.023,71.8233 Z
     </string>
+    <string name="error_lectura_internet">Error en la lectura RSS. Compruebe su conexión a internet</string>
     <integer name="circle_original_width">200</integer>
     <integer name="circle_original_height">200</integer>
 </resources>

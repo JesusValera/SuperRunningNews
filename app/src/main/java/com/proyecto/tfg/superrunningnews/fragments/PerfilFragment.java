@@ -148,7 +148,6 @@ public class PerfilFragment extends Fragment {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            //Toast.makeText(PerfilFragment.this, "Error en la base de datos!", Toast.LENGTH_SHORT).show();
         }
     };
 

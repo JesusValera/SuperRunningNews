@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class Mensaje implements MessageContentType {
 
+    private static final String EMPTY = "__EMPTY__";
+
     private String id;
     private String text;
     private Date createdAt;
@@ -58,6 +60,14 @@ public class Mensaje implements MessageContentType {
                 ", createdAt=" + createdAt +
                 ", user=" + user +
                 '}';
+    }
+
+    public boolean estaVacio() {
+        return getText().equals(Mensaje.EMPTY);
+    }
+
+    public static Mensaje createEmtpy() {
+        return new Mensaje("id", new Usuario(), EMPTY);
     }
 
 }

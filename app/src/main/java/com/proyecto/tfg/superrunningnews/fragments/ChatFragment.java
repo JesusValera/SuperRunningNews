@@ -1,4 +1,4 @@
-/*******************************************************************************
+/* ******************************************************************************
  * Copyright 2016 stfalcon.com
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,12 +40,12 @@ import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 import com.stfalcon.chatkit.utils.DateFormatter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
 public class ChatFragment extends BaseChatFragment implements DateFormatter.Formatter {
 
-    private DialogsList dialogsList;
     private ArrayList<Dialog> tGrupos;
 
     public ChatFragment() {
@@ -56,57 +56,68 @@ public class ChatFragment extends BaseChatFragment implements DateFormatter.Form
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
-
-        dialogsList = (DialogsList) v.findViewById(R.id.dialogsList);
         tGrupos = new ArrayList<>();
+        crearReferenciaFirebase();
 
-        // Firebase.
+        return v;
+    }
+
+    private void crearReferenciaFirebase() {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference ref = db.getReference("grupos/");
         ref.addListenerForSingleValueEvent(ref_ValueEventListener);
-
-        return v;
     }
 
     private ValueEventListener ref_ValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Mensaje lastMensaje = new Mensaje("", new Usuario(), "");
+            cargarTodosMensajes(dataSnapshot);
+            Collections.sort(tGrupos);
+            initAdapter();
+        }
+
+        private void cargarTodosMensajes(DataSnapshot dataSnapshot) {
+            Mensaje lastMensaje = Mensaje.createEmtpy();
             ArrayList<Usuario> user = new ArrayList<>();
             for (DataSnapshot data : dataSnapshot.getChildren()) {
-                Dialog dialog = data.getValue(Dialog.class);
-                dialog.setLastMessage(lastMensaje);
-                dialog.setUsers(user);
-                tGrupos.add(dialog);
+                tGrupos.add(crearGrupo(data, lastMensaje, user));
             }
-            Collections.sort(tGrupos);
+        }
 
-            initAdapter();
+        private Dialog crearGrupo(DataSnapshot data, Mensaje lastMensaje, ArrayList<Usuario> user) {
+            Dialog dialog = data.getValue(Dialog.class);
+            dialog.setLastMessage(lastMensaje);
+            dialog.setUsers(user);
+            return dialog;
         }
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Toast.makeText(getContext(), "Error cargar dialogos.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Error al cargar los grupos.", Toast.LENGTH_SHORT).show();
         }
     };
 
-    @Override
-    public String format(Date date) {
-        // Ocultar hora de dialogos.
-        return "";
+    private void initAdapter() {
+        DialogsList dialogsList = (DialogsList) getView().findViewById(R.id.dialogsList);
+        dialogsAdapter = new DialogsListAdapter<>(imageLoader);
+        configurarAdaptadorGrupos();
+        establecerAdaptadorEnLista(dialogsList);
     }
 
-    private void initAdapter() {
-        // Metodo setItems, tanto para los grupos como para los mensajes.
-        dialogsAdapter = new DialogsListAdapter<>(imageLoader);
+    private void configurarAdaptadorGrupos() {
         dialogsAdapter.setItems(tGrupos);
+        anadirListenersAdaptadorGrupos();
+    }
 
+    private void anadirListenersAdaptadorGrupos() {
         dialogsAdapter.setOnDialogClickListener(clickListener);
         dialogsAdapter.setOnDialogLongClickListener(this);
         dialogsAdapter.setDatesFormatter(this);
+    }
 
+    private void establecerAdaptadorEnLista(DialogsList dialogsList) {
         dialogsList.setAdapter(dialogsAdapter);
-        dialogsList.scrollToPosition(tGrupos.size()-1);
+        dialogsList.scrollToPosition(tGrupos.size() - 1);
     }
 
     private DialogsListAdapter.OnDialogClickListener clickListener = new DialogsListAdapter.OnDialogClickListener() {
@@ -117,6 +128,17 @@ public class ChatFragment extends BaseChatFragment implements DateFormatter.Form
             startActivity(i);
         }
     };
+
+    @Override
+    public String format(Date date) {
+        if (Calendar.getInstance().getTime().compareTo(date) == 0) {
+            return "";
+        } else if (DateFormatter.isToday(date)) {
+            return DateFormatter.format(date, DateFormatter.Template.TIME);
+        } else {
+            return DateFormatter.format(date, DateFormatter.Template.STRING_DAY_MONTH_YEAR);
+        }
+    }
 
     @Override
     public void onDialogClick(Dialog dialog) {
