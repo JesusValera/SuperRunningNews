@@ -24,49 +24,46 @@ import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static final int SINGUP = 1;
+    public static final int CALLER_LOGIN = 2;
+
     private EditText etUsuario, etPassword;
     private Button btLogin;
     private CheckBox cbRecordar;
     private TextView tvSingup;
-
-    public static final int SINGUP = 1;
-
     private ArrayList<Usuario> usuarios;
-    private FirebaseDatabase db;
-    private DatabaseReference ref;
 
-    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
-
-    public static final int CALLER_LOGIN = 2;
-
-    //private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //pref = PreferenceManager.getDefaultSharedPreferences(SplashActivity.splashContext);
+        usuarios = new ArrayList<>();
+        cargarControles();
+        listeners();
+        firebase();
+    }
 
-        //Enganchar controles
+    private void cargarControles() {
         etUsuario = (EditText) findViewById(R.id.etUsuario);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btLogin = (Button) findViewById(R.id.btLogin);
         tvSingup = (TextView) findViewById(R.id.tvSingup);
         cbRecordar = (CheckBox) findViewById(R.id.cbRecordar);
+    }
 
-        //Listeners
+    private void listeners() {
         btLogin.setOnClickListener(btLogin_OnClickListener);
         tvSingup.setOnClickListener(tvSingup_OnClickListener);
+    }
 
-        //Firebase
-        usuarios = new ArrayList<>();
-        db = FirebaseDatabase.getInstance();
-        ref = db.getReference("usuarios");
-
+    private void firebase() {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference ref = db.getReference("usuarios");
         ref.addValueEventListener(ref_ValueEventListener);
-
     }
 
     //Listener Firebase
@@ -91,12 +88,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (!validar()) {
-                //Toast.makeText(LoginActivity.this, "No se ha podido conectar!", Toast.LENGTH_SHORT).show();
-                //btLogin.setEnabled(true);
                 return;
             }
 
-            final String usuario = etUsuario.getText().toString();
+            String usuario = etUsuario.getText().toString();
             String password = etPassword.getText().toString();
 
             //Comprobar los datos en Firebase
@@ -174,12 +169,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    /*@Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
-        //super.onBackPressed();
-    }*/
 
     @Override
     public void onBackPressed() {

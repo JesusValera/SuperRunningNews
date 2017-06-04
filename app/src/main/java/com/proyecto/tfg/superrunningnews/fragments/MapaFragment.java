@@ -44,11 +44,23 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mapa, container, false);
 
-        Bundle args = getArguments();
+        builder = new LatLngBounds.Builder();
+        marcadores = new ArrayList<>();
+
+        cargarNoticias(getArguments());
+        obtenerMapa(v, savedInstanceState);
+        inicializarGoogleApiClient();
+
+        return v;
+    }
+
+    private void cargarNoticias(Bundle args) {
         if (args != null) {
             this.tNoticia = args.getParcelableArrayList("noticia");
         }
+    }
 
+    private void obtenerMapa(View v, Bundle savedInstanceState) {
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume(); // needed to get the map to display immediately.
@@ -58,18 +70,15 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback,
             e.printStackTrace();
         }
         mMapView.getMapAsync(this);
+    }
 
+    private void inicializarGoogleApiClient() {
         if (gac == null) {
             gac = new GoogleApiClient.Builder(getContext())
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
         }
-
-        builder = new LatLngBounds.Builder();
-        marcadores = new ArrayList<>();
-
-        return v;
     }
 
     @Override

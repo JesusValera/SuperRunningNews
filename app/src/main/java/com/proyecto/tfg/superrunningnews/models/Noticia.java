@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 
 public class Noticia implements Parcelable, Comparable<Noticia> {
 
@@ -37,7 +38,8 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         favorito = false;
     }
 
-    public Noticia(String titulo, String imagen, String localizacion, String fecha, String link, LatLng latLng) {
+    public Noticia(String titulo, String imagen, String localizacion,
+                   String fecha, String link, LatLng latLng) {
         this.titulo = titulo;
         this.imagen = imagen;
         this.localizacion = localizacion;
@@ -114,7 +116,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
 
     @Override
     public int compareTo(@NonNull Noticia n) {
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("ES", "es"));
         Date fechaThis = null, fechaN = null;
         try {
             fechaThis = formatter.parse(this.fecha);
@@ -135,7 +137,7 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
     public static Comparator<Noticia> NoticiaOrdenadaFechaInversa = new Comparator<Noticia>() {
         @Override
         public int compare(Noticia n1, Noticia n2) {
-            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("ES", "es"));
             Date fechaThis = null, fechaN = null;
             try {
                 fechaThis = formatter.parse(n1.fecha);

@@ -20,23 +20,31 @@ public class MapTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-
         for (Noticia noticia : tNoticia) {
-            // Texto, descripcion y color del marcador.
             if (noticia.getLatLng() != null) {
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(noticia.getLatLng())
-                        .title(noticia.getTitulo())
-                        .snippet(noticia.getLocalizacion() + " el " + noticia.getFecha())
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                if (noticia.isFavorito()) {
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                }
+                MarkerOptions markerOptions = crearMarcador(noticia);
+                esFavorito(markerOptions, noticia);
                 marcadores.add(markerOptions);
             }
         }
 
         return null;
+    }
+
+    private MarkerOptions crearMarcador(Noticia noticia) {
+        return new MarkerOptions()
+                .position(noticia.getLatLng())
+                .title(noticia.getTitulo())
+                .snippet(noticia.getLocalizacion() + " el " + noticia.getFecha())
+                .icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+    }
+
+    private void esFavorito(MarkerOptions markerOptions, Noticia noticia) {
+        if (noticia.isFavorito()) {
+            markerOptions.icon(BitmapDescriptorFactory
+                    .defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        }
     }
 
 }

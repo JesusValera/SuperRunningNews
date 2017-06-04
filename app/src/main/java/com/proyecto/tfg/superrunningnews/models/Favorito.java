@@ -1,7 +1,5 @@
 package com.proyecto.tfg.superrunningnews.models;
 
-
-
 public class Favorito {
 
     private String usuario;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/* ******************************************************************************
  * Copyright 2016 stfalcon.com
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,8 @@
 
 package com.proyecto.tfg.superrunningnews.adapters;
 
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,18 +28,12 @@ import com.stfalcon.chatkit.R;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.ViewHolder;
 import com.stfalcon.chatkit.commons.models.IDialog;
-import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.utils.DateFormatter;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 public class DialogsListAdapter<DIALOG extends IDialog>
         extends RecyclerView.Adapter<DialogsListAdapter.BaseDialogViewHolder> {
@@ -50,29 +42,6 @@ public class DialogsListAdapter<DIALOG extends IDialog>
     private int itemLayoutId;
     private Class<? extends BaseDialogViewHolder> holderClass;
     private ImageLoader imageLoader;
-    private OnDialogClickListener<DIALOG> onDialogClickListener;
-    private OnDialogLongClickListener<DIALOG> onLongItemClickListener;
-    private DialogListStyle dialogStyle;
-    private DateFormatter.Formatter datesFormatter;
-
-    /**
-     * For default list item layout and view holder
-     *
-     * @param imageLoader image loading method
-     */
-    public DialogsListAdapter(ImageLoader imageLoader) {
-        this(R.layout.item_dialog, DialogViewHolder.class, imageLoader);
-    }
-
-    /**
-     * For custom list item layout and default view holder
-     *
-     * @param itemLayoutId custom list item resource id
-     * @param imageLoader  image loading method
-     */
-    public DialogsListAdapter(@LayoutRes int itemLayoutId, ImageLoader imageLoader) {
-        this(itemLayoutId, DialogViewHolder.class, imageLoader);
-    }
 
     /**
      * For custom list item layout and custom view holder
@@ -92,9 +61,6 @@ public class DialogsListAdapter<DIALOG extends IDialog>
     @Override
     public void onBindViewHolder(BaseDialogViewHolder holder, int position) {
         holder.setImageLoader(imageLoader);
-        holder.setOnDialogClickListener(onDialogClickListener);
-        holder.setOnLongItemClickListener(onLongItemClickListener);
-        holder.setDatesFormatter(datesFormatter);
         holder.onBind(items.get(position));
     }
 
@@ -105,11 +71,7 @@ public class DialogsListAdapter<DIALOG extends IDialog>
         try {
             Constructor<? extends BaseDialogViewHolder> constructor = holderClass.getDeclaredConstructor(View.class);
             constructor.setAccessible(true);
-            BaseDialogViewHolder baseDialogViewHolder = constructor.newInstance(v);
-            if (baseDialogViewHolder instanceof DialogViewHolder) {
-                ((DialogViewHolder) baseDialogViewHolder).setDialogStyle(dialogStyle);
-            }
-            return baseDialogViewHolder;
+            return constructor.newInstance(v);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -122,229 +84,6 @@ public class DialogsListAdapter<DIALOG extends IDialog>
     @Override
     public int getItemCount() {
         return items.size();
-    }
-
-    /**
-     * remove item with id
-     *
-     * @param id dialog i
-     */
-    public void deleteById(String id) {
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getId().equals(id)) {
-                items.remove(i);
-                notifyItemRemoved(i);
-            }
-        }
-    }
-
-    /**
-     * Returns {@code true} if, and only if, dialogs count in adapter is non-zero.
-     *
-     * @return {@code true} if size is 0, otherwise {@code false}
-     */
-    public boolean isEmpty() {
-        return items.isEmpty();
-    }
-
-    /**
-     * clear dialogs list
-     */
-    public void clear() {
-        if (items != null) {
-            items.clear();
-        }
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Set dialogs list
-     *
-     * @param items dialogs list
-     */
-    public void setItems(List<DIALOG> items) {
-        this.items = items;
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Add dialogs items
-     *
-     * @param newItems new dialogs list
-     */
-    public void addItems(List<DIALOG> newItems) {
-        if (newItems != null) {
-            if (items == null) {
-                items = new ArrayList<>();
-            }
-            int curSize = items.size();
-            items.addAll(newItems);
-            notifyItemRangeInserted(curSize, items.size());
-        }
-    }
-
-    /**
-     * Add dialog to the end of dialogs list
-     *
-     * @param dialog dialog item
-     */
-    public void addItem(DIALOG dialog) {
-        items.add(dialog);
-        notifyItemInserted(0);
-    }
-
-    /**
-     * Add dialog to dialogs list
-     *
-     * @param dialog   dialog item
-     * @param position position in dialogs lost
-     */
-    public void addItem(int position, DIALOG dialog) {
-        items.add(position, dialog);
-        notifyItemInserted(position);
-    }
-
-    /**
-     * Update dialog by position in dialogs list
-     *
-     * @param position position in dialogs list
-     * @param item     new dialog item
-     */
-    public void updateItem(int position, DIALOG item) {
-        if (items == null) {
-            items = new ArrayList<>();
-        }
-        items.set(position, item);
-        notifyItemChanged(position);
-    }
-
-    /**
-     * Update dialog by dialog id
-     *
-     * @param item new dialog item
-     */
-    public void updateItemById(DIALOG item) {
-        if (items == null) {
-            items = new ArrayList<>();
-        }
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getId().equals(item.getId())) {
-                items.set(i, item);
-                notifyItemChanged(i);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Update last message in dialog and swap item to top of list.
-     *
-     * @param dialogId Dialog ID
-     * @param message  New message
-     * @return false if dialog doesn't exist.
-     */
-    public boolean updateDialogWithMessage(String dialogId, IMessage message) {
-        boolean dialogExist = false;
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getId().equals(dialogId)) {
-                items.get(i).setLastMessage(message);
-                notifyItemChanged(i);
-                if (i != 0) {
-                    Collections.swap(items, i, 0);
-                    notifyItemMoved(i, 0);
-                }
-                dialogExist = true;
-                break;
-            }
-        }
-        return dialogExist;
-    }
-
-    /**
-     * Sort dialog by last message date
-     */
-    public void sortByLastMessageDate() {
-        Collections.sort(items, new Comparator<DIALOG>() {
-            @Override
-            public int compare(DIALOG o1, DIALOG o2) {
-                if (o1.getLastMessage().getCreatedAt().after(o2.getLastMessage().getCreatedAt())) {
-                    return -1;
-                } else if (o1.getLastMessage().getCreatedAt().before(o2.getLastMessage().getCreatedAt())) {
-                    return 1;
-                } else return 0;
-            }
-        });
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Sort items with rules of comparator
-     *
-     * @param comparator Comparator
-     */
-    public void sort(Comparator<DIALOG> comparator) {
-        Collections.sort(items, comparator);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Register a callback to be invoked when image need to load.
-     *
-     * @param imageLoader image loading method
-     */
-    public void setImageLoader(ImageLoader imageLoader) {
-        this.imageLoader = imageLoader;
-    }
-
-    /**
-     * @return registered image loader
-     */
-    public ImageLoader getImageLoader() {
-        return imageLoader;
-    }
-
-    /**
-     * @return the on click callback registered for this view.
-     */
-    public OnDialogClickListener getOnDialogClickListener() {
-        return onDialogClickListener;
-    }
-
-    /**
-     * Register a callback to be invoked when item is clicked.
-     *
-     * @param onDialogClickListener on click item callback
-     */
-    public void setOnDialogClickListener(OnDialogClickListener<DIALOG> onDialogClickListener) {
-        this.onDialogClickListener = onDialogClickListener;
-    }
-
-    /**
-     * @return on long click item callback
-     */
-    public OnDialogLongClickListener getOnLongItemClickListener() {
-        return onLongItemClickListener;
-    }
-
-    /**
-     * Register a callback to be invoked when item is long clicked.
-     *
-     * @param onLongItemClickListener on long click item callback
-     */
-    public void setOnDialogLongClickListener(OnDialogLongClickListener<DIALOG> onLongItemClickListener) {
-        this.onLongItemClickListener = onLongItemClickListener;
-    }
-
-    /**
-     * Sets custom {@link DateFormatter.Formatter} for text representation of last message date.
-     */
-    public void setDatesFormatter(DateFormatter.Formatter datesFormatter) {
-        this.datesFormatter = datesFormatter;
-    }
-
-    //TODO ability to set style programmatically
-    void setStyle(DialogListStyle dialogStyle) {
-        this.dialogStyle = dialogStyle;
     }
 
     /*
@@ -377,21 +116,9 @@ public class DialogsListAdapter<DIALOG extends IDialog>
             this.imageLoader = imageLoader;
         }
 
-        void setOnDialogClickListener(OnDialogClickListener onDialogClickListener) {
-            this.onDialogClickListener = onDialogClickListener;
-        }
-
-        void setOnLongItemClickListener(OnDialogLongClickListener onLongItemClickListener) {
-            this.onLongItemClickListener = onLongItemClickListener;
-        }
-
-        public void setDatesFormatter(DateFormatter.Formatter dateHeadersFormatter) {
-            this.datesFormatter = dateHeadersFormatter;
-        }
     }
 
     public static class DialogViewHolder<DIALOG extends IDialog> extends BaseDialogViewHolder<DIALOG> {
-        protected DialogListStyle dialogStyle;
         protected ViewGroup container;
         protected ViewGroup root;
         protected TextView tvName;
@@ -415,110 +142,10 @@ public class DialogsListAdapter<DIALOG extends IDialog>
             ivAvatar = (ImageView) itemView.findViewById(R.id.dialogAvatar);
             dividerContainer = (ViewGroup) itemView.findViewById(R.id.dialogDividerContainer);
             divider = itemView.findViewById(R.id.dialogDivider);
-
         }
-
-        private void applyStyle() {
-            if (dialogStyle != null) {
-                //Texts
-                if (tvName != null) {
-                    tvName.setTextSize(TypedValue.COMPLEX_UNIT_PX, dialogStyle.getDialogTitleTextSize());
-                }
-
-                if (tvLastMessage != null) {
-                    tvLastMessage.setTextSize(TypedValue.COMPLEX_UNIT_PX, dialogStyle.getDialogMessageTextSize());
-                }
-
-                if (tvDate != null) {
-                    tvDate.setTextSize(TypedValue.COMPLEX_UNIT_PX, dialogStyle.getDialogDateSize());
-                }
-
-                //Divider
-                if (divider != null)
-                    divider.setBackgroundColor(dialogStyle.getDialogDividerColor());
-                if (dividerContainer != null)
-                    dividerContainer.setPadding(dialogStyle.getDialogDividerLeftPadding(), 0,
-                            dialogStyle.getDialogDividerRightPadding(), 0);
-                //Avatar
-                if (ivAvatar != null) {
-                    ivAvatar.getLayoutParams().width = dialogStyle.getDialogAvatarWidth();
-                    ivAvatar.getLayoutParams().height = dialogStyle.getDialogAvatarHeight();
-                }
-
-                //Last message user avatar
-                if (ivLastMessageUser != null) {
-                    ivLastMessageUser.getLayoutParams().width = dialogStyle.getDialogMessageAvatarWidth();
-                    ivLastMessageUser.getLayoutParams().height = dialogStyle.getDialogMessageAvatarHeight();
-                }
-
-                //Unread bubble
-                if (tvBubble != null) {
-                    GradientDrawable bgShape = (GradientDrawable) tvBubble.getBackground();
-                    bgShape.setColor(dialogStyle.getDialogUnreadBubbleBackgroundColor());
-                    tvBubble.setVisibility(dialogStyle.isDialogDividerEnabled() ? VISIBLE : GONE);
-                    tvBubble.setTextSize(TypedValue.COMPLEX_UNIT_PX, dialogStyle.getDialogUnreadBubbleTextSize());
-                    tvBubble.setTextColor(dialogStyle.getDialogUnreadBubbleTextColor());
-                    tvBubble.setTypeface(tvBubble.getTypeface(), dialogStyle.getDialogUnreadBubbleTextStyle());
-                }
-            }
-        }
-
-
-        private void applyDefaultStyle() {
-            if (dialogStyle != null) {
-                if (root != null) {
-                    root.setBackgroundColor(dialogStyle.getDialogItemBackground());
-                }
-
-                if (tvName != null) {
-                    tvName.setTextColor(dialogStyle.getDialogTitleTextColor());
-                    tvName.setTypeface(tvName.getTypeface(), dialogStyle.getDialogTitleTextStyle());
-                }
-
-                if (tvDate != null) {
-                    tvDate.setTextColor(dialogStyle.getDialogDateColor());
-                    tvDate.setTypeface(tvDate.getTypeface(), dialogStyle.getDialogDateStyle());
-                }
-
-                if (tvLastMessage != null) {
-                    tvLastMessage.setTextColor(dialogStyle.getDialogMessageTextColor());
-                    tvLastMessage.setTypeface(tvLastMessage.getTypeface(), dialogStyle.getDialogMessageTextStyle());
-                }
-            }
-        }
-
-        private void applyUnreadStyle() {
-            if (dialogStyle != null) {
-                if (root != null) {
-                    root.setBackgroundColor(dialogStyle.getDialogUnreadItemBackground());
-                }
-
-                if (tvName != null) {
-                    tvName.setTextColor(dialogStyle.getDialogUnreadTitleTextColor());
-                    tvName.setTypeface(tvName.getTypeface(), dialogStyle.getDialogUnreadTitleTextStyle());
-                }
-
-                if (tvDate != null) {
-                    tvDate.setTextColor(dialogStyle.getDialogUnreadDateColor());
-                    tvDate.setTypeface(tvDate.getTypeface(), dialogStyle.getDialogUnreadDateStyle());
-                }
-
-                if (tvLastMessage != null) {
-                    tvLastMessage.setTextColor(dialogStyle.getDialogUnreadMessageTextColor());
-                    tvLastMessage.setTypeface(tvLastMessage.getTypeface(), dialogStyle.getDialogUnreadMessageTextStyle());
-                }
-            }
-        }
-
 
         @Override
         public void onBind(final DIALOG dialog) {
-            if (dialog.getUnreadCount() > 0) {
-                applyUnreadStyle();
-            } else {
-                applyDefaultStyle();
-            }
-
             //Set Name
             tvName.setText(dialog.getDialogName());
 
@@ -535,20 +162,8 @@ public class DialogsListAdapter<DIALOG extends IDialog>
                 imageLoader.loadImage(ivAvatar, dialog.getDialogPhoto());
             }
 
-            //Set Last message user avatar
-            if (imageLoader != null) {
-                imageLoader.loadImage(ivLastMessageUser, dialog.getLastMessage().getUser().getAvatar());
-            }
-            ivLastMessageUser.setVisibility(dialogStyle.isDialogMessageAvatarEnabled()
-                    && dialog.getUsers().size() > 1 ? VISIBLE : GONE);
-
             //Set Last message text
             tvLastMessage.setText(dialog.getLastMessage().getText());
-
-            //Set Unread message count bubble
-            tvBubble.setText(String.valueOf(dialog.getUnreadCount()));
-            tvBubble.setVisibility(dialogStyle.isDialogUnreadBubbleEnabled() &&
-                    dialog.getUnreadCount() > 0 ? VISIBLE : GONE);
 
             if (onDialogClickListener != null) {
                 container.setOnClickListener(new View.OnClickListener() {
@@ -574,13 +189,5 @@ public class DialogsListAdapter<DIALOG extends IDialog>
             return DateFormatter.format(date, DateFormatter.Template.TIME);
         }
 
-        protected DialogListStyle getDialogStyle() {
-            return dialogStyle;
-        }
-
-        protected void setDialogStyle(DialogListStyle dialogStyle) {
-            this.dialogStyle = dialogStyle;
-            applyStyle();
-        }
     }
 }

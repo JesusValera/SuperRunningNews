@@ -22,6 +22,6 @@ public class MessageAdapter extends MessagesListAdapter.IncomingMessageViewHolde
     @Override
     public void onBind(Mensaje mensaje) {
         super.onBind(mensaje);
-        ((TextView) itemView.findViewById(R.id.username)).setText("\t\t" + mensaje.getUser().getName());
+        ((TextView) itemView.findViewById(R.id.username)).setText("\t\t\t" + mensaje.getUser().getName());
     }
 }
