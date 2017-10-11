@@ -16,7 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.proyecto.tfg.superrunningnews.BottomBarActivity;
+import com.proyecto.tfg.superrunningnews.activities.BottomBarActivity;
 import com.proyecto.tfg.superrunningnews.activities.LoginActivity;
 import com.proyecto.tfg.superrunningnews.activities.SplashActivity;
 import com.proyecto.tfg.superrunningnews.models.Dialog;
@@ -152,7 +152,7 @@ public class ProgressTask extends AsyncTask<String, Void, Boolean> {
         if (tag.equalsIgnoreCase("title")) {
             String title = parser.nextText();
             if (!title.equals("RSS de Carreras de vamosacorrer.com")) {
-                // Titulo no puede contener ".", "#", "[", "]".
+                // Title can not contain these characters: ".", "#", "[", "]".
                 String tituloFormateado = title.replace(".", "")
                         .replace("#", "")
                         .replace("[", "")

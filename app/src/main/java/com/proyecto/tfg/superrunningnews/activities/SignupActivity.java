@@ -16,17 +16,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.proyecto.tfg.superrunningnews.helpers.ImageHelper;
 import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -35,174 +36,117 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 public class SignupActivity extends AppCompatActivity {
 
+    private static final int SELECT_FILE = 1;
     private EditText etUsuario, etPassword;
     private Button btCrear, btImagen;
     private TextView tvLogin;
-
-    private FirebaseDatabase db;
     private DatabaseReference ref;
     private FirebaseStorage storage;
-
-    private ArrayList<Usuario> usuarios;
-
-    private static final int SELECT_FILE = 1;
+    private FirebaseAuth mAuth;
     private Bitmap imagenPerfil;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        //Enganchar controles
+        mAuth = FirebaseAuth.getInstance();
+        loadViews();
+        createListeners();
+        firebase();
+        picture();
+    }
+
+    private void loadViews() {
         etUsuario = (EditText) findViewById(R.id.etUsuario);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btCrear = (Button) findViewById(R.id.btCrear);
         btImagen = (Button) findViewById(R.id.btImagen);
         tvLogin = (TextView) findViewById(R.id.tvLogin);
+    }
 
-        //Listeners
+    private void createListeners() {
         btCrear.setOnClickListener(btCrear_OnClickListener);
         tvLogin.setOnClickListener(tvLogin_OnClickListener);
         btImagen.setOnClickListener(btImagen_OnClickListener);
-
-        //Firebase
-        usuarios = new ArrayList<>();
-        db = FirebaseDatabase.getInstance();
-        ref = db.getReference("usuarios");
-        storage = FirebaseStorage.getInstance();
-
-
-        ref.addValueEventListener(ref_ValueEventListener);
-
-        //Imagen
-        imagenPerfil = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-
     }
 
-    //Listener Firebase
-    private ValueEventListener ref_ValueEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            usuarios.clear();
-            for (DataSnapshot data : dataSnapshot.getChildren()) {
-                Usuario user = data.getValue(Usuario.class);
-                usuarios.add(user);
-            }
-        }
+    private void firebase() {
+        ref = FirebaseDatabase.getInstance().getReference("usuarios");
+        storage = FirebaseStorage.getInstance();
+    }
 
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            Toast.makeText(SignupActivity.this, "Error en la base de datos!", Toast.LENGTH_SHORT).show();
-        }
-    };
-
+    private void picture() {
+        imagenPerfil = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+    }
 
     //Listeners
     private View.OnClickListener btCrear_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (!validar()) {
-                Toast.makeText(SignupActivity.this, "No se ha podido crear la cuenta!", Toast.LENGTH_SHORT).show();
-                btCrear.setEnabled(true);
-                return;
-            }
-
-            btCrear.setEnabled(false);
-
-            final String usuario = etUsuario.getText().toString();
+            final String email = etUsuario.getText().toString();
             final String password = etPassword.getText().toString();
 
-            //Crear los datos en Firebase
-            boolean existe = false;
-            for (Usuario user : usuarios) {
-                if (user.getName().equals(usuario)) {
-                    existe = true;
-                    break;
-                }
-            }
-            if (existe) {
-                etUsuario.setError("El usuario ya existe");
-                btCrear.setEnabled(true);
-                etUsuario.requestFocus();
-                return;
-            }
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(SignupActivity.this, task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
 
-            //Guardar la imagen y después al usuario
-            StorageReference stref = storage.getReferenceFromUrl("gs://superrunningnews-75380.appspot.com/").child("imagenes/" + usuario + ".png");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            //Bitmap imagen= ImageHelper.getCircularBitmap(imagenPerfil);
-            imagenPerfil.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] data = baos.toByteArray();
-            //ByteArrayInputStream bs = new ByteArrayInputStream(data);
+                                return;
+                            }
 
-            final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                    R.style.AppTheme_Dark_Dialog);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Creando cuenta...");
+                            //Guardar la imagen y después al usuario
+                            StorageReference stref = storage.getReferenceFromUrl("gs://superrunningnews-75380.appspot.com/").child("imagenes/" + email + ".png");
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            imagenPerfil.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                            byte[] data = baos.toByteArray();
 
+                            final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
+                                    R.style.AppTheme_Dark_Dialog);
+                            progressDialog.setIndeterminate(true);
+                            progressDialog.setMessage("Creando cuenta...");
 
-            UploadTask uploadTask = stref.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(SignupActivity.this, "Error al guardar la foto", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                    return;
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    String urlImg = taskSnapshot.getDownloadUrl().toString().substring(0, taskSnapshot.getDownloadUrl().toString().indexOf("&"));
-                    ref.child(usuario).setValue(new Usuario(usuario, usuario, urlImg, password));
+                            UploadTask uploadTask = stref.putBytes(data);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Toast.makeText(SignupActivity.this, "Error al guardar la foto", Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    String urlImg = taskSnapshot.getDownloadUrl().toString().substring(0, taskSnapshot.getDownloadUrl().toString().indexOf("&"));
+                                    String nombre = email.replace(".", "").replace("#", "").replace("[", "").replace("]", "");
+                                    ref.child(nombre).setValue(new Usuario(email, email, urlImg, password));
 
-                    btCrear.setEnabled(true);
+                                    btCrear.setEnabled(true);
 
-                    progressDialog.dismiss();
+                                    progressDialog.dismiss();
 
-                    Toast.makeText(SignupActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SignupActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
 
-                    //Iniciar la LoginActivity con el result
-                    Intent i = new Intent(SignupActivity.this, LoginActivity.class);
-                    i.putExtra("usuario", usuario);
-                    setResult(RESULT_OK, i);
-                    finish();
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.show();
-                }
-            });
+                                    //Iniciar la LoginActivity con el result
+                                    Intent i = new Intent(SignupActivity.this, LoginActivity.class);
+                                    i.putExtra("usuario", nombre);
+                                    setResult(RESULT_OK, i);
+                                    finish();
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    progressDialog.show();
+                                }
+                            });
+                        }
+                    });
         }
-
-        private boolean validar() {
-            boolean valido = true;
-
-            String usuario = etUsuario.getText().toString();
-            String password = etPassword.getText().toString();
-
-            if (usuario.isEmpty() || usuario.length() < 3 || usuario.length() > 20) {
-                etUsuario.setError("entre 3 y 20 caracteres");
-                valido = false;
-            } else {
-                etUsuario.setError(null);
-            }
-
-            if (password.isEmpty() || password.length() < 4 || password.length() > 12) {
-                etPassword.setError("entre 4 y 12 caracteres alfanuméricos");
-                valido = false;
-            } else {
-                etPassword.setError(null);
-            }
-
-            return valido;
-        }
-
     };
 
     private View.OnClickListener tvLogin_OnClickListener = new View.OnClickListener() {
@@ -210,6 +154,7 @@ public class SignupActivity extends AppCompatActivity {
         public void onClick(View v) {
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
+            finish();
         }
     };
 

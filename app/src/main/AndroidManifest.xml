@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BottomBarActivity"
+            android:name=".activities.BottomBarActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />

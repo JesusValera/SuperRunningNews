@@ -1,4 +1,4 @@
-package com.proyecto.tfg.superrunningnews;
+package com.proyecto.tfg.superrunningnews.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.fragments.ChatFragment;
 import com.proyecto.tfg.superrunningnews.fragments.MapaFragment;
 import com.proyecto.tfg.superrunningnews.fragments.NoticiaFragment;

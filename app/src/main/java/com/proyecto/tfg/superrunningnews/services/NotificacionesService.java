@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
-import com.proyecto.tfg.superrunningnews.BottomBarActivity;
+import com.proyecto.tfg.superrunningnews.activities.BottomBarActivity;
 import com.proyecto.tfg.superrunningnews.R;
 import com.proyecto.tfg.superrunningnews.models.Noticia;
 import com.squareup.picasso.Picasso;
