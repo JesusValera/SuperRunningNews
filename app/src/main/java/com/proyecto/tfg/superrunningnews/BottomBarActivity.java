@@ -31,9 +31,10 @@ public class BottomBarActivity extends AppCompatActivity {
     private final NoticiaFragment FRAG_NOTICIA = new NoticiaFragment();
     private final PerfilFragment FRAG_PERFIL = new PerfilFragment();
     private final ChatFragment FRAG_CHAT = new ChatFragment();
+    private final String CURRENT_SECTION = "currentSection";
+    private static final int TIME_INTERVAL = 2000; // # milliseconds between two back presses.
     private ArrayList<Noticia> tNoticias;
     private int seccion;
-    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
 
     @Override
@@ -44,25 +45,25 @@ public class BottomBarActivity extends AppCompatActivity {
         tNoticias = getIntent().getParcelableArrayListExtra("noticia");
         noticias = tNoticias;
 
-        anadirBudlesAFragmentosNoticiaYMapa();
-        obtenerSeccionActual(savedInstanceState);
-        reproducirSonidoInicio();
-        iniciarServicio();
+        addDataToFragments();
+        getCurrentSection(savedInstanceState);
+        PlayMusicBeginning();
+        startService();
     }
-    
-    private void anadirBudlesAFragmentosNoticiaYMapa() {
+
+    private void addDataToFragments() {
         Bundle bundleNoticia = new Bundle();
         bundleNoticia.putParcelableArrayList("noticia", tNoticias);
         FRAG_NOTICIA.setArguments(bundleNoticia);
         FRAG_MAPA.setArguments(bundleNoticia);
     }
 
-    private void obtenerSeccionActual(Bundle savedInstanceState) {
+    private void getCurrentSection(Bundle savedInstanceState) {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         if (savedInstanceState != null) {
-            seccion = savedInstanceState.getInt("seccionActual");
+            seccion = savedInstanceState.getInt(CURRENT_SECTION);
             navigation.setSelectedItemId(seccion);
         } else {
             seccion = R.id.navigation_noticias;
@@ -70,7 +71,7 @@ public class BottomBarActivity extends AppCompatActivity {
         }
     }
 
-    private void reproducirSonidoInicio() {
+    private void PlayMusicBeginning() {
         try {
             MediaPlayer.create(getApplicationContext(), R.raw.coin).start();
         } catch (Exception e) {
@@ -78,9 +79,8 @@ public class BottomBarActivity extends AppCompatActivity {
         }
     }
 
-    private void iniciarServicio() {
+    private void startService() {
         Intent i = new Intent(BottomBarActivity.this, NotificacionesService.class);
-        //i.putParcelableArrayListExtra("noticia",tNoticias);
         PendingIntent servicePendingIntent = PendingIntent.getService(BottomBarActivity.this, 0, i, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
@@ -95,7 +95,7 @@ public class BottomBarActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_noticias:
                     cambiarPantalla(FRAG_NOTICIA, R.id.navigation_noticias);
-                    hacerScrollAPrimeraPos();
+                    scrollTo1stPos();
                     return true;
 
                 case R.id.navigation_mapa:
@@ -123,19 +123,17 @@ public class BottomBarActivity extends AppCompatActivity {
         this.seccion = seccion;
     }
 
-    private void hacerScrollAPrimeraPos() {
+    private void scrollTo1stPos() {
         try {
             ((RecyclerView) FRAG_NOTICIA.getActivity()
                     .findViewById(R.id.recyclerView))
                     .smoothScrollToPosition(0);
-        } catch (NullPointerException e) {
-            ;
-        }
+        } catch (NullPointerException e) { ; }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("seccionActual", seccion);
+        outState.putInt(CURRENT_SECTION, seccion);
     }
 
     @Override

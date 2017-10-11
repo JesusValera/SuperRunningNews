@@ -38,17 +38,6 @@ public class Noticia implements Parcelable, Comparable<Noticia> {
         favorito = false;
     }
 
-    public Noticia(String titulo, String imagen, String localizacion,
-                   String fecha, String link, LatLng latLng) {
-        this.titulo = titulo;
-        this.imagen = imagen;
-        this.localizacion = localizacion;
-        this.fecha = fecha;
-        this.link = link;
-        this.latLng = latLng;
-        favorito = false;
-    }
-
     public String getTitulo() {
         return titulo;
     }

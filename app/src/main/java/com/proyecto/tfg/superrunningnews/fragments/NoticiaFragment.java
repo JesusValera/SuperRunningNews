@@ -54,10 +54,10 @@ public class NoticiaFragment extends Fragment {
 
         adapter.setOnClickListener(clickListener);
 
-        fab = (FloatingActionButton) v.findViewById(R.id.fab);
-        fab1 = (FloatingActionButton) v.findViewById(R.id.fab1);
-        fab2 = (FloatingActionButton) v.findViewById(R.id.fab2);
-        fab3 = (FloatingActionButton) v.findViewById(R.id.fab3);
+        fab = v.findViewById(R.id.fab);
+        fab1 = v.findViewById(R.id.fab1);
+        fab2 = v.findViewById(R.id.fab2);
+        fab3 = v.findViewById(R.id.fab3);
         fab_open = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
         rotate_forward = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_forward);
@@ -80,18 +80,21 @@ public class NoticiaFragment extends Fragment {
                     recyclerView.smoothScrollToPosition(0);
                     animateFAB();
                     break;
+
                 case R.id.fab2:
                     Collections.sort(tNoticia, Noticia.NoticiaOrdenadaFechaInversa);
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(0);
                     animateFAB();
                     break;
+
                 case R.id.fab3:
                     Collections.sort(tNoticia);
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(0);
                     animateFAB();
                     break;
+
                 case R.id.fab:
                     animateFAB();
                     break;

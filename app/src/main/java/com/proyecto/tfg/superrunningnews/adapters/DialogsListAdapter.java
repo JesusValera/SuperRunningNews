@@ -87,26 +87,12 @@ public class DialogsListAdapter<DIALOG extends IDialog>
     }
 
     /*
-    * LISTENERS
-    * */
-    public interface OnDialogClickListener<DIALOG extends IDialog> {
-        void onDialogClick(DIALOG dialog);
-    }
-
-    public interface OnDialogLongClickListener<DIALOG extends IDialog> {
-        void onDialogLongClick(DIALOG dialog);
-    }
-
-    /*
     * HOLDERS
     * */
     public abstract static class BaseDialogViewHolder<DIALOG extends IDialog>
             extends ViewHolder<DIALOG> {
 
         protected ImageLoader imageLoader;
-        protected OnDialogClickListener onDialogClickListener;
-        protected OnDialogLongClickListener onLongItemClickListener;
-        protected DateFormatter.Formatter datesFormatter;
 
         public BaseDialogViewHolder(View itemView) {
             super(itemView);
@@ -114,79 +100,6 @@ public class DialogsListAdapter<DIALOG extends IDialog>
 
         void setImageLoader(ImageLoader imageLoader) {
             this.imageLoader = imageLoader;
-        }
-
-    }
-
-    public static class DialogViewHolder<DIALOG extends IDialog> extends BaseDialogViewHolder<DIALOG> {
-        protected ViewGroup container;
-        protected ViewGroup root;
-        protected TextView tvName;
-        protected TextView tvDate;
-        protected ImageView ivAvatar;
-        protected ImageView ivLastMessageUser;
-        protected TextView tvLastMessage;
-        protected TextView tvBubble;
-        protected ViewGroup dividerContainer;
-        protected View divider;
-
-        public DialogViewHolder(View itemView) {
-            super(itemView);
-            root = (ViewGroup) itemView.findViewById(R.id.dialogRootLayout);
-            container = (ViewGroup) itemView.findViewById(R.id.dialogContainer);
-            tvName = (TextView) itemView.findViewById(R.id.dialogName);
-            tvDate = (TextView) itemView.findViewById(R.id.dialogDate);
-            tvLastMessage = (TextView) itemView.findViewById(R.id.dialogLastMessage);
-            tvBubble = (TextView) itemView.findViewById(R.id.dialogUnreadBubble);
-            ivLastMessageUser = (ImageView) itemView.findViewById(R.id.dialogLastMessageUserAvatar);
-            ivAvatar = (ImageView) itemView.findViewById(R.id.dialogAvatar);
-            dividerContainer = (ViewGroup) itemView.findViewById(R.id.dialogDividerContainer);
-            divider = itemView.findViewById(R.id.dialogDivider);
-        }
-
-        @Override
-        public void onBind(final DIALOG dialog) {
-            //Set Name
-            tvName.setText(dialog.getDialogName());
-
-            //Set Date
-            String formattedDate = null;
-            Date lastMessageDate = dialog.getLastMessage().getCreatedAt();
-            if (datesFormatter != null) formattedDate = datesFormatter.format(lastMessageDate);
-            tvDate.setText(formattedDate == null
-                    ? getDateString(lastMessageDate)
-                    : formattedDate);
-
-            //Set Dialog avatar
-            if (imageLoader != null) {
-                imageLoader.loadImage(ivAvatar, dialog.getDialogPhoto());
-            }
-
-            //Set Last message text
-            tvLastMessage.setText(dialog.getLastMessage().getText());
-
-            if (onDialogClickListener != null) {
-                container.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onDialogClickListener.onDialogClick(dialog);
-                    }
-                });
-            }
-
-            if (onLongItemClickListener != null) {
-                container.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        onLongItemClickListener.onDialogLongClick(dialog);
-                        return true;
-                    }
-                });
-            }
-        }
-
-        protected String getDateString(Date date) {
-            return DateFormatter.format(date, DateFormatter.Template.TIME);
         }
 
     }

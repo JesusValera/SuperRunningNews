@@ -118,13 +118,13 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.ViewHold
 
         private ViewHolder(final View v) {
             super(v);
-            ivImagen = (ImageView) v.findViewById(R.id.ivImagen);
-            txtTitulo = (TextView) v.findViewById(R.id.txtTitulo);
-            txtLocalizacion = (TextView) v.findViewById(R.id.txtLocalizacion);
-            txtFecha = (TextView) v.findViewById(R.id.txtFecha);
-            llInformacion = (LinearLayout) v.findViewById(R.id.llInformacion);
-            fbFavorito = (FloatingActionButton) v.findViewById(R.id.fbFavorito);
-            fbChat = (FloatingActionButton) v.findViewById(R.id.fbChat);
+            ivImagen = v.findViewById(R.id.ivImagen);
+            txtTitulo = v.findViewById(R.id.txtTitulo);
+            txtLocalizacion = v.findViewById(R.id.txtLocalizacion);
+            txtFecha = v.findViewById(R.id.txtFecha);
+            llInformacion = v.findViewById(R.id.llInformacion);
+            fbFavorito = v.findViewById(R.id.fbFavorito);
+            fbChat = v.findViewById(R.id.fbChat);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-
 public class NotificacionesService extends IntentService {
 
     private int idNotificacion;
@@ -31,7 +30,6 @@ public class NotificacionesService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         try {
-            //tNoticias = intent.getParcelableArrayListExtra("noticia"); //El intent no tiene los datos
             ArrayList<Noticia> tNoticias = BottomBarActivity.noticias;
             Calendar fechaNoticia = Calendar.getInstance();
             Calendar fechaActual = Calendar.getInstance();
@@ -43,8 +41,6 @@ public class NotificacionesService extends IntentService {
                     fechaNoticia.setTime(sdf.parse(n.getFecha()));
                     int diaNoticia = fechaNoticia.get(Calendar.DAY_OF_YEAR);
                     int hoy = fechaActual.get(Calendar.DAY_OF_YEAR);
-
-                    //System.out.println(n.getTitulo()+"\nhoy: "+hoy+"  , diaNoticia:"+diaNoticia);
 
                     if (diaNoticia - hoy == 1) {
                         montarNotificacion(n, "¡Mañana es el Evento!");

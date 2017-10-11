@@ -26,14 +26,11 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final int SINGUP = 1;
     public static final int CALLER_LOGIN = 2;
-
     private EditText etUsuario, etPassword;
     private Button btLogin;
     private CheckBox cbRecordar;
     private TextView tvSingup;
-    private ArrayList<Usuario> usuarios;
-
-    private final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private ArrayList<Usuario> users;
     private long mBackPressed;
 
     @Override
@@ -41,13 +38,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        usuarios = new ArrayList<>();
-        cargarControles();
+        users = new ArrayList<>();
+        loadViews();
         listeners();
         firebase();
     }
 
-    private void cargarControles() {
+    private void loadViews() {
         etUsuario = (EditText) findViewById(R.id.etUsuario);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btLogin = (Button) findViewById(R.id.btLogin);
@@ -62,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void firebase() {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference ref = db.getReference("usuarios");
+        DatabaseReference ref = db.getReference("users");
         ref.addValueEventListener(ref_ValueEventListener);
     }
 
@@ -70,10 +67,10 @@ public class LoginActivity extends AppCompatActivity {
     private ValueEventListener ref_ValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            usuarios.clear();
+            users.clear();
             for (DataSnapshot data : dataSnapshot.getChildren()) {
                 Usuario user = data.getValue(Usuario.class);
-                usuarios.add(user);
+                users.add(user);
             }
         }
 
@@ -91,17 +88,17 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            String usuario = etUsuario.getText().toString();
-            String password = etPassword.getText().toString();
+            String userName = etUsuario.getText().toString();
+            String userPassword = etPassword.getText().toString();
 
             //Comprobar los datos en Firebase
             boolean existe = false;
-            boolean passvalid = false;
-            for (Usuario user : usuarios) {
-                if (user.getName().equals(usuario)) {
+            boolean validPassword = false;
+            for (Usuario user : users) {
+                if (user.getName().equals(userName)) {
                     existe = true;
-                    if (user.getPassword().equals(password)) {
-                        passvalid = true;
+                    if (user.getPassword().equals(userPassword)) {
+                        validPassword = true;
                     }
                     break;
                 }
@@ -112,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                 etUsuario.requestFocus();
                 return;
             }
-            if (!passvalid) {
+            if (!validPassword) {
                 etPassword.setError("Contraseña incorrecta");
                 btLogin.setEnabled(true);
                 etPassword.requestFocus();
@@ -140,17 +137,17 @@ public class LoginActivity extends AppCompatActivity {
     public boolean validar() {
         boolean valido = true;
 
-        String usuario = etUsuario.getText().toString();
-        String password = etPassword.getText().toString();
+        String userName = etUsuario.getText().toString();
+        String userPassword = etPassword.getText().toString();
 
-        if (usuario.isEmpty() || usuario.length() < 3 || usuario.length() > 20) {
+        if (userName.isEmpty() || userName.length() < 3 || userName.length() > 20) {
             etUsuario.setError("entre 3 y 20 caracteres");
             valido = false;
         } else {
             etUsuario.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 12) {
+        if (userPassword.isEmpty() || userPassword.length() < 4 || userPassword.length() > 12) {
             etPassword.setError("entre 4 y 12 caracteres alfanuméricos");
             valido = false;
         } else {
@@ -172,7 +169,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+        int TIME_INTERVAL_IN_MILLIS = 2000;
+        if (mBackPressed + TIME_INTERVAL_IN_MILLIS > System.currentTimeMillis()) {
             moveTaskToBack(true);
             return;
         } else {
